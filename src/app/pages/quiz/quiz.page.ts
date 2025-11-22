@@ -29,6 +29,7 @@ import { Subscription } from 'rxjs';
 export class QuizPage implements OnInit, OnDestroy {
   mode: 'practice' | 'competitive' = 'practice';
   questionCount: number = 10;
+  username: string = ''; // For competitive mode
 
   currentQuestion: Question | null = null;
   selectedAnswerId: string | null = null;
@@ -42,6 +43,10 @@ export class QuizPage implements OnInit, OnDestroy {
 
   // Practice mode properties
   practiceSession: PracticeSession | null = null;
+
+  // Competitive mode properties (reuse for UI compatibility)
+  competitiveSession: PracticeSession | null = null; // Using PracticeSession interface for UI compatibility
+
   currentQuestionTime: number = 0;
   timerInterval: any;
   questionStartTime: number = 0;
@@ -58,10 +63,22 @@ export class QuizPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Get route parameters
-    const params = this.route.snapshot.queryParams;
-    this.mode = params['mode'] || 'practice';
-    this.questionCount = parseInt(params['count'], 10) || 10;
+    // Get route parameters - handle new format: /quiz/competitive/username
+    const urlSegments = this.route.snapshot.url;
+    const firstSegment = urlSegments[0]?.path;
+
+    if (firstSegment === 'competitive' && urlSegments.length > 1) {
+      // Competitive mode: /quiz/competitive/username
+      this.mode = 'competitive';
+      this.username = urlSegments[1]?.path || '';
+      this.questionCount = 50; // Fixed for competitive mode
+    } else {
+      // Practice mode: check query params for compatibility
+      const params = this.route.snapshot.queryParams;
+      this.mode = params['mode'] || 'practice';
+      this.questionCount = parseInt(params['count'], 10) || 10;
+      this.username = params['username'] || ''; // For backward compatibility
+    }
 
     if (this.mode === 'practice') {
       this.initializePracticeMode();
@@ -109,27 +126,48 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   private initializeCompetitiveMode() {
-    // Subscribe to quiz state
-    const stateSub = this.quizService.getQuizState().subscribe(state => {
-      this.quizState = state;
-    });
-    this.subscriptions.push(stateSub);
+    // Validate username
+    if (!this.username || this.username.trim().length === 0) {
+      console.error('No username provided for competitive mode');
+      this.router.navigate(['/best-signaller']);
+      return;
+    }
 
-    // Initialize competitive quiz
-    this.quizService.initializeQuiz(this.questionCount, this.mode).subscribe({
+
+
+    // Subscribe to current question
+    const questionSub = this.quizService.getCurrentQuestion().subscribe(question => {
+      this.currentQuestion = question;
+      this.selectedAnswerId = null;
+      this.feedbackVisible = false;
+      this.nextButtonEnabled = false;
+      this.imageLoading = true;
+
+      // Start timer for new question
+      if (question) {
+        this.startQuestionTimer();
+      }
+
+      // Update progress (since we're not using quizState anymore)
+      if (question && this.practiceSession) {
+        this.currentQuestionTime = this.quizService.getCurrentQuestionTime();
+      }
+    });
+    this.subscriptions.push(questionSub);
+
+    // Initialize competitive session
+    this.quizService.initializeCompetitiveSession(this.username).subscribe({
       next: () => {
-        // Subscribe to current question
-        const sub = this.quizService.getCurrentQuestion().subscribe(question => {
-          this.currentQuestion = question;
-          this.selectedAnswerId = null;
-          this.feedbackVisible = false;
-          this.nextButtonEnabled = false;
-          this.imageLoading = true;
-        });
-        this.subscriptions.push(sub);
+        // Timer updates every 100ms for smooth display
+        this.timerInterval = setInterval(() => {
+          const session = this.quizService.getCompetitiveSessionValue();
+          if (session?.isActive) {
+            this.currentQuestionTime = this.quizService.getCurrentQuestionTime();
+          }
+        }, 100);
       },
       error: (err) => {
-        console.error('Failed to initialize quiz:', err);
+        console.error('Failed to initialize competitive session:', err);
       }
     });
   }
@@ -146,8 +184,11 @@ export class QuizPage implements OnInit, OnDestroy {
         this.feedbackCorrect = record.isCorrect;
       }
     } else {
-      const result = this.quizService.checkAnswer(answerId);
-      this.feedbackCorrect = result.isCorrect;
+      // Competitive mode
+      const record = this.quizService.submitCompetitiveAnswer(answerId);
+      if (record) {
+        this.feedbackCorrect = record.isCorrect;
+      }
     }
 
     // Show feedback
@@ -175,13 +216,18 @@ export class QuizPage implements OnInit, OnDestroy {
       }
     } else {
       // Competitive mode
-      if (this.quizState && this.quizState.currentQuestionIndex < this.quizState.totalQuestions) {
+      const session = this.quizService.getCompetitiveSessionValue();
+      if (session && session.currentQuestionIndex < 50) {
         // More questions remaining
-        this.quizService.generateQuestion().subscribe();
+        this.quizService.generateCompetitiveQuestion().subscribe();
       } else {
-        // Quiz completed
-        this.quizResults = this.quizService.completeQuiz();
-        this.quizCompleted = true;
+        // Quiz completed - navigate to competitive results
+        const results = this.quizService.getCompetitiveResults();
+        if (results) {
+          this.router.navigate(['/competitive-results'], {
+            state: { results }
+          });
+        }
       }
     }
   }
@@ -220,6 +266,15 @@ export class QuizPage implements OnInit, OnDestroy {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
 
+  getCurrentScore(): number {
+    if (this.mode === 'practice') {
+      return this.practiceSession?.currentScore || 0;
+    } else {
+      const session = this.quizService.getCompetitiveSessionValue();
+      return session?.currentScore || 0;
+    }
+  }
+
   getAccuracyDisplay(): string {
     if (this.mode === 'practice') {
       if (!this.practiceSession) return '0%';
@@ -229,8 +284,12 @@ export class QuizPage implements OnInit, OnDestroy {
       const accuracy = (correctCount / answeredQuestions.length) * 100;
       return accuracy.toFixed(1) + '%';
     } else {
-      if (!this.quizState) return '0%';
-      const accuracy = (this.quizState.score / this.quizState.currentQuestionIndex) * 100;
+      // Competitive mode
+      const session = this.quizService.getCompetitiveSessionValue();
+      if (!session || session.questionsAnswered.length === 0) return '0%';
+      const answeredQuestions = session.questionsAnswered.length;
+      const correctCount = session.questionsAnswered.filter(q => q.isCorrect).length;
+      const accuracy = (correctCount / answeredQuestions) * 100;
       return accuracy.toFixed(1) + '%';
     }
   }

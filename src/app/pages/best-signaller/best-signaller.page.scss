@@ -1,2 +1,56 @@
-// Best signaller page specific styles
+.valid-input {
+  --border-color: #10b981 !important; // Green border
+  ion-input {
+    --color: #166534 !important; // Dark green text
+  }
 
+  ion-text {
+    --color: #166534 !important; // Dark green helper text
+  }
+}
+
+.invalid-input {
+  --border-color: #ef4444 !important; // Red border
+
+  ion-input {
+    --color: #dc2626 !important; // Dark red text
+  }
+
+  ion-text {
+    --color: #dc2626 !important; // Dark red helper text
+  }
+}
+
+.validation-message {
+  margin-top: 8px;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.error-message {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.character-count {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+// Improve button styling
+ion-button[color="warning"] {
+  --background: linear-gradient(135deg, #f59e0b, #d97706);
+  --background-hover: linear-gradient(135deg, #d97706, #b45309);
+  --color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);
+}
+
+ion-button[color="warning"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px rgba(245, 158, 11, 0.25);
+}

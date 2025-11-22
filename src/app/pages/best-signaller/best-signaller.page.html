@@ -14,7 +14,7 @@
       </p>
       <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
         <p class="text-sm text-gray-700">
-          <strong>Scoring:</strong> Points are based on accuracy, speed, and total score. 
+          <strong>Scoring:</strong> Points are based on accuracy, speed, and total score.
           The faster you answer correctly, the higher your rating!
         </p>
       </div>
@@ -23,44 +23,45 @@
     <!-- Username Input -->
     <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
       <h3 class="text-xl font-bold text-gray-900 mb-4">Enter Your Username</h3>
-      <ion-item>
-        <ion-label position="stacked">Username</ion-label>
-        <ion-input 
-          [(ngModel)]="username" 
+      <ion-item [class]="isUsernameValid ? 'valid-input' : validationMessage ? 'invalid-input' : ''">
+        <ion-label position="stacked">Username (3-20 characters)</ion-label>
+        <ion-input
+          [(ngModel)]="username"
+          (ngModelChange)="validateUsername()"
           placeholder="Enter your username"
           type="text"
+          maxlength="20"
         ></ion-input>
+        <ion-text slot="helper" class="character-count">{{ getCharacterCount() }}</ion-text>
       </ion-item>
-    </div>
 
-    <!-- Question Count Selection -->
-    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-      <h3 class="text-xl font-bold text-gray-900 mb-4">Number of Questions</h3>
-      <ion-item>
-        <ion-label>Questions: {{ questionCount }}</ion-label>
-        <input 
-          type="range" 
-          min="5" 
-          max="50" 
-          step="5"
-          [(ngModel)]="questionCount"
-          class="w-full"
-        />
-      </ion-item>
+      <!-- Validation Message -->
+      <div *ngIf="validationMessage" class="validation-message error-message">
+        {{ validationMessage }}
+      </div>
+
+      <!-- Competition Challenge Info -->
+      <div *ngIf="isUsernameValid" class="mt-4 p-4 bg-green-50 border-l-4 border-green-400 rounded-r-lg">
+        <h4 class="font-semibold text-green-800 mb-2">Ready for the Challenge!</h4>
+        <ul class="text-sm text-green-700 space-y-1">
+          <li>• 50 signal flags to identify</li>
+          <li>• Timing and accuracy both count toward your rating</li>
+          <li>• Fast, accurate performance earns the highest ratings</li>
+        </ul>
+      </div>
     </div>
 
     <!-- Start Button -->
-    <ion-button 
-      expand="block" 
+    <ion-button
+      expand="block"
       size="large"
       fill="solid"
       color="warning"
       (click)="startCompetition()"
-      [disabled]="!username.trim()"
+      [disabled]="!isUsernameValid"
       class="mt-6"
     >
-      Start Competition
+      Start 50-Question Competition
     </ion-button>
   </div>
 </ion-content>
-

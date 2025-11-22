@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Quiz</ion-title>
+    <ion-title>{{ mode === 'competitive' && username ? username + ' - Competition' : 'Quiz' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button *ngIf="mode === 'practice'" (click)="restartQuiz()" fill="clear">
         <ion-icon name="refresh" slot="icon-only"></ion-icon>
@@ -22,7 +22,7 @@
     <!-- Timer and Score display -->
     <div class="score-container">
       <ion-text *ngIf="mode === 'practice'">Timer: {{ formatTime(currentQuestionTime) }}</ion-text>
-      <ion-text>Score: {{ (mode === 'practice' ? practiceSession?.currentScore : quizState?.score) || 0 }} / {{ currentQuestion?.totalQuestions }}</ion-text>
+      <ion-text>Score: {{ getCurrentScore() }} / {{ currentQuestion?.totalQuestions }}</ion-text>
       <ion-text>Accuracy: {{ getAccuracyDisplay() }}</ion-text>
     </div>
 

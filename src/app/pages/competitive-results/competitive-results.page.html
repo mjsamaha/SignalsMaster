@@ -1,0 +1,179 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Competition Results</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="results" class="results-container">
+    <!-- Header with Username and Trophy -->
+    <div class="results-header">
+      <ion-text class="congratulations">Competition Complete!</ion-text>
+      <ion-text class="username">{{ results.username }}</ion-text>
+    </div>
+
+    <!-- Main Rating Card -->
+    <ion-card class="rating-card">
+      <ion-card-header>
+        <ion-card-title class="rating-title">Your Rating</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="rating-display">
+          <div class="rating-number" [class]="'rating-' + getRatingColor()">
+            {{ results.finalRating }}
+          </div>
+          <ion-badge [class]="'tier-badge ' + getRatingTierColor()">
+            {{ results.ratingTier }}
+          </ion-badge>
+        </div>
+
+        <ion-text class="motivational-text">
+          {{ getMotivationalMessage() }}
+        </ion-text>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Stats Grid -->
+    <ion-grid class="stats-grid">
+      <ion-row>
+        <ion-col size="6">
+          <div class="stat-card">
+            <div class="stat-label">Accuracy</div>
+            <div class="stat-value">{{ results.accuracy.toFixed(1) }}%</div>
+            <ion-progress-bar
+              [value]="results.accuracy / 100"
+              [class]="'progress-' + getRatingColor()">
+            </ion-progress-bar>
+          </div>
+        </ion-col>
+        <ion-col size="6">
+          <div class="stat-card">
+            <div class="stat-label">Speed Bonus</div>
+            <div class="stat-value">{{ results.speedBonus.toFixed(1) }}/100</div>
+            <ion-progress-bar
+              [value]="results.speedBonus / 100"
+              color="secondary">
+            </ion-progress-bar>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <div class="stat-card">
+            <div class="stat-label">Total Time</div>
+            <div class="stat-value">{{ formatTime(results.totalTime) }}</div>
+            <div class="stat-sub">{{ (results.totalTime / 60).toFixed(1) }} min</div>
+          </div>
+        </ion-col>
+        <ion-col size="6">
+          <div class="stat-card">
+            <div class="stat-label">Avg/Question</div>
+            <div class="stat-value">{{ results.averageTimePerQuestion.toFixed(1) }}s</div>
+            <div class="stat-sub">{{ getSpeedComparison() }}</div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- Rating Breakdown -->
+    <ion-card class="breakdown-card">
+      <ion-card-header>
+        <ion-card-title>Rating Breakdown</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="breakdown-item">
+          <span>Base Score ({{ results.accuracy.toFixed(1) }}% accuracy)</span>
+          <span class="breakdown-value">{{ results.baseRating.toFixed(0) }}</span>
+        </div>
+        <div class="breakdown-item">
+          <span>× 0.7 weight</span>
+          <span class="breakdown-value">{{ (results.baseRating * 0.7).toFixed(0) }}</span>
+        </div>
+        <div class="breakdown-item">
+          <span>Speed Bonus</span>
+          <span class="breakdown-value">{{ results.speedBonus.toFixed(0) }}</span>
+        </div>
+        <div class="breakdown-item">
+          <span>× 0.3 weight</span>
+          <span class="breakdown-value">{{ (results.speedBonus * 0.3).toFixed(0) }}</span>
+        </div>
+        <div class="breakdown-item total">
+          <span>Final Rating</span>
+          <span class="breakdown-value">{{ results.finalRating }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Question Breakdown -->
+    <ion-card class="question-breakdown-card">
+      <ion-card-header>
+        <ion-card-title>Question Details</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="question-list">
+        <div *ngFor="let answer of results.answers; let i = index"
+             class="question-item"
+             [class]="answer.isCorrect ? 'correct-answer' : 'incorrect-answer'">
+          <div class="question-header">
+            <span class="question-number">Q{{ i + 1 }}</span>
+            <span class="flag-name">{{ answer.flag.name }}</span>
+            <span class="question-time">{{ formatTime(answer.timeSpent) }}</span>
+          </div>
+          <div class="question-result">
+            <ion-icon
+              [name]="answer.isCorrect ? 'checkmark-circle' : 'close-circle'"
+              [class]="answer.isCorrect ? 'correct-icon' : 'incorrect-icon'">
+            </ion-icon>
+            <div class="flag-preview">
+              <img
+                [src]="getFlagImagePath(answer.flag.id)"
+                [alt]="answer.flag.name"
+                class="flag-thumbnail"
+                (error)="$event.target.style.display='none'"
+              />
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <ion-button
+        expand="full"
+        fill="solid"
+        color="primary"
+        (click)="tryAgain()"
+        class="try-again-btn">
+        <ion-icon name="refresh" slot="start"></ion-icon>
+        Try Again
+      </ion-button>
+
+      <ion-button
+        expand="full"
+        fill="outline"
+        color="secondary"
+        (click)="viewLeaderboard()"
+        class="leaderboard-btn">
+        <ion-icon name="trophy" slot="start"></ion-icon>
+        View Leaderboard
+      </ion-button>
+
+      <ion-button
+        expand="full"
+        fill="clear"
+        color="medium"
+        (click)="goHome()"
+        class="home-btn">
+        <ion-icon name="home" slot="start"></ion-icon>
+        Go Home
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Loading/Error State -->
+  <div *ngIf="!results" class="loading-container">
+    <div class="loading-message">
+      <ion-text>Loading results...</ion-text>
+    </div>
+  </div>
+</ion-content>

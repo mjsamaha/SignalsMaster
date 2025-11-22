@@ -89,6 +89,34 @@ export interface PracticeSummary {
   completedAt: Date;
 }
 
+export interface CompetitiveSession {
+  sessionId: string;
+  mode: 'competitive';
+  username: string;
+  startTime: Date;
+  endTime: Date | null;
+  currentQuestionIndex: number;
+  questionsAnswered: AnswerRecord[];
+  currentScore: number;
+  isActive: boolean;
+}
+
+export interface CompetitiveResults {
+  username: string;
+  totalQuestions: 50;
+  correctAnswers: number;
+  accuracy: number;
+  totalTime: number;
+  averageTimePerQuestion: number;
+  baseRating: number;
+  speedBonus: number;
+  finalRating: number;
+  ratingTier: string;
+  sessionId: string;
+  completedAt: Date;
+  answers: AnswerRecord[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -101,6 +129,9 @@ export class QuizService {
   // Practice session state
   private practiceSession$ = new BehaviorSubject<PracticeSession | null>(null);
   private questionStartTime: Date | null = null;
+
+  // Competitive session state
+  private competitiveSession$ = new BehaviorSubject<CompetitiveSession | null>(null);
 
   constructor(private flagService: FlagService) {}
 
@@ -509,5 +540,206 @@ export class QuizService {
         observer.complete();
       });
     });
+  }
+
+  // Competitive Session Methods
+  initializeCompetitiveSession(username: string): Observable<void> {
+    return new Observable(observer => {
+      this.flagService.getAllFlags().subscribe(flags => {
+        this.allFlags = flags;
+        this.usedFlagIds.clear();
+
+        const session: CompetitiveSession = {
+          sessionId: `competitive-${Date.now()}`,
+          mode: 'competitive',
+          username,
+          startTime: new Date(),
+          endTime: null,
+          currentQuestionIndex: 0,
+          questionsAnswered: [],
+          currentScore: 0,
+          isActive: true
+        };
+
+        this.competitiveSession$.next(session);
+        this.startQuestionTimer();
+        this.generateCompetitiveQuestion().subscribe(() => {
+          observer.next();
+          observer.complete();
+        });
+      });
+    });
+  }
+
+  generateCompetitiveQuestion(): Observable<void> {
+    return new Observable(observer => {
+      const session = this.competitiveSession$.value;
+      if (!session || !session.isActive) {
+        observer.error('No active competitive session');
+        return;
+      }
+
+      // Get unused flags
+      const availableFlags = this.allFlags.filter(flag => !this.usedFlagIds.has(flag.id));
+      if (availableFlags.length === 0) {
+        observer.error('No more flags available');
+        return;
+      }
+
+      // Select random flag
+      const flag = availableFlags[Math.floor(Math.random() * availableFlags.length)];
+      this.usedFlagIds.add(flag.id);
+
+      // Determine question type
+      const quizType: 'identify-name' | 'identify-meaning' =
+        Math.random() > 0.5 ? 'identify-name' : 'identify-meaning';
+
+      // Generate options
+      const options: AnswerOption[] = [];
+      const correctAnswer = {
+        id: 'correct',
+        text: quizType === 'identify-name' ? flag.name : flag.meaning,
+        isCorrect: true
+      };
+      options.push(correctAnswer);
+
+      // Add incorrect options
+      const otherFlags = this.allFlags.filter(f => f.id !== flag.id);
+      const shuffled = [...otherFlags].sort(() => 0.5 - Math.random()).slice(0, 3);
+      shuffled.forEach((f, i) => {
+        options.push({
+          id: `incorrect-${i}`,
+          text: quizType === 'identify-name' ? f.name : f.meaning,
+          isCorrect: false
+        });
+      });
+
+      // Shuffle options
+      const shuffledOptions = this.shuffleArray([...options]);
+
+      const question: Question = {
+        id: `competitive-q-${Date.now()}`,
+        flagId: flag.id,
+        flag,
+        quizType,
+        options: shuffledOptions,
+        correctAnswerId: correctAnswer.id,
+        questionNumber: session.currentQuestionIndex + 1,
+        totalQuestions: 50
+      };
+
+      // Update question observable
+      this.currentQuestion$.next(question);
+
+      observer.next();
+      observer.complete();
+    });
+  }
+
+  submitCompetitiveAnswer(selectedAnswerId: string): AnswerRecord | null {
+    const session = this.competitiveSession$.value;
+    const question = this.currentQuestion$.value;
+
+    if (!session || !question) {
+      return null;
+    }
+
+    const timeSpent = this.recordQuestionTime();
+    const isCorrect = selectedAnswerId === question.correctAnswerId;
+
+    const record: AnswerRecord = {
+      questionId: question.id,
+      questionNumber: question.questionNumber,
+      flagId: question.flagId,
+      timeSpent,
+      selectedAnswerId,
+      correctAnswerId: question.correctAnswerId,
+      isCorrect,
+      flag: question.flag
+    };
+
+    // Update session
+    const newScore = isCorrect ? session.currentScore + 1 : session.currentScore;
+    const newAnswers = [...session.questionsAnswered, record];
+    const newIndex = session.currentQuestionIndex + 1;
+
+    const updatedSession: CompetitiveSession = {
+      ...session,
+      currentScore: newScore,
+      questionsAnswered: newAnswers,
+      currentQuestionIndex: newIndex,
+      endTime: newIndex >= 50 ? new Date() : null,
+      isActive: newIndex < 50
+    };
+
+    this.competitiveSession$.next(updatedSession);
+    return record;
+  }
+
+  getCompetitiveSession(): Observable<CompetitiveSession | null> {
+    return this.competitiveSession$.asObservable();
+  }
+
+  getCompetitiveSessionValue(): CompetitiveSession | null {
+    return this.competitiveSession$.value;
+  }
+
+  calculateCompetitiveRating(accuracy: number, totalTime: number): { baseRating: number, speedBonus: number, finalRating: number, ratingTier: string } {
+    // Base accuracy score (0-100)
+    const baseRating = accuracy;
+
+    // Speed bonus calculation
+    // Benchmark: 175 seconds total (3.5 seconds per question average)
+    const benchmarkTime = 175;
+    const speedBonus = Math.max(0, 100 - ((totalTime - benchmarkTime) * 0.2));
+
+    // Final rating (70% accuracy + 30% speed)
+    const finalRating = Math.min(100, (baseRating * 0.7) + (speedBonus * 0.3));
+    const roundedRating = Math.round(finalRating);
+
+    // Determine rating tier
+    let ratingTier: string;
+    if (roundedRating >= 90) ratingTier = 'Signals Master';
+    else if (roundedRating >= 80) ratingTier = 'Expert Signaller';
+    else if (roundedRating >= 70) ratingTier = 'Advanced Operator';
+    else if (roundedRating >= 60) ratingTier = 'Competent Handler';
+    else if (roundedRating >= 50) ratingTier = 'Developing Skill';
+    else ratingTier = 'Keep Practicing';
+
+    return {
+      baseRating,
+      speedBonus,
+      finalRating: roundedRating,
+      ratingTier
+    };
+  }
+
+  getCompetitiveResults(): CompetitiveResults | null {
+    const session = this.competitiveSession$.value;
+    if (!session || !session.endTime) {
+      return null;
+    }
+
+    const totalTime = (session.endTime.getTime() - session.startTime.getTime()) / 1000;
+    const accuracy = (session.currentScore / 50) * 100;
+    const averageTimePerQuestion = totalTime / 50;
+
+    const rating = this.calculateCompetitiveRating(accuracy, totalTime);
+
+    return {
+      username: session.username,
+      totalQuestions: 50,
+      correctAnswers: session.currentScore,
+      accuracy,
+      totalTime,
+      averageTimePerQuestion,
+      baseRating: rating.baseRating,
+      speedBonus: rating.speedBonus,
+      finalRating: rating.finalRating,
+      ratingTier: rating.ratingTier,
+      sessionId: session.sessionId,
+      completedAt: session.endTime,
+      answers: [...session.questionsAnswered]
+    };
   }
 }
