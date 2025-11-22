@@ -1,0 +1,481 @@
+{
+  "flags": [
+    {
+      "id": "letter-a",
+      "name": "Alpha",
+      "meaning": "Divers or friendly EOD personnel down",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/a.png"
+    },
+    {
+      "id": "letter-b",
+      "name": "Bravo",
+      "meaning": "Weapons Practices.",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/b.png"
+    },
+    {
+      "id": "letter-c",
+      "name": "Charlie",
+      "meaning": "Affirmative",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/c.png"
+    },
+    {
+      "id": "letter-d",
+      "name": "Delta",
+      "meaning": "Degaussing",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/d.png"
+    },
+    {
+      "id": "letter-e",
+      "name": "Echo",
+      "meaning": "No RF Danger",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/e.png"
+    },
+    {
+      "id": "letter-f",
+      "name": "Foxtrot",
+      "meaning": "Flight Operations",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/f.png"
+    },
+    {
+      "id": "letter-g",
+      "name": "Golf",
+      "meaning": "Guide Flag",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/g.png"
+    },
+    {
+      "id": "letter-h",
+      "name": "Hotel",
+      "meaning": "Helicopter Operations",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/h.png"
+    },
+    {
+      "id": "letter-i",
+      "name": "India",
+      "meaning": "Going Alongside",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/i.png"
+    },
+    {
+      "id": "letter-j",
+      "name": "Juliet",
+      "meaning": "Semaphore Message",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/j.png"
+    },
+    {
+      "id": "letter-k",
+      "name": "Kilo",
+      "meaning": "Personnel Working Aloft",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/k.png"
+    },
+    {
+      "id": "letter-l",
+      "name": "Lima",
+      "meaning": "RADHAZ/HERO Warning",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/l.png"
+    },
+    {
+      "id": "letter-m",
+      "name": "Mike",
+      "meaning": "Medical Duty Ship",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/m.png"
+    },
+    {
+      "id": "letter-n",
+      "name": "November",
+      "meaning": "Movements Not Understood",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/n.png"
+    },
+    {
+      "id": "letter-o",
+      "name": "Oscar",
+      "meaning": "Person Overboard",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/o.png"
+    },
+    {
+      "id": "letter-p",
+      "name": "Papa",
+      "meaning": "General Recall",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/p.png"
+    },
+    {
+      "id": "letter-q",
+      "name": "Quebec",
+      "meaning": "Boat Recall",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/q.png"
+    },
+    {
+      "id": "letter-r",
+      "name": "Romeo",
+      "meaning": "Ready Duty Ship",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/r.png"
+    },
+    {
+      "id": "letter-s",
+      "name": "Sierra",
+      "meaning": "Drill Signal",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/s.webp"
+    },
+    {
+      "id": "letter-t",
+      "name": "Tango",
+      "meaning": "Time Indicator",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/t.png"
+    },
+    {
+      "id": "letter-u",
+      "name": "Uniform",
+      "meaning": "Anchoring, Mooring, Weighing",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/u.png"
+    },
+    {
+      "id": "letter-v",
+      "name": "Victor",
+      "meaning": "Recovering Towed Acoustic Devices, not including Minesweeping Equipment",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/v.png"
+    },
+    {
+      "id": "letter-w",
+      "name": "Whiskey",
+      "meaning": "Information Addressee",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/w.png"
+    },
+    {
+      "id": "letter-x",
+      "name": "X-ray",
+      "meaning": "Exercise Complete",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/x.png"
+    },
+    {
+      "id": "letter-y",
+      "name": "Yankee",
+      "meaning": "Acknowledge",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/y.png"
+    },
+    {
+      "id": "letter-z",
+      "name": "Zulu",
+      "meaning": "Communication Guard",
+      "category": "letters",
+      "imagePath": "assets/flags/letters/z.png"
+    },
+    {
+      "id": "number-0",
+      "name": "Zero",
+      "meaning": "Military Guard",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/0.png"
+    },
+    {
+      "id": "number-1",
+      "name": "One",
+      "meaning": "ASW Action Table",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/1.png"
+    },
+    {
+      "id": "number-2",
+      "name": "Two",
+      "meaning": "Surface Action Table",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/2.png"
+    },
+    {
+      "id": "number-3",
+      "name": "Three",
+      "meaning": "OTH Engagement",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/3.png"
+    },
+    {
+      "id": "number-4",
+      "name": "Four",
+      "meaning": "TTH Range Engagement",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/4.png"
+    },
+    {
+      "id": "number-5",
+      "name": "Five",
+      "meaning": "Breakdown",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/5.png"
+    },
+    {
+      "id": "number-6",
+      "name": "Six",
+      "meaning": "Towing Operations",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/6.png"
+    },
+    {
+      "id": "number-7",
+      "name": "Seven",
+      "meaning": "AAW Action Table",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/7.png"
+    },
+    {
+      "id": "number-8",
+      "name": "Eight",
+      "meaning": "Boat Signal",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/8.png"
+    },
+    {
+      "id": "number-9",
+      "name": "Nine",
+      "meaning": "Torpedo Action Table",
+      "category": "numbers",
+      "imagePath": "assets/flags/numbers/9.png"
+    },
+    {
+      "id": "pennant-0",
+      "name": "Pennant Zero",
+      "meaning": "Zero pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p0.png"
+    },
+    {
+      "id": "pennant-1",
+      "name": "Pennant One",
+      "meaning": "One pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p1.png"
+    },
+    {
+      "id": "pennant-2",
+      "name": "Pennant Two",
+      "meaning": "Two pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p2.png"
+    },
+    {
+      "id": "pennant-3",
+      "name": "Pennant Three",
+      "meaning": "Three pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p3.png"
+    },
+    {
+      "id": "pennant-4",
+      "name": "Pennant Four",
+      "meaning": "Four pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p4.png"
+    },
+    {
+      "id": "pennant-5",
+      "name": "Pennant Five",
+      "meaning": "Five pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p5.png"
+    },
+    {
+      "id": "pennant-6",
+      "name": "Pennant Six",
+      "meaning": "Six pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p6.png"
+    },
+    {
+      "id": "pennant-7",
+      "name": "Pennant Seven",
+      "meaning": "Seven pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p7.png"
+    },
+    {
+      "id": "pennant-8",
+      "name": "Pennant Eight",
+      "meaning": "Eight pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p8.png"
+    },
+    {
+      "id": "pennant-9",
+      "name": "Pennant Nine",
+      "meaning": "Nine pennant",
+      "category": "pennants",
+      "imagePath": "assets/flags/pennnant-numbers/p9.png"
+    },
+    {
+      "id": "special-ans",
+      "name": "Answer",
+      "meaning": "Acknowledgment",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/ans.png"
+    },
+    {
+      "id": "special-corpen",
+      "name": "Corpen",
+      "meaning": "Stop the Turn",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/corpen.png"
+    },
+    {
+      "id": "special-desig",
+      "name": "Designation",
+      "meaning": "Plain Text",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/desig.png"
+    },
+    {
+      "id": "special-div",
+      "name": "Division",
+      "meaning": " ",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/div.png"
+    },
+    {
+      "id": "special-emerg",
+      "name": "Emergency",
+      "meaning": "Signals Flying are to be Obeyed as soon as Understood",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/emerg.png"
+    },
+    {
+      "id": "special-flotilla",
+      "name": "Flotilla",
+      "meaning": " ",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/flotilla.png"
+    },
+    {
+      "id": "special-form",
+      "name": "Formation",
+      "meaning": "Refuse Boat is Required",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/form.png"
+    },
+    {
+      "id": "special-int",
+      "name": "Interrogative",
+      "meaning": "Interrogative",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/int.png"
+    },
+    {
+      "id": "special-negat",
+      "name": "Negative",
+      "meaning": "Negative",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/negat.png"
+    },
+    {
+      "id": "special-port",
+      "name": "Port",
+      "meaning": "Out of Routine",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/port.png"
+    },
+    {
+      "id": "special-prep",
+      "name": "Preparative",
+      "meaning": "Preparative",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/prep.png"
+    },
+    {
+      "id": "special-screen",
+      "name": "Screen",
+      "meaning": " ",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/screen.png"
+    },
+    {
+      "id": "special-speed",
+      "name": "Speed",
+      "meaning": " ",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/speed.png"
+    },
+    {
+      "id": "special-sqn",
+      "name": "Squadron",
+      "meaning": " ",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/sqn.png"
+    },
+    {
+      "id": "special-station",
+      "name": "Station",
+      "meaning": "Take Proper or Assigned Station",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/station.png"
+    },
+    {
+      "id": "special-stbd",
+      "name": "Starboard",
+      "meaning": "Indefinite Turn to Starboard",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/stbd.png"
+    },
+    {
+      "id": "special-sub",
+      "name": "Substitute",
+      "meaning": " ",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/sub.png"
+    },
+    {
+      "id": "special-turn",
+      "name": "Turn",
+      "meaning": " ",
+      "category": "special-pennants",
+      "imagePath": "assets/flags/special-pennants/turn.png"
+    },
+    {
+      "id": "substitute-1",
+      "name": "Substitute One",
+      "meaning": "First substitute pennant",
+      "category": "substitutes",
+      "imagePath": "assets/flags/substitutes/sub1.png"
+    },
+    {
+      "id": "substitute-2",
+      "name": "Substitute Two",
+      "meaning": "Second substitute pennant",
+      "category": "substitutes",
+      "imagePath": "assets/flags/substitutes/sub2.png"
+    },
+    {
+      "id": "substitute-3",
+      "name": "Substitute Three",
+      "meaning": "Third substitute pennant",
+      "category": "substitutes",
+      "imagePath": "assets/flags/substitutes/sub3.png"
+    },
+    {
+      "id": "substitute-4",
+      "name": "Substitute Four",
+      "meaning": "Fourth substitute pennant",
+      "category": "substitutes",
+      "imagePath": "assets/flags/substitutes/sub4.png"
+    }
+  ]
+}
+

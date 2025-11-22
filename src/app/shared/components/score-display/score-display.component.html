@@ -1,0 +1,13 @@
+<div class="score-display-container p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg text-white">
+  <div class="flex items-center justify-between">
+    <div>
+      <p class="text-sm opacity-90">Score</p>
+      <p class="text-3xl font-bold">{{ score }} / {{ total }}</p>
+    </div>
+    <div *ngIf="showPercentage" class="text-right">
+      <p class="text-sm opacity-90">Accuracy</p>
+      <p class="text-3xl font-bold">{{ percentage }}%</p>
+    </div>
+  </div>
+</div>
+

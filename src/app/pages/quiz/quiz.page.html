@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ mode === 'practice' ? 'Practice Quiz' : 'Competition' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-gradient-to-b from-blue-50 to-white">
+  <div class="container mx-auto px-4 py-6 max-w-2xl">
+    <!-- Progress and Score -->
+    <div class="mb-6 space-y-4">
+      <div class="flex justify-between items-center text-sm text-gray-600">
+        <span>Question {{ currentIndex + 1 }} of {{ totalQuestions }}</span>
+        <app-timer [startTime]="quizStartTime" mode="elapsed"></app-timer>
+      </div>
+      <app-score-display [score]="score" [total]="totalQuestions"></app-score-display>
+    </div>
+
+    <!-- Question -->
+    <app-quiz-question
+      [question]="currentQuestion"
+      [selectedAnswer]="selectedAnswer"
+      [showResult]="showResult"
+      (answerSelected)="onAnswerSelected($event)"
+    ></app-quiz-question>
+
+    <!-- Next Button -->
+    <div class="mt-6" *ngIf="showResult">
+      <ion-button 
+        expand="block" 
+        size="large"
+        fill="solid"
+        color="primary"
+        (click)="nextQuestion()"
+      >
+        {{ currentIndex + 1 < totalQuestions ? 'Next Question' : 'Finish Quiz' }}
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+

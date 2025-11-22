@@ -1,0 +1,24 @@
+.quiz-question-container {
+  @apply w-full;
+}
+
+.answer-button {
+  @apply bg-white border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50;
+  
+  &.selected {
+    @apply border-blue-500 bg-blue-100;
+  }
+  
+  &.correct {
+    @apply border-green-500 bg-green-100;
+  }
+  
+  &.incorrect {
+    @apply border-red-500 bg-red-100;
+  }
+  
+  &.disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+}
+

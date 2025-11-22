@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-gradient-to-b from-gray-50 to-white">
+  <div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="bg-white rounded-xl shadow-lg p-6 space-y-4">
+      <h1 class="text-2xl font-bold text-gray-900 mb-6">App Settings</h1>
+
+      <ion-item>
+        <ion-label>Sound Effects</ion-label>
+        <ion-toggle [(ngModel)]="soundEnabled"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Notifications</ion-label>
+        <ion-toggle [(ngModel)]="notificationsEnabled"></ion-toggle>
+      </ion-item>
+
+      <div class="pt-4 border-t border-gray-200 mt-6">
+        <p class="text-sm text-gray-600">More settings coming soon!</p>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
