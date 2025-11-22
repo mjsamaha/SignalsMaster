@@ -1,0 +1,71 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Practice Results</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="results-container" *ngIf="summary">
+    <!-- Header with motivational message -->
+    <div class="results-header">
+      <ion-text class="results-title">Practice Complete!</ion-text>
+      <ion-text class="motivational-message">{{ getMotivationalMessage() }}</ion-text>
+    </div>
+
+    <!-- Score banner -->
+    <div class="score-banner" [class]="'score-' + getAccuracyColor()">
+      <ion-text class="score-text">{{ summary.correctAnswers }}/{{ summary.totalQuestions }}</ion-text>
+      <ion-text class="accuracy-text">{{ summary.accuracy | number:'1.0-1' }}%</ion-text>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="stats-grid" *ngIf="summary">
+      <div class="stat-item">
+        <div class="stat-label">Total Time</div>
+        <div class="stat-value">{{ formatTime(summary.totalTime) }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Avg/Question</div>
+        <div class="stat-value">{{ formatTime(summary.averageTimePerQuestion) }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Correct</div>
+        <div class="stat-value">{{ summary.correctAnswers }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Incorrect</div>
+        <div class="stat-value">{{ summary.totalQuestions - summary.correctAnswers }}</div>
+      </div>
+    </div>
+
+    <!-- Question breakdown -->
+    <div class="breakdown-section">
+      <ion-text class="breakdown-title">Question Breakdown</ion-text>
+      <div class="breakdown-list">
+        <div class="question-item" *ngFor="let answer of summary.answers">
+          <div class="question-info">
+            <ion-text class="question-number">Q{{ answer.questionNumber }}</ion-text>
+            <ion-text class="question-text">{{ answer.flag.name }}</ion-text>
+            <ion-text class="question-time">{{ formatTime(answer.timeSpent) }}</ion-text>
+          </div>
+          <div class="question-result">
+            <ion-icon
+              [name]="answer.isCorrect ? 'checkmark-circle' : 'close-circle'"
+              [class]="answer.isCorrect ? 'correct-icon' : 'incorrect-icon'">
+            </ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="action-buttons">
+      <ion-button expand="block" (click)="tryAgain()" class="try-again-btn">
+        Try Again
+      </ion-button>
+      <ion-button expand="block" fill="outline" (click)="goHome()" class="home-btn">
+        Back to Home
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

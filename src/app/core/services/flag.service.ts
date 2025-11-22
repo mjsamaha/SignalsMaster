@@ -6,13 +6,15 @@ export interface Flag {
   id: string;
   name: string;
   meaning: string;
-  category: string;
+  category: 'letters' | 'numbers' | 'pennants' | 'special-pennants' | 'substitutes';
   imagePath: string;
 }
 
 export interface FlagsData {
   flags: Flag[];
 }
+
+
 
 @Injectable({
   providedIn: 'root'

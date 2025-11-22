@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonBadge } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { LeaderboardService, LeaderboardEntry } from '../../core/services/leaderboard.service';
 
@@ -8,7 +8,7 @@ import { LeaderboardService, LeaderboardEntry } from '../../core/services/leader
   templateUrl: './leaderboard.page.html',
   styleUrls: ['./leaderboard.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonBadge, CommonModule]
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, CommonModule]
 })
 export class LeaderboardPage implements OnInit {
   entries: LeaderboardEntry[] = [];
@@ -42,4 +42,3 @@ export class LeaderboardPage implements OnInit {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 }
-

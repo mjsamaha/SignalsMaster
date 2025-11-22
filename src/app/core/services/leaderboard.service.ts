@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { QuizResult } from './quiz.service';
+import { QuizResults } from './quiz.service';
 
 export interface LeaderboardEntry {
   id: string;
@@ -27,20 +27,20 @@ export class LeaderboardService {
   /**
    * Add a quiz result to the leaderboard
    */
-  addResult(result: QuizResult): void {
-    if (result.mode !== 'competition' || !result.username) {
-      return; // Only add competition results with username
+  addResult(result: QuizResults, username: string = 'Anonymous'): void {
+    if (result.mode !== 'competitive') {
+      return; // Only add competition results
     }
 
     const entry: LeaderboardEntry = {
       id: this.generateId(),
-      username: result.username,
-      score: result.score,
+      username: username,
+      score: result.correctAnswers,
       totalQuestions: result.totalQuestions,
-      accuracy: (result.correctAnswers / result.totalQuestions) * 100,
-      timeElapsed: result.timeElapsed,
-      rating: this.calculateRating(result),
-      date: new Date()
+      accuracy: result.accuracy,
+      timeElapsed: Math.round(result.totalTime), // Convert to seconds
+      rating: result.rating,
+      date: result.completedAt
     };
 
     const currentLeaderboard = this.leaderboard$.value;
@@ -93,12 +93,8 @@ export class LeaderboardService {
   /**
    * Calculate rating based on score, accuracy, and time
    */
-  private calculateRating(result: QuizResult): number {
-    const accuracy = (result.correctAnswers / result.totalQuestions) * 100;
-    const timeBonus = Math.max(0, 1000 - (result.timeElapsed / 1000)); // Time in seconds
-    const baseScore = result.score * 10;
-    
-    return Math.round(baseScore + (accuracy * 2) + (timeBonus * 0.1));
+  private calculateRating(result: QuizResults): number {
+    return result.rating; // Use the rating from QuizResults
   }
 
   /**
@@ -137,4 +133,3 @@ export class LeaderboardService {
     }
   }
 }
-

@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 
+
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -24,5 +26,22 @@ export class HomePage {
   navigateToLeaderboard(): void {
     this.router.navigate(['/tabs/leaderboard']);
   }
+
+  startPractice(questionCount: number) {
+  this.router.navigate(['/quiz'], {
+    queryParams: {
+      mode: 'practice',
+      count: questionCount
+    }
+  });
+}
+
+startBestSignaller() {
+  this.router.navigate(['/quiz'], {
+    queryParams: {
+      mode: 'competitive'
+    }
+  });
+}
 }
 
