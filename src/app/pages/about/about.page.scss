@@ -6,6 +6,11 @@
 
 ion-header {
   @include unified-header;
+
+  ion-back-button {
+    --color: var(--color-white);
+    --icon-color: var(--color-white);
+  }
 }
 
 ion-content {
@@ -65,25 +70,13 @@ h2 {
   }
 }
 
-p,
-li {
-  color: var(--color-white);
-  font-size: 16px;
-  line-height: var(--line-height-relaxed);
-  margin-bottom: var(--spacing-lg);
-
-  @media (max-width: 768px) {
-    font-size: 15px;
-  }
-}
-
 // ============================================================================
 // SECTION CARDS
 // ============================================================================
 
 .about-section {
   background: var(--color-white);
-  border: 2px solid var(--color-navy-500);
+  border: 2px solid var(--color-naval-blue);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
@@ -98,12 +91,12 @@ li {
 
   h2,
   h3 {
-    color: var(--color-navy-500);
+    color: var(--color-naval-blue);
   }
 
   p,
   li {
-    color: var(--color-navy-500);
+    color: var(--color-naval-blue);
   }
 
   ul {
@@ -131,7 +124,7 @@ li {
 
   .feature-card {
     background: var(--color-white);
-    border: 2px solid var(--color-navy-500);
+    border: 2px solid var(--color-naval-blue);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-lg);
     text-align: center;
@@ -151,7 +144,7 @@ li {
 
     h3 {
       font-size: 18px;
-      color: var(--color-navy-500);
+      color: var(--color-naval-blue);
       margin: 0 0 var(--spacing-sm) 0;
     }
 
