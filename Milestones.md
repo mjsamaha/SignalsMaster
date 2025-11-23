@@ -1,4 +1,3 @@
-## Milestone 7 - UI/UX Polish & Responsive Design
 
 # Milestone 7: UI/UX Polish & Responsive Design
 
@@ -522,6 +521,13 @@ export class QuizPage {
 - [CSS Animations Guide](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations)
 - [Responsive Web Design Best Practices](https://web.dev/responsive-web-design-basics/)
 - [Ionic Responsive Grid](https://ionicframework.com/docs/layout/grid)
+
+
+
+
+
+
+
 
 
 ## Milestone 8 — Deployment

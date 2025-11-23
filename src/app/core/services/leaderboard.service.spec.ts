@@ -190,9 +190,29 @@ describe('LeaderboardService', () => {
 
 // Additional helper test for data transformation
 describe('Leaderboard Data Processing', () => {
-  it('should correctly generate tier labels', () => {
-    const service = new LeaderboardService({} as Firestore, {} as NgZone);
+  let service: LeaderboardService;
+  let firestoreMock: any;
+  let ngZoneMock: any;
 
+  beforeEach(() => {
+    ngZoneMock = {
+      run: jasmine.createSpy('run').and.callFake((fn) => fn()),
+      runOutsideAngular: jasmine.createSpy('runOutsideAngular').and.callFake((fn) => fn())
+    };
+    firestoreMock = {};
+
+    TestBed.configureTestingModule({
+      providers: [
+        LeaderboardService,
+        { provide: Firestore, useValue: firestoreMock },
+        { provide: NgZone, useValue: ngZoneMock }
+      ]
+    });
+
+    service = TestBed.inject(LeaderboardService);
+  });
+
+  it('should correctly generate tier labels', () => {
     expect((service as any).getTierLabel(1)).toBe('Signals Master');
     expect((service as any).getTierLabel(5)).toBe('Top Signaller');
     expect((service as any).getTierLabel(12)).toBe('');
