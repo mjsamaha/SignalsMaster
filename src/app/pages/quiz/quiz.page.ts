@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonProgressBar, IonText, IonIcon, IonSpinner, IonButtons, IonModal } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon, IonSpinner, IonButtons, IonModal } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { QuizService, Question, AnswerOption, QuizResults, QuizState, PracticeSession, PracticeSummary } from '../../core/services/quiz.service';
 import { Observable } from 'rxjs';
@@ -18,7 +18,6 @@ import { Subscription } from 'rxjs';
     IonTitle,
     IonContent,
     IonButton,
-    IonProgressBar,
     IonText,
     IonIcon,
     IonSpinner,

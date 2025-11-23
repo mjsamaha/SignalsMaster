@@ -11,30 +11,48 @@
 
 <ion-content class="ion-padding">
   <div *ngIf="!quizCompleted; else resultsView">
-    <!-- Progress indicator -->
-    <div class="progress-container">
-      <ion-text>Question {{ currentQuestion?.questionNumber }} of {{ currentQuestion?.totalQuestions }}</ion-text>
-      <ion-progress-bar
-        [value]="currentQuestion ? (currentQuestion.questionNumber / currentQuestion.totalQuestions) : 0">
-      </ion-progress-bar>
-    </div>
-
-    <!-- Timer and Score display -->
-    <div class="score-container">
-      <ion-text *ngIf="mode === 'practice'">Timer: {{ formatTime(currentQuestionTime) }}</ion-text>
-      <ion-text>Score: {{ getCurrentScore() }} / {{ currentQuestion?.totalQuestions }}</ion-text>
-      <ion-text>Accuracy: {{ getAccuracyDisplay() }}</ion-text>
+    <!-- Compact metadata bar -->
+    <div class="metadata-bar">
+      <ion-text>
+        Question {{ currentQuestion?.questionNumber }}/{{ currentQuestion?.totalQuestions }}
+        <span *ngIf="mode === 'practice'" class="separator">•</span>
+        <ion-icon *ngIf="mode === 'practice'" name="time-outline" class="metadata-icon"></ion-icon>
+        <span *ngIf="mode === 'practice'">{{ formatTime(currentQuestionTime) }}</span>
+        <span class="separator">•</span>
+        <ion-icon name="stats-chart-outline" class="metadata-icon"></ion-icon>
+        {{ getCurrentScore() }}/{{ currentQuestion?.totalQuestions }}
+        <span class="separator">•</span>
+        <ion-icon name="trending-up-outline" class="metadata-icon"></ion-icon>
+        {{ getAccuracyDisplay() }}
+      </ion-text>
     </div>
 
     <!-- Question -->
     <div *ngIf="currentQuestion" class="question-container">
-      <!-- Flag image -->
-      <div class="flag-container">
-        <img [src]="currentQuestion.flag.imagePath"
-             [alt]="currentQuestion.flag.name"
-             (load)="onImageLoad()"
-             [class.loading]="imageLoading">
-        <ion-spinner *ngIf="imageLoading" name="crescent"></ion-spinner>
+      <!-- Flag card with feedback overlay -->
+      <div class="flag-card">
+        <div class="flag-container">
+          <img [src]="currentQuestion.flag.imagePath"
+               [alt]="currentQuestion.flag.name"
+               (load)="onImageLoad()"
+               [class.loading]="imageLoading">
+          <ion-spinner *ngIf="imageLoading" name="crescent"></ion-spinner>
+        </div>
+
+        <!-- Feedback overlay -->
+        <div *ngIf="feedbackVisible" class="feedback-overlay"
+             [class.correct]="feedbackCorrect"
+             [class.incorrect]="!feedbackCorrect">
+          <div class="feedback-content">
+            <ion-icon [name]="feedbackCorrect ? 'checkmark-circle' : 'close-circle'" class="feedback-icon"></ion-icon>
+            <ion-text class="feedback-title">
+              {{ feedbackCorrect ? 'Correct!' : 'Incorrect' }}
+            </ion-text>
+            <ion-text *ngIf="!feedbackCorrect" class="feedback-answer">
+              {{ getCorrectAnswerText() }}
+            </ion-text>
+          </div>
+        </div>
       </div>
 
       <!-- Question text -->
@@ -44,33 +62,15 @@
            'What does this flag mean?' }}
       </ion-text>
 
-      <!-- Answer options -->
-      <div class="options-container">
+      <!-- Answer options - 2x2 grid -->
+      <div class="options-grid">
         <ion-button *ngFor="let option of currentQuestion.options"
-                   expand="block"
                    [color]="getButtonColor(option.id)"
                    (click)="onAnswerSelected(option.id)"
-                   [disabled]="feedbackVisible">
-          {{ option.text }}
-          <ion-icon *ngIf="feedbackVisible && option.id === selectedAnswerId"
-                   [name]="feedbackCorrect ? 'checkmark' : 'close'"
-                   slot="end"></ion-icon>
-          <ion-icon *ngIf="feedbackVisible && option.id === currentQuestion.correctAnswerId"
-                   name="checkmark"
-                   slot="end"></ion-icon>
+                   [disabled]="feedbackVisible"
+                   class="option-button">
+          <span class="option-text">{{ option.text }}</span>
         </ion-button>
-      </div>
-
-      <!-- Feedback message -->
-      <div *ngIf="feedbackVisible" class="feedback-message"
-           [class.correct]="feedbackCorrect"
-           [class.incorrect]="!feedbackCorrect">
-        <ion-text>
-          {{ feedbackCorrect ? 'Correct!' : 'Incorrect' }}
-        </ion-text>
-        <ion-text *ngIf="!feedbackCorrect" class="correct-answer">
-          Correct answer: {{ getCorrectAnswerText() }}
-        </ion-text>
       </div>
 
       <!-- Next button -->

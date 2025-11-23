@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // QUIZ PAGE STYLES - LIGHT THEME REDESIGN
 // ============================================================================
 // Color Palette:
@@ -39,7 +39,7 @@ ion-header {
   border: 1px solid #E5E7EB;
   border-radius: 6px;
   padding: 6px 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   animation: fadeIn 0.3s ease-in-out;
 
@@ -84,7 +84,7 @@ ion-header {
   background: #FFFFFF;
   border: 1.5px solid #E5E7EB;
   border-radius: 8px;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 8px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
@@ -94,7 +94,7 @@ ion-header {
   width: 100%;
   max-width: 85%;
   margin: 0 auto;
-  height: 110px;
+  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -128,7 +128,7 @@ ion-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 12px;
   animation: fadeIn 0.3s ease-in-out;
   z-index: 10;
 
@@ -143,24 +143,24 @@ ion-header {
   .feedback-content {
     text-align: center;
     color: #FFFFFF;
-    padding: 16px;
+    padding: 24px;
 
     .feedback-icon {
-      font-size: 48px;
-      margin-bottom: 8px;
+      font-size: 64px;
+      margin-bottom: 16px;
       animation: scaleIn 0.4s ease-out;
     }
 
     .feedback-title {
       display: block;
-      font-size: 18px;
+      font-size: 24px;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
 
     .feedback-answer {
       display: block;
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 500;
       opacity: 0.95;
     }
@@ -169,58 +169,50 @@ ion-header {
 
 .question-text {
   display: block;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   margin-bottom: 8px;
   margin-top: 8px;
   text-align: center;
   color: #1F2937;
-  line-height: 1.3;
-  padding: 0 4px;
+  line-height: 1.4;
 }
 
 // ============================================================================
-// OPTIONS GRID - 2x2 LAYOUT (MOBILE OPTIMIZED)
+// OPTIONS GRID - 2x2 LAYOUT
 // ============================================================================
 
 .options-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
   margin-bottom: 10px;
 
   .option-button {
     --border-radius: 6px;
-    --padding-start: 8px;
-    --padding-end: 8px;
-    --padding-top: 6px;
-    --padding-bottom: 6px;
+    --padding-start: 10px;
+    --padding-end: 10px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
     --background: #FFFFFF;
     --color: #1F2937;
     --border-width: 1.5px;
     --border-style: solid;
     --border-color: #D1D5DB;
-    min-height: 44px;
-    height: auto;
+    min-height: 50px;
+    height: 100%;
     text-transform: none;
     font-weight: 600;
-    font-size: 12px;
-    transition: all 0.15s ease;
+    font-size: 13px;
+    transition: all 0.2s ease;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     .option-text {
-      white-space: normal;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      line-height: 1.2;
-      text-align: center;
-      word-break: break-word;
+      line-height: 1.3;
     }
 
     // Hover state
@@ -278,7 +270,7 @@ ion-header {
   --padding-bottom: 12px;
   --background: #0A2A43;
   --color: #FFFFFF;
-  min-height: 44px;
+  min-height: 46px;
   font-weight: 700;
   font-size: 14px;
   text-transform: uppercase;
@@ -429,57 +421,29 @@ ion-header {
     }
   }
 
-  .flag-card {
-    padding: 12px;
-  }
-
   .flag-container {
-    height: 160px;
+    height: 180px;
     max-width: 90%;
   }
 
   .question-text {
-    font-size: 16px;
-    margin-bottom: 10px;
+    font-size: 17px;
+    margin-bottom: 12px;
   }
 
   .options-grid {
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 16px;
 
     .option-button {
-      font-size: 13px;
-      min-height: 48px;
-      --padding-start: 10px;
-      --padding-end: 10px;
-      --padding-top: 8px;
-      --padding-bottom: 8px;
+      font-size: 14px;
+      min-height: 52px;
     }
   }
 
   .next-button {
     min-height: 48px;
     font-size: 15px;
-  }
-
-  .feedback-overlay {
-    .feedback-content {
-      padding: 20px;
-
-      .feedback-icon {
-        font-size: 56px;
-        margin-bottom: 12px;
-      }
-
-      .feedback-title {
-        font-size: 20px;
-        margin-bottom: 6px;
-      }
-
-      .feedback-answer {
-        font-size: 14px;
-      }
-    }
   }
 }
 
@@ -523,21 +487,17 @@ ion-header {
   }
 
   .options-grid {
-    gap: 14px;
+    gap: 16px;
     margin-bottom: 20px;
 
     .option-button {
-      font-size: 15px;
+      font-size: 16px;
       min-height: 56px;
       --border-radius: 8px;
-      --padding-start: 14px;
-      --padding-end: 14px;
-      --padding-top: 12px;
-      --padding-bottom: 12px;
-
-      .option-text {
-        -webkit-line-clamp: 2;
-      }
+      --padding-start: 16px;
+      --padding-end: 16px;
+      --padding-top: 14px;
+      --padding-bottom: 14px;
     }
   }
 
@@ -545,28 +505,6 @@ ion-header {
     min-height: 52px;
     font-size: 16px;
     --border-radius: 8px;
-  }
-
-  .feedback-overlay {
-    border-radius: 12px;
-
-    .feedback-content {
-      padding: 24px;
-
-      .feedback-icon {
-        font-size: 64px;
-        margin-bottom: 16px;
-      }
-
-      .feedback-title {
-        font-size: 24px;
-        margin-bottom: 8px;
-      }
-
-      .feedback-answer {
-        font-size: 16px;
-      }
-    }
   }
 
   .results-container {
