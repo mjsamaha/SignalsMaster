@@ -193,7 +193,7 @@ export class QuizService {
       const options: AnswerOption[] = [];
       const correctAnswer = {
         id: 'correct',
-        text: quizType === 'identify-name' ? flag.name : flag.meaning,
+        text: this.formatAnswerText(flag),
         isCorrect: true
       };
       options.push(correctAnswer);
@@ -204,7 +204,7 @@ export class QuizService {
       shuffled.forEach((f, i) => {
         options.push({
           id: `incorrect-${i}`,
-          text: quizType === 'identify-name' ? f.name : f.meaning,
+          text: this.formatAnswerText(f),
           isCorrect: false
         });
       });
@@ -337,6 +337,15 @@ export class QuizService {
     return newArray;
   }
 
+  // Utility: format answer text consistently
+  private formatAnswerText(flag: Flag): string {
+    const meaning = flag.meaning?.trim();
+    if (meaning && meaning.length > 0) {
+      return `${flag.name} — ${meaning}`;
+    }
+    return flag.name;
+  }
+
   // Clean up and reset
   resetQuiz(): void {
     this.quizState$.next(null);
@@ -405,7 +414,7 @@ export class QuizService {
       const options: AnswerOption[] = [];
       const correctAnswer = {
         id: 'correct',
-        text: quizType === 'identify-name' ? flag.name : flag.meaning,
+        text: this.formatAnswerText(flag),
         isCorrect: true
       };
       options.push(correctAnswer);
@@ -416,7 +425,7 @@ export class QuizService {
       shuffled.forEach((f, i) => {
         options.push({
           id: `incorrect-${i}`,
-          text: quizType === 'identify-name' ? f.name : f.meaning,
+          text: this.formatAnswerText(f),
           isCorrect: false
         });
       });
@@ -598,7 +607,7 @@ export class QuizService {
       const options: AnswerOption[] = [];
       const correctAnswer = {
         id: 'correct',
-        text: quizType === 'identify-name' ? flag.name : flag.meaning,
+        text: this.formatAnswerText(flag),
         isCorrect: true
       };
       options.push(correctAnswer);
@@ -609,7 +618,7 @@ export class QuizService {
       shuffled.forEach((f, i) => {
         options.push({
           id: `incorrect-${i}`,
-          text: quizType === 'identify-name' ? f.name : f.meaning,
+          text: this.formatAnswerText(f),
           isCorrect: false
         });
       });

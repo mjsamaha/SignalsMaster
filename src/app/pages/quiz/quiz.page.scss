@@ -4,7 +4,7 @@ ion-content {
 
 .progress-container {
   margin-bottom: 20px;
-  
+
   ion-text {
     display: block;
     margin-bottom: 8px;
@@ -16,7 +16,7 @@ ion-content {
 .score-container {
   text-align: right;
   margin-bottom: 20px;
-  
+
   ion-text {
     font-weight: bold;
     font-size: 1.1em;
@@ -41,18 +41,18 @@ ion-content {
   background: #f9f9f9;
   border-radius: 8px;
   overflow: hidden;
-  
+
   img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     transition: opacity 0.3s;
-    
+
     &.loading {
       opacity: 0;
     }
   }
-  
+
   ion-spinner {
     position: absolute;
   }
@@ -68,7 +68,7 @@ ion-content {
 
 .options-container {
   margin-bottom: 20px;
-  
+
   ion-button {
     margin-bottom: 12px;
     --border-radius: 8px;
@@ -78,12 +78,13 @@ ion-content {
     --background: #f0f0f0;
     --color: #333;
     text-transform: none;
-    
+    @apply break-words whitespace-normal text-sm line-clamp-2;
+
     &.button-solid-success {
       --background: #2dd36f;
       --color: white;
     }
-    
+
     &.button-solid-danger {
       --background: #eb445a;
       --color: white;
@@ -97,17 +98,17 @@ ion-content {
   border-radius: 8px;
   margin-bottom: 20px;
   text-align: center;
-  
+
   &.correct {
     background: #e6f7ed;
     color: #2dd36f;
   }
-  
+
   &.incorrect {
     background: #fde8e8;
     color: #eb445a;
   }
-  
+
   .correct-answer {
     display: block;
     margin-top: 8px;
@@ -125,7 +126,7 @@ ion-content {
 .results-container {
   text-align: center;
   padding: 20px;
-  
+
   .results-title {
     display: block;
     font-size: 1.8em;
@@ -133,25 +134,25 @@ ion-content {
     margin-bottom: 30px;
     color: #3880ff;
   }
-  
+
   .results-stats {
     background: white;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 30px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    
+
     ion-text {
       display: block;
       font-size: 1.2em;
       margin-bottom: 12px;
-      
+
       &:last-child {
         margin-bottom: 0;
       }
     }
   }
-  
+
   .results-actions {
     ion-button {
       margin-bottom: 12px;
