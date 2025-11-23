@@ -2,7 +2,7 @@
 // PRACTICE MODE PAGE STYLES - UNIFIED NAVAL THEME
 // ============================================================================
 
-@import '../../theme/mixins';
+@use '../../theme/mixins' as *;
 
 ion-header {
   @include unified-header;

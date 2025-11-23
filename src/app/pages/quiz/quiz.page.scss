@@ -10,7 +10,7 @@
 // - Error: #EF4444 (incorrect answers)
 // ============================================================================
 
-@import '../../theme/mixins';
+@use '../../theme/mixins' as *;
 
 ion-content {
   --background: var(--color-sky-50);

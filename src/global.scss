@@ -39,7 +39,7 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
 
 /* Tailwind CSS */
 @tailwind base;
@@ -209,21 +209,21 @@ ion-button {
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.025em;
   transition: all var(--transition-fast);
-  
+
   &.primary {
     --background: var(--color-naval-blue);
     --background-hover: var(--color-naval-blue-hover);
     --background-activated: var(--color-naval-blue-active);
     --color: var(--color-white);
   }
-  
+
   &.accent {
     --background: var(--color-signal-yellow);
     --background-hover: var(--color-signal-yellow-hover);
     --background-activated: var(--color-signal-yellow-active);
     --color: var(--color-naval-blue);
   }
-  
+
   &.outline {
     --border-width: var(--border-width-medium);
     --border-color: var(--color-naval-blue);
