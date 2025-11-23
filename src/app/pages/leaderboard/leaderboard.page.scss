@@ -134,9 +134,7 @@ h1 {
 // Button Group
 .empty-state-buttons {
   display: flex;
-  gap: 16px;
   justify-content: center;
-  flex-wrap: wrap;
   margin-bottom: 32px;
 }
 
@@ -160,31 +158,6 @@ h1 {
     --background: #2563EB;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-  }
-}
-
-.btn-rules {
-  --background: #FFFFFF;
-  --color: #3B82F6;
-  --border-color: #3B82F6;
-  --border-width: 2px;
-  --padding-start: 28px;
-  --padding-end: 28px;
-  --border-radius: 8px;
-  font-size: 16px;
-  font-weight: 700;
-  height: 48px;
-  text-transform: none;
-  transition: all 150ms ease;
-
-  .btn-icon {
-    margin-right: 8px;
-  }
-
-  &:hover {
-    --background: #EFF6FF;
-    --border-color: #2563EB;
-    transform: translateY(-2px);
   }
 }
 
@@ -292,13 +265,10 @@ h1 {
   }
 
   .empty-state-buttons {
-    flex-direction: column;
-    gap: 12px;
     width: 100%;
   }
 
-  .btn-compete,
-  .btn-rules {
+  .btn-compete {
     width: 100%;
     --padding-start: 24px;
     --padding-end: 24px;
@@ -330,8 +300,7 @@ h1 {
     font-size: 20px;
   }
 
-  .btn-compete,
-  .btn-rules {
+  .btn-compete {
     font-size: 14px;
     --padding-start: 20px;
     --padding-end: 20px;

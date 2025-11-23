@@ -108,16 +108,9 @@ export class LeaderboardPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Navigate to Best Signaller (competition mode entry)
+   * Navigate to Compete tab (Best Signaller competition mode entry)
    */
   navigateToCompete(): void {
-    this.router.navigate(['/best-signaller']);
-  }
-
-  /**
-   * Navigate to About page (rules and information)
-   */
-  navigateToAbout(): void {
-    this.router.navigate(['/about']);
+    this.router.navigate(['/tabs/best-signaller']);
   }
 }
