@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonBadge, IonProgressBar, IonGrid, IonRow, IonCol } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { CompetitiveResults } from '../../core/services/quiz.service';
 import { LeaderboardService } from '../../core/services/leaderboard.service';
@@ -18,16 +18,7 @@ import { LeaderboardService } from '../../core/services/leaderboard.service';
     IonContent,
     IonButton,
     IonText,
-    IonIcon,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonBadge,
-    IonProgressBar,
-    IonGrid,
-    IonRow,
-    IonCol
+    IonIcon
 ]
 })
 export class CompetitiveResultsPage implements OnInit, AfterViewInit {
@@ -36,43 +27,27 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
   hasSubmitted = false;
   submissionMessage = '';
   submissionSuccess = false;
+  showAllQuestions = false;
+  Math = Math;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private leaderboardService: LeaderboardService
-  ) {
-    console.log('[DEBUG] CompetitiveResultsPage CONSTRUCTOR called');
-  }
+  ) {}
 
   ngOnInit() {
-    console.log('[DEBUG] CompetitiveResultsPage.ngOnInit() called');
-
     // Extract results from router navigation state
     const navigation = this.router.getCurrentNavigation();
-    console.log('[DEBUG] getCurrentNavigation result:', !!navigation, 'has state:', !!navigation?.extras?.state);
 
     if (navigation?.extras?.state && navigation.extras.state['results']) {
       this.results = navigation.extras.state['results'] as CompetitiveResults;
-      console.log('[DEBUG] ✓ Results extracted successfully:', {
-        username: this.results.username,
-        finalRating: this.results.finalRating,
-        accuracy: this.results.accuracy,
-        totalTime: this.results.totalTime,
-        sessionId: this.results.sessionId
-      });
     } else {
-      console.log('[DEBUG] ✗ No results found in navigation state');
-      console.log('[DEBUG] Navigation extras:', navigation?.extras);
-      console.log('[DEBUG] Attempting redirect to best-signaller');
       this.router.navigate(['/best-signaller']);
     }
   }
 
-  ngAfterViewInit() {
-    console.log('[DEBUG] CompetitiveResultsPage.ngAfterViewInit() called');
-    console.log('[DEBUG] Button should be visible - hasSubmitted:', this.hasSubmitted, 'isSubmitting:', this.isSubmitting);
-  }
+  ngAfterViewInit() {}
 
   getRatingColor(): string {
     if (!this.results) return 'medium';
@@ -113,7 +88,6 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
   getMotivationalMessage(): string {
     if (!this.results) return '';
 
-    const tier = this.results.ratingTier;
     const rating = this.results.finalRating;
 
     if (rating >= 90) {
@@ -123,8 +97,35 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
     } else if (rating >= 50) {
       return 'Good progress! Focus on both speed and accuracy to reach the next level.';
     } else {
-      return 'Keep practicing! Consistent effort will lead to improvement.';
+      return 'Focus on accuracy to reach the next level';
     }
+  }
+
+  getPerformanceEmoji(): string {
+    if (!this.results) return '🏅';
+    const rating = this.results.finalRating;
+    if (rating >= 90) return '🏆';
+    if (rating >= 70) return '⭐';
+    if (rating >= 50) return '🎖️';
+    return '🏅';
+  }
+
+  getPerformanceTier(): string {
+    if (!this.results) return 'Developing Skill';
+    const rating = this.results.finalRating;
+    if (rating >= 90) return 'Excellent';
+    if (rating >= 70) return 'Good';
+    if (rating >= 50) return 'Fair';
+    return 'Developing Skill';
+  }
+
+  getDisplayedQuestions() {
+    if (!this.results) return [];
+    return this.showAllQuestions ? this.results.answers : this.results.answers.slice(0, 5);
+  }
+
+  toggleQuestions() {
+    this.showAllQuestions = !this.showAllQuestions;
   }
 
   getFlagImagePath(flagId: string): string {
@@ -146,63 +147,41 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
   }
 
   async submitScore(): Promise<void> {
-    console.log('[DEBUG] submitScore() called, results:', this.results, 'isSubmitting:', this.isSubmitting);
     if (!this.results || this.isSubmitting) {
-      console.log('[DEBUG] Early return: results null or already submitting', { results: this.results, isSubmitting: this.isSubmitting });
       return;
     }
-
-    console.log('[DEBUG] Proceeding with score submission...');
-    console.log('[DEBUG] Results object details:', {
-      username: this.results.username,
-      finalRating: this.results.finalRating,
-      accuracy: this.results.accuracy,
-      totalTime: this.results.totalTime,
-      sessionId: this.results.sessionId,
-      correctAnswers: this.results.correctAnswers,
-      totalQuestions: this.results.totalQuestions
-    });
 
     this.isSubmitting = true;
     this.submissionMessage = '';
 
     try {
-      console.log('[DEBUG] Calling leaderboardService.submitScore...');
       const response = await this.leaderboardService.submitScore(this.results);
-      console.log('[DEBUG] submitScore response:', response);
       this.isSubmitting = false;
 
       if (response.success) {
-        console.log('[DEBUG] Submission successful');
         this.hasSubmitted = true;
         this.submissionSuccess = true;
-        this.submissionMessage = response.message;
+        this.submissionMessage = 'Score submitted successfully!';
       } else {
-        console.log('[DEBUG] Submission failed:', response.message);
         this.submissionSuccess = false;
         this.submissionMessage = response.message || 'Failed to submit score';
       }
     } catch (error) {
-      console.log('[DEBUG] Caught exception in submitScore:', error);
       this.isSubmitting = false;
       this.submissionSuccess = false;
       this.submissionMessage = 'Network error. Please try again.';
-      console.error('Submission error:', error);
     }
   }
 
   tryAgain(): void {
-    console.log('[DEBUG] tryAgain() called');
     this.router.navigate(['/best-signaller']);
   }
 
   viewLeaderboard(): void {
-    console.log('[DEBUG] viewLeaderboard() called');
     this.router.navigate(['/tabs/leaderboard']);
   }
 
   goHome(): void {
-    console.log('[DEBUG] goHome() called');
     this.router.navigate(['/tabs/home']);
   }
 }

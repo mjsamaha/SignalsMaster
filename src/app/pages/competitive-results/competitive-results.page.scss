@@ -1,15 +1,45 @@
 // ============================================================================
-// COMPETITIVE RESULTS PAGE STYLES - UNIFIED NAVAL THEME
+// COMPETITIVE RESULTS PAGE - REDESIGNED (LIGHT THEME, COMPACT, RESPONSIVE)
 // ============================================================================
 
-@use '../../theme/mixins' as *;
-
 ion-header {
-  @include unified-header;
+  ion-toolbar {
+    --background: #1E3A8A;
+    --color: #FFFFFF;
+    ion-title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+  }
 }
 
 ion-content {
-  --background: var(--color-sky-50);
+  --background: #F9FAFB;
+}
+
+// ============================================================================
+// STATUS MESSAGE (Top Banner)
+// ============================================================================
+
+.status-message {
+  padding: 12px 16px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  border-bottom: 1px solid;
+
+  &.success {
+    background: #DCFCE7;
+    color: #10B981;
+    border-color: #10B981;
+  }
+
+  &.error {
+    background: #FEE2E2;
+    color: #EF4444;
+    border-color: #EF4444;
+  }
 }
 
 // ============================================================================
@@ -19,395 +49,517 @@ ion-content {
 .results-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: var(--spacing-xl);
-  padding-bottom: calc(var(--spacing-xl) * 3);
+  padding: 24px 20px 80px 20px;
 
-  @media (max-width: 768px) {
-    padding: var(--spacing-lg);
-  }
-
-  @media (max-width: 375px) {
-    padding: var(--spacing-md);
+  @media (max-width: 667px) {
+    padding: 16px 16px 80px 16px;
   }
 }
 
 // ============================================================================
-// HEADER
+// HERO CARD (Color-Coded Performance Gradient)
 // ============================================================================
 
-.results-header {
+.hero-card {
+  border-radius: 12px;
+  padding: 32px 24px;
+  margin-bottom: 24px;
   text-align: center;
-  margin-bottom: var(--spacing-2xl);
-  animation: fadeIn 0.4s ease-in-out;
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.5s ease-in-out;
 
-  .congratulations {
-    display: block;
-    font-size: 20px;
-    font-weight: var(--font-weight-bold);
-    color: var(--color-gold-500);
-    margin-bottom: var(--spacing-md);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  // Excellent (90%+): Green
+  &.hero-success {
+    background: linear-gradient(135deg, #10B981 0%, #D1FAE5 100%);
   }
 
-  .username {
-    display: block;
-    font-size: 24px;
-    font-weight: var(--font-weight-bold);
-    color: var(--color-white);
-  }
-}
-
-// ============================================================================
-// RATING CARD
-// ============================================================================
-
-.rating-card {
-  background: var(--color-white);
-  border: 2px solid var(--color-navy-500);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-xl);
-  margin-bottom: var(--spacing-xl);
-  box-shadow: var(--shadow-lg);
-  animation: slideInUp 0.4s ease-in-out;
-  text-align: center;
-
-  .rating-display {
-    margin: var(--spacing-lg) 0;
-
-    .rating-number {
-      font-size: 56px;
-      font-weight: var(--font-weight-bold);
-      margin-bottom: var(--spacing-md);
-      display: block;
-
-      &.rating-success {
-        color: var(--color-success-500);
-      }
-
-      &.rating-warning {
-        color: var(--color-gold-500);
-      }
-
-      &.rating-danger {
-        color: var(--color-error-500);
-      }
-    }
-
-    .tier-badge {
-      display: inline-block;
-      font-size: 14px;
-      font-weight: var(--font-weight-semibold);
-      padding: var(--spacing-sm) var(--spacing-lg);
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-
-      &.success {
-        background: rgba(39, 174, 96, 0.15);
-        color: var(--color-success-500);
-      }
-
-      &.warning {
-        background: rgba(212, 175, 55, 0.15);
-        color: var(--color-gold-500);
-      }
-
-      &.danger {
-        background: rgba(231, 76, 60, 0.15);
-        color: var(--color-error-500);
-      }
-    }
+  // Good (70-89%): Blue
+  &.hero-warning {
+    background: linear-gradient(135deg, #3B82F6 0%, #DBEAFE 100%);
   }
 
-  .motivational-text {
-    display: block;
-    margin-top: var(--spacing-lg);
-    font-size: 14px;
-    color: var(--color-gray-500);
-    font-style: italic;
-  }
-}
-
-// ============================================================================
-// STATS GRID
-// ============================================================================
-
-.stats-grid {
-  margin-bottom: var(--spacing-xl);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-
-  .stat-card {
-    background: var(--color-white);
-    border: 2px solid var(--color-navy-500);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-lg);
-    text-align: center;
-    box-shadow: var(--shadow-md);
-    transition: all var(--transition-base);
-
-    &:hover {
-      border-color: var(--color-gold-500);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .stat-label {
-      display: block;
-      font-size: 11px;
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-gray-500);
-      margin-bottom: var(--spacing-xs);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .stat-value {
-      display: block;
-      font-size: 28px;
-      font-weight: var(--font-weight-bold);
-      color: var(--color-gold-500);
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .stat-sub {
-      font-size: 12px;
-      color: var(--color-gray-500);
-      font-weight: var(--font-weight-medium);
-    }
-
-    ion-progress-bar {
-      --background: var(--color-gray-500);
-      --progress-background: linear-gradient(90deg, var(--color-gold-500), var(--color-gold-400));
-      height: 6px;
-      border-radius: 3px;
-      margin-top: var(--spacing-md);
-
-      &.progress-success {
-        --progress-background: linear-gradient(90deg, var(--color-success-500), #1e8449);
-      }
-
-      &.progress-warning {
-        --progress-background: linear-gradient(90deg, var(--color-gold-500), var(--color-gold-600));
-      }
-
-      &.progress-danger {
-        --progress-background: linear-gradient(90deg, var(--color-error-500), #a93226);
-      }
-    }
-  }
-}
-
-// ============================================================================
-// BREAKDOWN CARD
-// ============================================================================
-
-.breakdown-card {
-  background: var(--color-white);
-  border: 2px solid var(--color-navy-500);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-  box-shadow: var(--shadow-lg);
-
-  ion-card-content {
-    padding: 0;
+  // Fair/Developing (<70%): Purple/Amber
+  &.hero-danger {
+    background: linear-gradient(135deg, #8B5CF6 0%, #F3E8FF 100%);
   }
 
-  .breakdown-item {
+  .hero-content {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-md) 0;
-    border-bottom: 1px solid var(--color-navy-100);
+    flex-direction: column;
+    gap: 12px;
+  }
 
-    &:last-child {
-      border-bottom: none;
+  .hero-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .hero-score {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 8px 0;
+
+    .score-label {
+      font-size: 16px;
+      font-weight: 500;
+      opacity: 0.9;
     }
 
-    span:first-child {
-      font-weight: var(--font-weight-medium);
-      color: var(--color-gray-500);
+    .score-value {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .hero-meta {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.95;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .separator {
+      opacity: 0.7;
+    }
+  }
+
+  .hero-motivational {
+    font-size: 12px;
+    opacity: 0.85;
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 667px) {
+    padding: 24px 20px;
+    margin-bottom: 16px;
+
+    .hero-title {
+      font-size: 22px;
+    }
+
+    .hero-score .score-value {
+      font-size: 36px;
+    }
+
+    .hero-meta {
+      font-size: 13px;
+    }
+  }
+}
+
+// ============================================================================
+// PERFORMANCE METRICS GRID (2x2 Compact Cards)
+// ============================================================================
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 667px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+}
+
+.metric-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 150ms ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .metric-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .metric-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .metric-sub {
+    font-size: 11px;
+    color: #6B7280;
+    margin-top: 4px;
+  }
+
+  .metric-progress {
+    width: 100%;
+    height: 4px;
+    background: #E5E7EB;
+    border-radius: 2px;
+    overflow: hidden;
+
+    .progress-bar {
+      height: 100%;
+      background: #FCD34D;
+      transition: width 0.3s ease;
+
+      &.speed-bonus {
+        background: #3B82F6;
+      }
+    }
+  }
+
+  @media (max-width: 667px) {
+    padding: 14px;
+
+    .metric-value {
+      font-size: 24px;
+    }
+  }
+}
+
+// ============================================================================
+// SCORE BREAKDOWN (Light Theme)
+// ============================================================================
+
+.score-breakdown {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+
+  @media (max-width: 667px) {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+.breakdown-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 14px;
+
+  .breakdown-label {
+    color: #6B7280;
+    font-weight: 500;
+  }
+
+  .breakdown-value {
+    color: #1F2937;
+    font-weight: 700;
+  }
+
+  &.total {
+    border-top: 2px solid #1F2937;
+    border-bottom: 2px solid #1F2937;
+    padding: 14px 0;
+    margin-top: 8px;
+    font-size: 15px;
+
+    .breakdown-label {
+      color: #1F2937;
+      font-weight: 700;
     }
 
     .breakdown-value {
-      font-weight: var(--font-weight-bold);
-      color: var(--color-navy-500);
-    }
-
-    &.total {
-      border-bottom: none;
-      border-top: 2px solid var(--color-navy-500);
-      padding-top: var(--spacing-lg);
-      margin-top: var(--spacing-md);
-
-      span:first-child {
-        font-weight: var(--font-weight-bold);
-        color: var(--color-navy-500);
-        font-size: 16px;
-      }
-
-      .breakdown-value {
-        font-weight: var(--font-weight-bold);
-        font-size: 18px;
-        color: var(--color-gold-500);
-      }
+      color: #1F2937;
+      font-size: 18px;
     }
   }
 }
 
+.breakdown-divider {
+  border-bottom: 1px solid #E5E7EB;
+  margin: 12px 0;
+}
+
 // ============================================================================
-// QUESTION BREAKDOWN
+// QUESTION DETAILS (Light Theme, Compact Table)
 // ============================================================================
 
-.question-breakdown-card {
-  margin-bottom: var(--spacing-2xl);
+.question-details {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
 
-  .question-list {
-    background: var(--color-white);
-    border: 2px solid var(--color-navy-500);
-    border-radius: var(--border-radius-lg);
-    max-height: 500px;
-    overflow-y: auto;
-    box-shadow: var(--shadow-lg);
+  @media (max-width: 667px) {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+}
 
-    .question-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--spacing-md);
-      margin: 0;
-      border-bottom: 1px solid var(--color-navy-100);
-      border-radius: 0;
-      border: none;
-      border-bottom: 1px solid var(--color-navy-100);
-      transition: all var(--transition-fast);
+.question-header-section {
+  margin-bottom: 12px;
 
-      &:last-child {
-        border-bottom: none;
-      }
+  .question-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
 
-      &:hover {
-        background: var(--color-navy-50);
-      }
+.question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
 
-      &.correct-answer {
-        background-color: rgba(39, 174, 96, 0.08);
+.question-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: #FFFFFF;
+  border-bottom: 1px solid #F3F4F6;
+  transition: background 150ms ease;
 
-        &:hover {
-          background-color: rgba(39, 174, 96, 0.12);
-        }
-      }
+  &:first-child {
+    border-radius: 6px 6px 0 0;
+  }
 
-      &.incorrect-answer {
-        background-color: rgba(231, 76, 60, 0.08);
+  &:last-child {
+    border-bottom: none;
+    border-radius: 0 0 6px 6px;
+  }
 
-        &:hover {
-          background-color: rgba(231, 76, 60, 0.12);
-        }
-      }
+  &:hover {
+    background: #F3F4F6;
+  }
 
-      .question-header {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-md);
+  &.correct {
+    background: #F0FDF4;
+  }
 
-        .question-number {
-          font-weight: var(--font-weight-bold);
-          color: var(--color-navy-500);
-          min-width: 30px;
-        }
+  &.incorrect {
+    background: #FEF2F2;
+  }
 
-        .flag-name {
-          font-weight: var(--font-weight-medium);
-          color: var(--color-navy-500);
-          flex: 1;
-        }
+  .question-number {
+    font-weight: 700;
+    color: #1F2937;
+    min-width: 40px;
+    font-size: 13px;
+  }
 
-        .question-time {
-          font-size: 12px;
-          color: var(--color-gray-500);
-        }
-      }
+  .question-flag {
+    flex: 1;
+    color: #1F2937;
+    font-weight: 500;
+    font-size: 14px;
+  }
 
-      .question-result {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-md);
+  .question-time {
+    color: #6B7280;
+    font-size: 13px;
+    margin-right: 16px;
+  }
 
-        ion-icon {
-          font-size: 20px;
+  .question-status {
+    font-size: 13px;
+    font-weight: 600;
 
-          &.correct-icon {
-            color: var(--color-success-500);
-          }
+    &.correct {
+      color: #10B981;
+    }
 
-          &.incorrect-icon {
-            color: var(--color-error-500);
-          }
-        }
+    &.incorrect {
+      color: #EF4444;
+    }
+  }
 
-        .flag-preview {
-          .flag-thumbnail {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            border-radius: var(--border-radius-sm);
-          }
-        }
-      }
+  @media (max-width: 667px) {
+    padding: 10px 12px;
+    font-size: 13px;
+
+    .question-time {
+      display: none;
     }
   }
 }
 
+.toggle-questions-btn {
+  width: 100%;
+  padding: 12px 16px;
+  margin-top: 8px;
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  color: #1F2937;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+
+  &:hover {
+    background: #F3F4F6;
+    border-color: #9CA3AF;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
 // ============================================================================
-// ACTION BUTTONS
+// SUBMIT SECTION
+// ============================================================================
+
+.submit-section {
+  margin-bottom: 24px;
+
+  .submit-prompt {
+    text-align: center;
+    color: #6B7280;
+    font-size: 13px;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+
+  .submit-btn {
+    --background: #10B981;
+    --background-hover: #059669;
+    --color: #FFFFFF;
+    font-weight: 700;
+    font-size: 16px;
+    height: 48px;
+    border-radius: 8px;
+    transition: all 150ms ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    &.submitting {
+      --background: #9CA3AF;
+    }
+
+    &.submitted {
+      --background: #10B981;
+    }
+  }
+
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+}
+
+// ============================================================================
+// ACTION BUTTONS (Redesigned)
 // ============================================================================
 
 .action-buttons {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--color-navy-600);
-  padding: var(--spacing-lg);
-  border-top: 1px solid var(--color-navy-700);
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: 16px;
+  max-width: 700px;
+  margin: 32px auto 24px auto;
 
-  @media (max-width: 768px) {
-    position: fixed;
+  .primary-actions {
+    display: flex;
+    gap: 16px;
+
+    @media (max-width: 667px) {
+      flex-direction: column;
+      gap: 12px;
+    }
   }
 
   ion-button {
+    font-weight: 700;
+    font-size: 16px;
+    height: 48px;
+    border-radius: 8px;
+    transition: all 150ms ease;
     margin: 0;
-    min-height: var(--touch-target-preferred);
-    font-weight: var(--font-weight-bold);
-
-    &.try-again-btn {
-      --background: linear-gradient(135deg, var(--color-gold-500), var(--color-gold-600));
-      --color: var(--color-navy-500);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    &.leaderboard-btn {
-      --border-color: var(--color-gold-500);
-      --color: var(--color-gold-500);
-      --background: transparent;
-    }
-
-    &.home-btn {
-      --color: var(--color-white);
-      --border-color: var(--color-gray-400);
-    }
 
     ion-icon {
-      margin-right: var(--spacing-sm);
+      margin-right: 8px;
+    }
+  }
+
+  .btn-try-again {
+    --background: #3B82F6;
+    --background-hover: #2563EB;
+    --color: #FFFFFF;
+    flex: 1;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+  }
+
+  .btn-leaderboard {
+    --background: #10B981;
+    --background-hover: #059669;
+    --color: #FFFFFF;
+    flex: 1;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+  }
+
+  .btn-home {
+    --background: #FFFFFF;
+    --color: #1F2937;
+    --border-color: #D1D5DB;
+    --border-width: 2px;
+
+    &:hover {
+      --background: #F3F4F6;
+      --border-color: #9CA3AF;
+      transform: translateY(-2px);
+    }
+  }
+
+  @media (max-width: 667px) {
+    gap: 12px;
+    margin: 24px auto 16px auto;
+
+    ion-button {
+      height: 44px;
     }
   }
 }
@@ -424,84 +576,21 @@ ion-content {
 
   .loading-message {
     text-align: center;
-    color: var(--color-gray-400);
+    color: #6B7280;
     font-size: 16px;
   }
-
-  ion-spinner {
-    --color: var(--color-gold-500);
-  }
 }
 
 // ============================================================================
-// RESPONSIVE
+// ANIMATIONS
 // ============================================================================
 
-@media (max-width: 768px) {
-  .rating-number {
-    font-size: 48px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-}
-
-@media (max-width: 375px) {
-  .results-container {
-    padding-bottom: calc(var(--spacing-xl) * 4);
-  }
-
-  .rating-card {
-    padding: var(--spacing-lg);
-  }
-
-  .rating-number {
-    font-size: 40px;
-  }
-
-  .question-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-sm);
-
-    .question-header {
-      width: 100%;
-    }
-  }
-}
-
-// ============================================================================
-// DARK MODE
-// ============================================================================
-
-@media (prefers-color-scheme: dark) {
-  .rating-card,
-  .stat-card,
-  .breakdown-card {
-    background: rgba(15, 20, 25, 0.9);
-    border-color: var(--color-navy-300);
-
-    .stat-label,
-    .stat-sub {
-      color: var(--color-gray-400);
-    }
-
-    .stat-value {
-      color: var(--color-gold-500);
-    }
-  }
-
-  .breakdown-item span:first-child {
-    color: var(--color-gray-400);
-  }
-
-  .question-item {
-    background: rgba(15, 20, 25, 0.9);
-
-    .question-header {
-      color: var(--color-gray-700);
-    }
-  }
-
-  .question-list {
-    background: rgba(15, 20, 25, 0.9);
+  to {
+    opacity: 1;
   }
 }
 
@@ -510,14 +599,13 @@ ion-content {
 // ============================================================================
 
 @media (prefers-reduced-motion: reduce) {
-  .results-header,
-  .rating-card {
+  .hero-card,
+  .metric-card,
+  .question-row,
+  ion-button {
     animation: none;
-  }
-
-  .stat-card,
-  .question-item {
     transition: none;
   }
 }
+
 
