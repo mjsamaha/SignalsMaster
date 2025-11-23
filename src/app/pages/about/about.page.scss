@@ -1,2 +1,268 @@
-// About page specific styles
+// ============================================================================
+// ABOUT PAGE STYLES - UNIFIED NAVAL THEME
+// ============================================================================
+
+ion-header {
+  --background: var(--color-navy-500);
+  --border-color: transparent;
+  --color: var(--color-navy-500);
+
+  ion-title {
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--color-white);
+  }
+}
+
+ion-content {
+  --background: var(--color-sky-50);
+}
+
+// ============================================================================
+// CONTAINER
+// ============================================================================
+
+.about-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+
+  @media (max-width: 375px) {
+    padding: var(--spacing-md);
+  }
+}
+
+// ============================================================================
+// HEADING & TEXT
+// ============================================================================
+
+h1 {
+  font-size: var(--font-size-h1-desktop);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gold-500);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 24px;
+  }
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gold-500);
+  margin: var(--spacing-2xl) 0 var(--spacing-lg) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+}
+
+p,
+li {
+  color: var(--color-white);
+  font-size: 16px;
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-lg);
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
+}
+
+// ============================================================================
+// SECTION CARDS
+// ============================================================================
+
+.about-section {
+  background: var(--color-white);
+  border: 2px solid var(--color-navy-500);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.4s ease-in-out;
+  transition: all var(--transition-base);
+
+  &:hover {
+    border-color: var(--color-gold-500);
+    box-shadow: var(--shadow-xl);
+  }
+
+  h2,
+  h3 {
+    color: var(--color-navy-500);
+  }
+
+  p,
+  li {
+    color: var(--color-navy-500);
+  }
+
+  ul {
+    margin-left: var(--spacing-lg);
+
+    li {
+      margin-bottom: var(--spacing-md);
+
+      &::marker {
+        color: var(--color-gold-500);
+      }
+    }
+  }
+}
+
+// ============================================================================
+// FEATURE GRID
+// ============================================================================
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  margin: var(--spacing-xl) 0;
+
+  .feature-card {
+    background: var(--color-white);
+    border: 2px solid var(--color-navy-500);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+
+    &:hover {
+      border-color: var(--color-gold-500);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .icon {
+      font-size: 36px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    h3 {
+      font-size: 18px;
+      color: var(--color-navy-500);
+      margin: 0 0 var(--spacing-sm) 0;
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--color-gray-500);
+      margin: 0;
+    }
+  }
+}
+
+// ============================================================================
+// BUTTONS
+// ============================================================================
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  ion-button {
+    --border-radius: var(--border-radius-md);
+    --padding-top: var(--spacing-lg);
+    --padding-bottom: var(--spacing-lg);
+    --min-height: var(--touch-target-preferred);
+  }
+}
+
+// ============================================================================
+// RESPONSIVE
+// ============================================================================
+
+@media (max-width: 375px) {
+  .about-container {
+    padding: var(--spacing-md);
+  }
+
+  .about-section {
+    padding: var(--spacing-lg);
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .button-group {
+    gap: var(--spacing-md);
+  }
+}
+
+// ============================================================================
+// DARK MODE
+// ============================================================================
+
+@media (prefers-color-scheme: dark) {
+  .about-section {
+    background: rgba(15, 20, 25, 0.9);
+    border-color: var(--color-navy-300);
+
+    h2,
+    h3 {
+      color: var(--color-gray-700);
+    }
+
+    p,
+    li {
+      color: var(--color-gray-700);
+    }
+  }
+
+  .feature-card {
+    background: rgba(15, 20, 25, 0.9);
+    border-color: var(--color-navy-300);
+
+    h3 {
+      color: var(--color-gray-700);
+    }
+
+    p {
+      color: var(--color-gray-600);
+    }
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY: PREFERS-REDUCED-MOTION
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .about-section,
+  .feature-card {
+    animation: none;
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
 

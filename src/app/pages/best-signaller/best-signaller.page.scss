@@ -1,56 +1,247 @@
+// ============================================================================
+// BEST SIGNALLER PAGE STYLES - UNIFIED NAVAL THEME
+// ============================================================================
+
+ion-header {
+  --background: var(--color-navy-500);
+  --border-color: transparent;
+  --color: var(--color-navy-500);
+
+  ion-title {
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--color-white);
+  }
+}
+
+ion-content {
+  --background: var(--color-sky-50);
+}
+
+// ============================================================================
+// CONTAINER
+// ============================================================================
+
+.best-signaller-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+
+  @media (max-width: 375px) {
+    padding: var(--spacing-md);
+  }
+}
+
+// ============================================================================
+// HEADING
+// ============================================================================
+
+h1 {
+  font-size: var(--font-size-h1-mobile);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gold-500);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  @media (min-width: 768px) {
+    font-size: var(--font-size-h1-desktop);
+  }
+}
+
+// ============================================================================
+// FORM ELEMENTS
+// ============================================================================
+
+.form-group {
+  margin-bottom: var(--spacing-xl);
+
+  label {
+    display: block;
+    font-size: var(--font-size-label-mobile);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  ion-input,
+  ion-textarea {
+    --background: var(--color-white);
+    --color: var(--color-navy-500);
+    --border-bottom: 2px solid var(--color-navy-300);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    min-height: var(--touch-target-min);
+    transition: all var(--transition-fast);
+
+    &:focus-visible {
+      --border-bottom: 2px solid var(--color-gold-500);
+      --color: var(--color-navy-500);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ============================================================================
+// VALIDATION MESSAGES
+// ============================================================================
+
 .valid-input {
-  --border-color: #10b981 !important; // Green border
-  ion-input {
-    --color: #166534 !important; // Dark green text
+  --border-bottom: 2px solid var(--color-success-500) !important;
+
+  ion-input,
+  ion-textarea {
+    --color: var(--color-success-500) !important;
   }
 
   ion-text {
-    --color: #166534 !important; // Dark green helper text
+    --color: var(--color-success-500) !important;
   }
 }
 
 .invalid-input {
-  --border-color: #ef4444 !important; // Red border
+  --border-bottom: 2px solid var(--color-error-500) !important;
 
-  ion-input {
-    --color: #dc2626 !important; // Dark red text
+  ion-input,
+  ion-textarea {
+    --color: var(--color-error-500) !important;
   }
 
   ion-text {
-    --color: #dc2626 !important; // Dark red helper text
+    --color: var(--color-error-500) !important;
   }
 }
 
 .validation-message {
-  margin-top: 8px;
-  font-size: 14px;
-  padding: 8px 12px;
-  border-radius: 6px;
+  margin-top: var(--spacing-sm);
+  font-size: 12px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 .error-message {
-  background-color: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
+  background-color: rgba(231, 76, 60, 0.15);
+  color: var(--color-error-500);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.success-message {
+  background-color: rgba(39, 174, 96, 0.15);
+  color: var(--color-success-500);
+  border: 1px solid rgba(39, 174, 96, 0.3);
 }
 
 .character-count {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-400);
+  text-align: right;
+  margin-top: var(--spacing-sm);
 }
 
-// Improve button styling
-ion-button[color="warning"] {
-  --background: linear-gradient(135deg, #f59e0b, #d97706);
-  --background-hover: linear-gradient(135deg, #d97706, #b45309);
-  --color: #ffffff;
-  font-weight: 600;
+// ============================================================================
+// BUTTON STYLING
+// ============================================================================
+
+ion-button[color="warning"],
+.compete-button {
+  --background: linear-gradient(135deg, var(--color-gold-500), var(--color-gold-600));
+  --color: var(--color-navy-500);
+  --border-radius: var(--border-radius-md);
+  --padding-start: var(--spacing-lg);
+  --padding-end: var(--spacing-lg);
+  --padding-top: var(--spacing-lg);
+  --padding-bottom: var(--spacing-lg);
+  --min-height: var(--touch-target-preferred);
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+
+  &:hover:not(:disabled) {
+    --background: linear-gradient(135deg, var(--color-gold-600), var(--color-gold-500));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
-ion-button[color="warning"]:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 8px rgba(245, 158, 11, 0.25);
+// ============================================================================
+// RESPONSIVE
+// ============================================================================
+
+@media (max-width: 375px) {
+  .best-signaller-container {
+    padding: var(--spacing-md);
+  }
+
+  .form-group {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  ion-button {
+    --padding-start: var(--spacing-md);
+    --padding-end: var(--spacing-md);
+  }
 }
+
+// ============================================================================
+// DARK MODE
+// ============================================================================
+
+@media (prefers-color-scheme: dark) {
+  .form-group ion-input,
+  .form-group ion-textarea {
+    --background: var(--color-navy-700);
+    --color: var(--color-gray-700);
+  }
+
+  .validation-message.error-message {
+    background-color: rgba(231, 76, 60, 0.1);
+  }
+
+  .validation-message.success-message {
+    background-color: rgba(39, 174, 96, 0.1);
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY: PREFERS-REDUCED-MOTION
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  ion-button[color="warning"],
+  .compete-button {
+    transition: none;
+
+    &:hover:not(:disabled) {
+      transform: none;
+    }
+
+    &:active:not(:disabled) {
+      transform: none;
+    }
+  }
+}
+

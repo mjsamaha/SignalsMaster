@@ -1,0 +1,275 @@
+// ============================================================================
+// PRIMARY BUTTON COMPONENT - UNIFIED MODERN DESIGN
+// ============================================================================
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+  position: relative;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-navy-500);
+    outline-offset: 2px;
+  }
+
+  // ---- SIZE VARIANTS ----
+  &.btn-sm {
+    padding: 8px 12px;
+    font-size: 14px;
+    min-height: 36px;
+  }
+
+  &.btn-md {
+    padding: 14px 24px;
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  &.btn-lg {
+    padding: 16px 24px;
+    font-size: 18px;
+    min-height: 48px;
+  }
+
+  // ---- PRIMARY: Gold CTA ----
+  &.btn-primary {
+    background-color: var(--color-gold-500);
+    color: var(--color-navy-500);
+    box-shadow: var(--shadow-sm);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-gold-600);
+      transform: scale(1.02);
+      box-shadow: var(--shadow-md);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--color-gold-700);
+      transform: scale(0.98);
+      box-shadow: var(--shadow-inner);
+    }
+  }
+
+  // ---- SECONDARY: White with Navy Border ----
+  &.btn-secondary {
+    background-color: var(--color-white);
+    color: var(--color-navy-500);
+    border: 2px solid var(--color-navy-500);
+    box-shadow: var(--shadow-light);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-sky-50);
+      border-color: var(--color-navy-500);
+      box-shadow: var(--shadow-sm);
+      transform: scale(1.02);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--color-navy-50);
+      transform: scale(0.98);
+    }
+  }
+
+  // ---- ANSWER BUTTON: Interactive Question Option ----
+  &.btn-answer {
+    background-color: var(--color-white);
+    color: var(--color-navy-500);
+    border: 2px solid var(--color-gray-100);
+    padding: 16px;
+    min-height: 48px;
+    font-weight: 500;
+    box-shadow: var(--shadow-light);
+    text-align: left;
+    justify-content: flex-start;
+
+    &:hover:not(:disabled):not(.selected-correct):not(.selected-incorrect) {
+      background-color: var(--color-sky-50);
+      border-color: var(--color-navy-500);
+      box-shadow: var(--shadow-sm);
+      transform: scale(1.02);
+    }
+  }
+
+  // ---- CORRECT ANSWER ----
+  &.btn-correct,
+  &.selected-correct {
+    background-color: var(--color-success-500);
+    color: var(--color-white);
+    border: none;
+    animation: bounce-feedback 0.2s ease-out forwards;
+    box-shadow: var(--shadow-md);
+
+    &::after {
+      content: ' ✓';
+      margin-left: 8px;
+      font-weight: 700;
+    }
+  }
+
+  // ---- INCORRECT ANSWER ----
+  &.btn-incorrect,
+  &.selected-incorrect {
+    background-color: var(--color-error-500);
+    color: var(--color-white);
+    border: none;
+    animation: shake-feedback 0.15s ease-in-out forwards;
+    box-shadow: var(--shadow-md);
+
+    &::after {
+      content: ' ✗';
+      margin-left: 8px;
+      font-weight: 700;
+    }
+  }
+
+  // ---- DISABLED ----
+  &:disabled,
+  &.btn-disabled {
+    background-color: var(--color-gray-50);
+    color: var(--color-gray-600);
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+    border-color: var(--color-gray-100);
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  // ---- LOADING STATE ----
+  &.btn-loading {
+    .btn-content {
+      visibility: hidden;
+    }
+  }
+
+  .btn-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+  }
+
+  .btn-spinner {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .spinner {
+      animation: spin 1s linear infinite;
+      stroke: currentColor;
+    }
+  }
+}
+
+// ============================================================================
+// KEYFRAME ANIMATIONS
+// ============================================================================
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce-feedback {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake-feedback {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+// ============================================================================
+// RESPONSIVE
+// ============================================================================
+
+@media (max-width: 375px) {
+  .btn-md {
+    padding: 11px 14px;
+    font-size: 14px;
+  }
+
+  .btn-lg {
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+}
+
+// ============================================================================
+// DARK MODE
+// ============================================================================
+
+@media (prefers-color-scheme: dark) {
+  .btn {
+    &.btn-outline {
+      border-color: var(--color-gray-700);
+      color: var(--color-gray-700);
+
+      &:hover:not(:disabled) {
+        background-color: rgba(229, 231, 235, 0.1);
+      }
+    }
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY: PREFERS-REDUCED-MOTION
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+
+    &:hover:not(:disabled) {
+      transform: none;
+    }
+
+    &:active:not(:disabled) {
+      transform: none;
+    }
+
+    &.btn-correct,
+    &.btn-incorrect {
+      animation: none;
+    }
+
+    .btn-spinner .spinner {
+      animation: none;
+    }
+  }
+}

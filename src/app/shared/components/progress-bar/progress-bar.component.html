@@ -1,0 +1,20 @@
+<div class="progress-wrapper">
+  <div *ngIf="label" class="progress-label">
+    <span>{{ label }}</span>
+    <span *ngIf="showPercentage" class="progress-percentage">
+      {{ clampedValue }}%
+    </span>
+  </div>
+  <div [class]="'progress-bar progress-bar-' + height">
+    <div class="progress-track">
+      <div
+        class="progress-fill"
+        [style.width.%]="clampedValue"
+        [attr.aria-valuenow]="clampedValue"
+        [attr.aria-valuemin]="0"
+        [attr.aria-valuemax]="100"
+        role="progressbar"
+      ></div>
+    </div>
+  </div>
+</div>

@@ -1,263 +1,357 @@
-// Competitive Results Page Styles
+// ============================================================================
+// COMPETITIVE RESULTS PAGE STYLES - UNIFIED NAVAL THEME
+// ============================================================================
 
-.results-container {
-  padding: 20px;
-  max-width: 600px;
-  margin: 0 auto;
-  padding-bottom: 100px; // Space for buttons
+ion-header {
+  --background: var(--color-navy-500);
+  --border-color: transparent;
+  --color: var(--color-navy-500);
+
+  ion-title {
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--color-white);
+  }
 }
 
-// Header section
+ion-content {
+  --background: var(--color-sky-50);
+}
+
+// ============================================================================
+// RESULTS CONTAINER
+// ============================================================================
+
+.results-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+  padding-bottom: calc(var(--spacing-xl) * 3);
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+
+  @media (max-width: 375px) {
+    padding: var(--spacing-md);
+  }
+}
+
+// ============================================================================
+// HEADER
+// ============================================================================
+
 .results-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: var(--spacing-2xl);
+  animation: fadeIn 0.4s ease-in-out;
 
   .congratulations {
     display: block;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 8px;
+    font-size: 20px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gold-500);
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
   .username {
     display: block;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #3b82f6;
+    font-size: 24px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
   }
 }
 
-// Main rating card
+// ============================================================================
+// RATING CARD
+// ============================================================================
+
 .rating-card {
-  margin-bottom: 24px;
+  background: var(--color-white);
+  border: 2px solid var(--color-navy-500);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  animation: slideInUp 0.4s ease-in-out;
   text-align: center;
 
   .rating-display {
-    margin: 20px 0;
+    margin: var(--spacing-lg) 0;
 
     .rating-number {
-      font-size: 4rem;
-      font-weight: 800;
-      margin-bottom: 16px;
+      font-size: 56px;
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-md);
       display: block;
 
       &.rating-success {
-        color: #059669;
+        color: var(--color-success-500);
       }
 
       &.rating-warning {
-        color: #d97706;
+        color: var(--color-gold-500);
       }
 
       &.rating-danger {
-        color: #dc2626;
+        color: var(--color-error-500);
       }
     }
 
     .tier-badge {
-      font-size: 1.125rem;
-      font-weight: 600;
-      padding: 8px 16px;
+      display: inline-block;
+      font-size: 14px;
+      font-weight: var(--font-weight-semibold);
+      padding: var(--spacing-sm) var(--spacing-lg);
       border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
 
       &.success {
-        --background: #dcfce7;
-        --color: #166534;
+        background: rgba(39, 174, 96, 0.15);
+        color: var(--color-success-500);
       }
 
       &.warning {
-        --background: #fffbeb;
-        --color: #92400e;
+        background: rgba(212, 175, 55, 0.15);
+        color: var(--color-gold-500);
       }
 
       &.danger {
-        --background: #fef2f2;
-        --color: #991b1b;
+        background: rgba(231, 76, 60, 0.15);
+        color: var(--color-error-500);
       }
     }
   }
 
   .motivational-text {
     display: block;
-    margin-top: 16px;
-    font-size: 1rem;
-    color: #6b7280;
+    margin-top: var(--spacing-lg);
+    font-size: 14px;
+    color: var(--color-gray-500);
     font-style: italic;
   }
 }
 
-// Stats grid
+// ============================================================================
+// STATS GRID
+// ============================================================================
+
 .stats-grid {
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
 
   .stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 16px;
-    margin: 8px 0;
+    background: var(--color-white);
+    border: 2px solid var(--color-navy-500);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+
+    &:hover {
+      border-color: var(--color-gold-500);
+      box-shadow: var(--shadow-lg);
+    }
 
     .stat-label {
       display: block;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #6b7280;
-      margin-bottom: 8px;
+      font-size: 11px;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-gray-500);
+      margin-bottom: var(--spacing-xs);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .stat-value {
       display: block;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #1f2937;
-      margin-bottom: 8px;
+      font-size: 28px;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-gold-500);
+      margin-bottom: var(--spacing-sm);
     }
 
     .stat-sub {
-      font-size: 0.75rem;
-      color: #9ca3af;
-      font-weight: 500;
+      font-size: 12px;
+      color: var(--color-gray-500);
+      font-weight: var(--font-weight-medium);
     }
 
     ion-progress-bar {
-      --progress-background: #e5e7eb;
-      --background: #f3f4f6;
+      --background: var(--color-gray-500);
+      --progress-background: linear-gradient(90deg, var(--color-gold-500), var(--color-gold-400));
       height: 6px;
       border-radius: 3px;
-      margin-top: 8px;
+      margin-top: var(--spacing-md);
 
       &.progress-success {
-        --progress-background: #059669;
+        --progress-background: linear-gradient(90deg, var(--color-success-500), #1e8449);
       }
 
       &.progress-warning {
-        --progress-background: #d97706;
+        --progress-background: linear-gradient(90deg, var(--color-gold-500), var(--color-gold-600));
       }
 
       &.progress-danger {
-        --progress-background: #dc2626;
+        --progress-background: linear-gradient(90deg, var(--color-error-500), #a93226);
       }
     }
   }
 }
 
-// Rating breakdown card
+// ============================================================================
+// BREAKDOWN CARD
+// ============================================================================
+
 .breakdown-card {
-  margin-bottom: 24px;
+  background: var(--color-white);
+  border: 2px solid var(--color-navy-500);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
 
   ion-card-content {
-    padding: 16px;
+    padding: 0;
   }
 
   .breakdown-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid #f3f4f6;
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--color-navy-100);
+
+    &:last-child {
+      border-bottom: none;
+    }
 
     span:first-child {
-      font-weight: 500;
-      color: #6b7280;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-gray-500);
     }
 
     .breakdown-value {
-      font-weight: 600;
-      color: #1f2937;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-navy-500);
     }
 
     &.total {
       border-bottom: none;
-      border-top: 2px solid #1f2937;
-      padding-top: 16px;
-      margin-top: 8px;
+      border-top: 2px solid var(--color-navy-500);
+      padding-top: var(--spacing-lg);
+      margin-top: var(--spacing-md);
 
       span:first-child {
-        font-weight: 700;
-        color: #1f2937;
-        font-size: 1.125rem;
+        font-weight: var(--font-weight-bold);
+        color: var(--color-navy-500);
+        font-size: 16px;
       }
 
       .breakdown-value {
-        font-weight: 800;
-        font-size: 1.25rem;
-        color: #059669; // Success color for total
+        font-weight: var(--font-weight-bold);
+        font-size: 18px;
+        color: var(--color-gold-500);
       }
     }
   }
 }
 
-// Question breakdown
+// ============================================================================
+// QUESTION BREAKDOWN
+// ============================================================================
+
 .question-breakdown-card {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-2xl);
 
   .question-list {
-    max-height: 400px;
+    background: var(--color-white);
+    border: 2px solid var(--color-navy-500);
+    border-radius: var(--border-radius-lg);
+    max-height: 500px;
     overflow-y: auto;
-    padding: 8px;
+    box-shadow: var(--shadow-lg);
 
     .question-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px;
-      margin: 6px 0;
-      border-radius: 8px;
-      border: 1px solid #f3f4f6;
+      padding: var(--spacing-md);
+      margin: 0;
+      border-bottom: 1px solid var(--color-navy-100);
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid var(--color-navy-100);
+      transition: all var(--transition-fast);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: var(--color-navy-50);
+      }
 
       &.correct-answer {
-        background-color: #f0fdf4;
-        border-color: #bbf7d0;
+        background-color: rgba(39, 174, 96, 0.08);
+
+        &:hover {
+          background-color: rgba(39, 174, 96, 0.12);
+        }
       }
 
       &.incorrect-answer {
-        background-color: #fef2f2;
-        border-color: #fecaca;
+        background-color: rgba(231, 76, 60, 0.08);
+
+        &:hover {
+          background-color: rgba(231, 76, 60, 0.12);
+        }
       }
 
       .question-header {
         flex: 1;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: var(--spacing-md);
 
         .question-number {
-          font-weight: 600;
-          color: #374151;
+          font-weight: var(--font-weight-bold);
+          color: var(--color-navy-500);
           min-width: 30px;
         }
 
         .flag-name {
-          font-weight: 500;
-          color: #4b5563;
+          font-weight: var(--font-weight-medium);
+          color: var(--color-navy-500);
           flex: 1;
         }
 
         .question-time {
-          font-size: 0.875rem;
-          color: #6b7280;
-          font-mono: true;
+          font-size: 12px;
+          color: var(--color-gray-500);
         }
       }
 
       .question-result {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: var(--spacing-md);
 
         ion-icon {
-          font-size: 1.25rem;
+          font-size: 20px;
 
           &.correct-icon {
-            color: #16a34a;
+            color: var(--color-success-500);
           }
 
           &.incorrect-icon {
-            color: #dc2626;
+            color: var(--color-error-500);
           }
         }
 
@@ -266,7 +360,7 @@
             width: 32px;
             height: 32px;
             object-fit: contain;
-            border-radius: 4px;
+            border-radius: var(--border-radius-sm);
           }
         }
       }
@@ -274,80 +368,104 @@
   }
 }
 
-// Action buttons
+// ============================================================================
+// ACTION BUTTONS
+// ============================================================================
+
 .action-buttons {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
-  padding: 16px;
-  border-top: 1px solid #e5e7eb;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--color-navy-600);
+  padding: var(--spacing-lg);
+  border-top: 1px solid var(--color-navy-700);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+
+  @media (max-width: 768px) {
+    position: fixed;
+  }
 
   ion-button {
-    margin: 4px 0;
-    height: 48px;
-    font-weight: 600;
+    margin: 0;
+    min-height: var(--touch-target-preferred);
+    font-weight: var(--font-weight-bold);
 
     &.try-again-btn {
-      --background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-      --color: white;
-      margin-bottom: 12px;
+      --background: linear-gradient(135deg, var(--color-gold-500), var(--color-gold-600));
+      --color: var(--color-navy-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     &.leaderboard-btn {
-      --border-color: #6366f1;
-      --color: #6366f1;
+      --border-color: var(--color-gold-500);
+      --color: var(--color-gold-500);
+      --background: transparent;
     }
 
     &.home-btn {
-      --color: #6b7280;
+      --color: var(--color-white);
+      --border-color: var(--color-gray-400);
     }
 
     ion-icon {
-      margin-right: 8px;
+      margin-right: var(--spacing-sm);
     }
   }
 }
 
-// Loading state
+// ============================================================================
+// LOADING STATE
+// ============================================================================
+
 .loading-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60vh;
+  min-height: 60vh;
 
   .loading-message {
     text-align: center;
-    color: #6b7280;
+    color: var(--color-gray-400);
+    font-size: 16px;
+  }
+
+  ion-spinner {
+    --color: var(--color-gold-500);
   }
 }
 
-// Responsive adjustments
-@media (max-width: 480px) {
+// ============================================================================
+// RESPONSIVE
+// ============================================================================
+
+@media (max-width: 768px) {
+  .rating-number {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 375px) {
   .results-container {
-    padding: 16px;
+    padding-bottom: calc(var(--spacing-xl) * 4);
+  }
+
+  .rating-card {
+    padding: var(--spacing-lg);
   }
 
   .rating-number {
-    font-size: 3rem !important;
-  }
-
-  .stats-grid {
-    .stat-card {
-      padding: 12px;
-
-      .stat-value {
-        font-size: 1.5rem;
-      }
-    }
+    font-size: 40px;
   }
 
   .question-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: var(--spacing-sm);
 
     .question-header {
       width: 100%;
@@ -355,30 +473,57 @@
   }
 }
 
-// Dark theme support (if needed)
+// ============================================================================
+// DARK MODE
+// ============================================================================
+
 @media (prefers-color-scheme: dark) {
-  .results-header .congratulations {
-    color: #f9fafb;
-  }
+  .rating-card,
+  .stat-card,
+  .breakdown-card {
+    background: rgba(15, 20, 25, 0.9);
+    border-color: var(--color-navy-300);
 
-  .stat-card {
-    background: #374151;
-    border: 1px solid #4b5563;
-
-    .stat-label {
-      color: #d1d5db;
+    .stat-label,
+    .stat-sub {
+      color: var(--color-gray-400);
     }
 
     .stat-value {
-      color: #f9fafb;
-    }
-
-    .stat-sub {
-      color: #9ca3af;
+      color: var(--color-gold-500);
     }
   }
 
-  .breakdown-card .breakdown-item span:first-child {
-    color: #d1d5db;
+  .breakdown-item span:first-child {
+    color: var(--color-gray-400);
+  }
+
+  .question-item {
+    background: rgba(15, 20, 25, 0.9);
+
+    .question-header {
+      color: var(--color-gray-700);
+    }
+  }
+
+  .question-list {
+    background: rgba(15, 20, 25, 0.9);
   }
 }
+
+// ============================================================================
+// ACCESSIBILITY: PREFERS-REDUCED-MOTION
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .results-header,
+  .rating-card {
+    animation: none;
+  }
+
+  .stat-card,
+  .question-item {
+    transition: none;
+  }
+}
+

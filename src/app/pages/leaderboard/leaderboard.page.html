@@ -4,63 +4,63 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="bg-gradient-to-b from-gray-50 to-white">
-  <div class="container mx-auto px-4 py-8 max-w-4xl">
-    <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">Global Rankings</h1>
+<ion-content [fullscreen]="true">
+  <div class="container">
+    <h1>Global Rankings</h1>
 
-    <div *ngIf="entries.length === 0" class="text-center py-12">
-      <p class="text-gray-600 text-lg">No competition results yet.</p>
-      <p class="text-gray-500 mt-2">Be the first to compete in Best Signaller mode!</p>
+    <div *ngIf="entries.length === 0" class="empty-state">
+      <p>No competition results yet.</p>
+      <p class="subtitle">Be the first to compete in Best Signaller mode!</p>
     </div>
 
     <div *ngIf="entries.length > 0" class="space-y-4">
       <!-- Top 10 Highlight -->
       <div *ngFor="let entry of entries.slice(0, 10); let i = index"
-           class="bg-white rounded-xl shadow-lg p-6 border-2"
-           [ngClass]="getRankClass(entry.rank)">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="text-4xl">{{ getRankIcon(entry.rank) }}</div>
+           [class.leaderboard-entry-top]="true"
+           [ngClass]="'rank-' + entry.rank">
+        <div class="flex-items-center">
+          <div class="entry-info">
+            <div class="rank-icon">{{ getRankIcon(entry.rank) }}</div>
             <div>
-              <h3 class="text-xl font-bold text-gray-900">{{ entry.username }}</h3>
-              <p class="text-sm text-gray-600">{{ entry.tier }}</p>
+              <h3>{{ entry.username }}</h3>
+              <p>{{ entry.tier }}</p>
             </div>
           </div>
-          <div class="text-right">
-            <p class="text-2xl font-bold text-gray-900">{{ entry.rating }}</p>
-            <p class="text-sm text-gray-600">Rating</p>
+          <div class="entry-rating">
+            <p class="rating-value">{{ entry.rating }}</p>
+            <p class="rating-label">Rating</p>
           </div>
         </div>
-        <div class="mt-4 grid grid-cols-3 gap-4 text-center">
-          <div>
-            <p class="text-lg font-semibold text-gray-900">{{ entry.correctAnswers }}/{{ entry.totalQuestions }}</p>
-            <p class="text-xs text-gray-600">Correct</p>
+        <div class="stats-grid">
+          <div class="stat">
+            <div class="stat-value">{{ entry.correctAnswers }}/{{ entry.totalQuestions }}</div>
+            <div class="stat-label">Correct</div>
           </div>
-          <div>
-            <p class="text-lg font-semibold text-gray-900">{{ entry.accuracy.toFixed(1) }}%</p>
-            <p class="text-xs text-gray-600">Accuracy</p>
+          <div class="stat">
+            <div class="stat-value">{{ entry.accuracy.toFixed(1) }}%</div>
+            <div class="stat-label">Accuracy</div>
           </div>
-          <div>
-            <p class="text-lg font-semibold text-gray-900">{{ formatTime(entry.totalTime) }}</p>
-            <p class="text-xs text-gray-600">Time</p>
+          <div class="stat">
+            <div class="stat-value">{{ formatTime(entry.totalTime) }}</div>
+            <div class="stat-label">Time</div>
           </div>
         </div>
       </div>
 
       <!-- Rest of Leaderboard -->
       <div *ngFor="let entry of entries.slice(10)"
-           class="bg-white rounded-lg shadow p-4 border border-gray-200">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="w-10 text-center font-bold text-gray-700">#{{ entry.rank }}</div>
-            <div>
-              <h4 class="font-semibold text-gray-900">{{ entry.username }}</h4>
-              <p class="text-xs text-gray-600">{{ formatTime(entry.totalTime) }}</p>
+           class="leaderboard-entry-regular">
+        <div class="entry-main">
+          <div class="entry-info">
+            <div class="rank">#{{ entry.rank }}</div>
+            <div class="info-text">
+              <h4>{{ entry.username }}</h4>
+              <p>{{ formatTime(entry.totalTime) }}</p>
             </div>
           </div>
-          <div class="text-right">
-            <p class="font-bold text-gray-900">{{ entry.rating }}</p>
-            <p class="text-xs text-gray-600">{{ entry.correctAnswers }}/{{ entry.totalQuestions }} ({{ entry.accuracy.toFixed(1) }}%)</p>
+          <div class="entry-stats">
+            <div class="rating">{{ entry.rating }}</div>
+            <div class="details">{{ entry.correctAnswers }}/{{ entry.totalQuestions }} ({{ entry.accuracy.toFixed(1) }}%)</div>
           </div>
         </div>
       </div>

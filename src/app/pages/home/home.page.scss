@@ -1,2 +1,316 @@
-// Home page specific styles if needed
+// ============================================================================
+// HOME PAGE STYLES - UNIFIED NAVAL THEME
+// ============================================================================
+// Color Palette:
+// - Header Background: Navy #0A3961
+// - Page Background: Sky #F0F6FA
+// - Text Color: Navy #0A3961
+// - Accent Color: Gold #D4AF37
+// ============================================================================
+
+ion-header {
+  --background: var(--color-navy-500);
+  --border-color: transparent;
+  --color: var(--color-navy-500);
+
+  ion-toolbar {
+    --background: var(--color-navy-500);
+    --border-color: transparent;
+  }
+
+  ion-title {
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--color-white);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+}
+
+ion-content {
+  --background: var(--color-sky-50);
+}
+
+// ============================================================================
+// CONTAINER & LAYOUT
+// ============================================================================
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+
+  @media (max-width: 375px) {
+    padding: var(--spacing-md);
+  }
+}
+
+// ============================================================================
+// HERO SECTION
+// ============================================================================
+
+.text-center {
+  text-align: center;
+
+  &.mb-12,
+  &[class*="mb-"] {
+    margin-bottom: var(--spacing-2xl);
+
+    @media (max-width: 768px) {
+      margin-bottom: var(--spacing-xl);
+    }
+  }
+
+  h1 {
+    font-size: var(--font-size-h1-desktop);
+    font-weight: 600;
+    color: var(--color-navy-500);
+    margin-bottom: var(--spacing-lg);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    @media (max-width: 768px) {
+      font-size: 28px;
+    }
+
+    @media (max-width: 375px) {
+      font-size: 24px;
+    }
+  }
+
+  p {
+    font-size: 18px;
+    color: var(--color-navy-500);
+    margin-bottom: var(--spacing-xl);
+    line-height: var(--line-height-relaxed);
+
+    @media (max-width: 768px) {
+      font-size: 16px;
+    }
+  }
+}
+
+// ============================================================================
+// MODE SELECTION CARDS
+// ============================================================================
+
+.space-y-6 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+
+  &.mb-8 {
+    margin-bottom: var(--spacing-2xl);
+  }
+}
+
+.card-mode {
+  background: var(--color-white);
+  border: 2px solid var(--color-navy-500);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
+  animation: fadeIn 0.4s ease-in-out;
+
+  &:hover {
+    border-color: var(--color-gold-500);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+  }
+
+  .flex {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+
+    .icon-container {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: var(--spacing-lg);
+      font-size: 28px;
+      flex-shrink: 0;
+
+      // Practice mode icon - ocean blue
+      &.practice {
+        background: rgba(52, 152, 219, 0.15);
+        color: var(--color-ocean-blue);
+      }
+
+      // Competition mode icon - gold
+      &.competition {
+        background: rgba(212, 175, 55, 0.15);
+        color: var(--color-gold-500);
+      }
+    }
+
+    .flex-1 {
+      flex: 1;
+
+      h2 {
+        font-size: 24px;
+        font-weight: var(--font-weight-bold);
+        color: var(--color-navy-500);
+        margin: 0 0 var(--spacing-sm) 0;
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--color-gray-600);
+      }
+    }
+  }
+
+  ion-button {
+    margin-top: var(--spacing-lg);
+    --padding-start: var(--spacing-lg);
+    --padding-end: var(--spacing-lg);
+    --padding-top: var(--spacing-md);
+    --padding-bottom: var(--spacing-md);
+    --border-radius: var(--border-radius-md);
+    --min-height: var(--touch-target-preferred);
+  }
+}
+
+// ============================================================================
+// CTA BUTTON
+// ============================================================================
+
+.text-center {
+  &.cta-section {
+    margin-top: var(--spacing-2xl);
+
+    button {
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-gold-500);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+      padding: var(--spacing-md) 0;
+
+      &:hover {
+        color: var(--color-gold-400);
+        text-decoration: underline;
+        transform: translateX(4px);
+      }
+
+      &:active {
+        transform: translateX(2px);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-gold-500);
+        outline-offset: 4px;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE DESIGN
+// ============================================================================
+
+@media (max-width: 768px) {
+  .space-y-6 {
+    gap: var(--spacing-lg);
+  }
+
+  .card-mode {
+    padding: var(--spacing-lg);
+
+    .flex .icon-container {
+      width: 48px;
+      height: 48px;
+      font-size: 24px;
+    }
+
+    .flex h2 {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 375px) {
+  .space-y-6 {
+    gap: var(--spacing-md);
+  }
+
+  .card-mode {
+    padding: var(--spacing-lg);
+
+    .flex {
+      flex-direction: column;
+      text-align: center;
+      margin-bottom: var(--spacing-md);
+
+      .icon-container {
+        margin-right: 0;
+        margin-bottom: var(--spacing-md);
+      }
+    }
+
+    .flex h2 {
+      font-size: 18px;
+    }
+  }
+}
+
+// ============================================================================
+// DARK MODE
+// ============================================================================
+
+@media (prefers-color-scheme: dark) {
+  .card-mode {
+    background: rgba(15, 20, 25, 0.9);
+    border-color: var(--color-navy-300);
+
+    .flex h2 {
+      color: var(--color-gray-700);
+    }
+
+    .flex p {
+      color: var(--color-gray-600);
+    }
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY: PREFERS-REDUCED-MOTION
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .card-mode {
+    animation: none;
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .text-center button {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: none;
+    }
+  }
+}
+
 

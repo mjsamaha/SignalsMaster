@@ -1,2 +1,395 @@
-// Leaderboard page specific styles
+// ============================================================================
+// LEADERBOARD PAGE STYLES - UNIFIED NAVAL THEME
+// ============================================================================
+// Features:
+// - Navy header with white text
+// - Sky blue page background
+// - Gold-bordered cards for top 3 entries
+// - Standard white cards for other entries
+// ============================================================================
+
+ion-header {
+  --background: var(--color-navy-500);
+  --border-color: transparent;
+  --color: var(--color-navy-500);
+
+  ion-title {
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--color-white);
+  }
+}
+
+ion-content {
+  --background: var(--color-sky-50);
+}
+
+// ============================================================================
+// CONTAINER & LAYOUT
+// ============================================================================
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+
+  @media (max-width: 375px) {
+    padding: var(--spacing-md);
+  }
+}
+
+// ============================================================================
+// HEADING
+// ============================================================================
+
+h1 {
+  font-size: var(--font-size-h1-desktop);
+  font-weight: 600;
+  color: var(--color-navy-500);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 24px;
+  }
+}
+
+// ============================================================================
+// EMPTY STATE
+// ============================================================================
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-2xl);
+
+  p {
+    color: var(--color-white);
+    font-size: 16px;
+    margin-bottom: var(--spacing-lg);
+
+    &.subtitle {
+      color: var(--color-gray-400);
+      font-size: 14px;
+    }
+  }
+}
+
+// ============================================================================
+// LEADERBOARD ENTRY CARDS
+// ============================================================================
+
+.space-y-4 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+// Top 10 entries (highlighted)
+.leaderboard-entry-top {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  animation: slideInUp 0.3s ease-in-out;
+  transition: all var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+  }
+
+  // Rank-specific styling
+  &.rank-1 {
+    border: 2px solid var(--color-gold-500);
+    background: var(--color-white);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+
+    &:hover {
+      box-shadow: 0 6px 16px rgba(212, 175, 55, 0.2);
+      border-color: var(--color-gold-600);
+    }
+  }
+
+  &.rank-2 {
+    border: 2px solid var(--color-border-light);
+    background: var(--color-white);
+  }
+
+  &.rank-3 {
+    border: 2px solid var(--color-border-light);
+    background: var(--color-white);
+  }
+
+  &:nth-child(n + 4) {
+    border: 1px solid var(--color-border-light);
+  }
+
+  .rank-icon {
+    font-size: 36px;
+    text-align: center;
+  }
+
+  .flex-items-center {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-lg);
+
+    .entry-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+      flex: 1;
+
+      h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--color-navy-500);
+        margin: 0;
+      }
+
+      p {
+        margin: 0;
+        font-size: 12px;
+        color: var(--color-gray-dark);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+
+    .entry-rating {
+      text-align: right;
+
+      p {
+        margin: 0;
+
+        &.rating-value {
+          font-size: 28px;
+          font-weight: var(--font-weight-bold);
+          color: var(--color-gold-500);
+        }
+
+        &.rating-label {
+          font-size: 12px;
+          color: var(--color-gray-dark);
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-border-light);
+
+    .stat {
+      text-align: center;
+
+      .stat-value {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--color-navy-500);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: var(--color-gray-dark);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+}
+
+// Regular leaderboard entries (11+)
+.leaderboard-entry-regular {
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  transition: all var(--transition-base);
+
+  &:hover {
+    background: var(--color-white);
+    border-color: var(--color-gold-500);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .entry-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .entry-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+
+      .rank {
+        width: 40px;
+        text-align: center;
+        font-weight: 600;
+        color: var(--color-navy-500);
+        font-size: 16px;
+      }
+
+      .info-text {
+        h4 {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--color-navy-500);
+          margin: 0 0 var(--spacing-xs) 0;
+        }
+
+        p {
+          font-size: 12px;
+          color: var(--color-gray-dark);
+          margin: 0;
+        }
+      }
+    }
+
+    .entry-stats {
+      text-align: right;
+
+      .rating {
+        font-weight: 600;
+        color: var(--color-navy-500);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .details {
+        font-size: 12px;
+        color: var(--color-gray-dark);
+      }
+    }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE DESIGN
+// ============================================================================
+
+@media (max-width: 768px) {
+  .leaderboard-entry-top {
+    padding: var(--spacing-lg);
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-md);
+    }
+
+    .flex-items-center {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .entry-rating {
+        align-self: flex-end;
+        margin-top: var(--spacing-md);
+      }
+    }
+  }
+}
+
+@media (max-width: 375px) {
+  .space-y-4 {
+    gap: var(--spacing-md);
+  }
+
+  .leaderboard-entry-top {
+    padding: var(--spacing-md);
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-sm);
+    }
+
+    .rank-icon {
+      font-size: 28px;
+    }
+  }
+
+  .leaderboard-entry-regular {
+    padding: var(--spacing-md);
+
+    .entry-main {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .entry-stats {
+        align-self: flex-end;
+        margin-top: var(--spacing-sm);
+      }
+    }
+  }
+}
+
+// ============================================================================
+// DARK MODE
+// ============================================================================
+
+@media (prefers-color-scheme: dark) {
+  .leaderboard-entry-top {
+    background: rgba(15, 20, 25, 0.9);
+    border-color: var(--color-navy-300);
+
+    &.rank-1,
+    &.rank-2,
+    &.rank-3 {
+      background: rgba(15, 20, 25, 0.9);
+    }
+
+    .entry-info h3 {
+      color: var(--color-gray-700);
+    }
+
+    .stats-grid {
+      border-top-color: var(--color-navy-300);
+
+      .stat-value {
+        color: var(--color-gray-700);
+      }
+    }
+  }
+
+  .leaderboard-entry-regular {
+    .info-text h4 {
+      color: var(--color-gray-700);
+    }
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY: PREFERS-REDUCED-MOTION
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .leaderboard-entry-top {
+    animation: none;
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .leaderboard-entry-regular {
+    transition: none;
+  }
+}
+
 

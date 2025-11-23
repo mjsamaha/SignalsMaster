@@ -1,0 +1,308 @@
+// ============================================================================
+// RESPONSIVE UTILITIES & BREAKPOINT HELPERS
+// ============================================================================
+
+// Responsive breakpoints (matching Tailwind config)
+$breakpoint-xs: 320px;
+$breakpoint-sm: 375px;   // Primary mobile target
+$breakpoint-md: 600px;   // Tablet start
+$breakpoint-lg: 768px;   // Tablet optimized
+$breakpoint-xl: 1024px;  // Desktop start
+$breakpoint-2xl: 1200px; // Full desktop
+
+// ============================================================================
+// MOBILE-FIRST RESPONSIVE HELPERS
+// ============================================================================
+
+// Utility classes for responsive visibility
+.hidden-mobile {
+  @media (max-width: 599px) {
+    display: none !important;
+  }
+}
+
+.hidden-tablet {
+  @media (min-width: 600px) and (max-width: 999px) {
+    display: none !important;
+  }
+}
+
+.hidden-desktop {
+  @media (min-width: 1000px) {
+    display: none !important;
+  }
+}
+
+.visible-mobile {
+  display: none !important;
+
+  @media (max-width: 599px) {
+    display: block !important;
+  }
+}
+
+.visible-tablet {
+  display: none !important;
+
+  @media (min-width: 600px) and (max-width: 999px) {
+    display: block !important;
+  }
+}
+
+.visible-desktop {
+  display: none !important;
+
+  @media (min-width: 1000px) {
+    display: block !important;
+  }
+}
+
+// ============================================================================
+// CONTAINER RESPONSIVE ADJUSTMENTS
+// ============================================================================
+
+.container-responsive {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+
+  @media (min-width: 375px) {
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+  }
+
+  @media (min-width: 768px) {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+    max-width: 750px;
+  }
+
+  @media (min-width: 992px) {
+    max-width: 970px;
+  }
+
+  @media (min-width: 1200px) {
+    max-width: 1170px;
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  @media (min-width: 1400px) {
+    max-width: 1320px;
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
+// ============================================================================
+// RESPONSIVE GRID HELPERS
+// ============================================================================
+
+.grid-responsive {
+  display: grid;
+  gap: var(--spacing-lg);
+
+  // Mobile: 1 column
+  grid-template-columns: 1fr;
+
+  // Tablet: 2 columns
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+  }
+
+  // Desktop: 3 columns
+  @media (min-width: 1000px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.grid-2col-responsive {
+  display: grid;
+  gap: var(--spacing-lg);
+  grid-template-columns: 1fr;
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+  }
+
+  @media (min-width: 1200px) {
+    gap: var(--spacing-2xl);
+  }
+}
+
+// ============================================================================
+// RESPONSIVE TEXT HELPERS
+// ============================================================================
+
+.text-responsive-lg {
+  font-size: 18px;
+
+  @media (min-width: 768px) {
+    font-size: 20px;
+  }
+
+  @media (min-width: 1200px) {
+    font-size: 24px;
+  }
+}
+
+.text-responsive-sm {
+  font-size: 14px;
+
+  @media (min-width: 768px) {
+    font-size: 15px;
+  }
+
+  @media (min-width: 1200px) {
+    font-size: 16px;
+  }
+}
+
+// ============================================================================
+// RESPONSIVE SPACING HELPERS
+// ============================================================================
+
+.py-responsive {
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+
+  @media (min-width: 768px) {
+    padding-top: var(--spacing-2xl);
+    padding-bottom: var(--spacing-2xl);
+  }
+
+  @media (min-width: 1200px) {
+    padding-top: var(--spacing-3xl);
+    padding-bottom: var(--spacing-3xl);
+  }
+}
+
+.gap-responsive {
+  gap: var(--spacing-lg);
+
+  @media (min-width: 768px) {
+    gap: var(--spacing-xl);
+  }
+
+  @media (min-width: 1200px) {
+    gap: var(--spacing-2xl);
+  }
+}
+
+// ============================================================================
+// SAFE AREA PADDING (for notched devices)
+// ============================================================================
+
+.safe-area-padding {
+  padding-left: max(var(--spacing-lg), env(safe-area-inset-left));
+  padding-right: max(var(--spacing-lg), env(safe-area-inset-right));
+  padding-top: max(var(--spacing-lg), env(safe-area-inset-top));
+  padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
+}
+
+.safe-area-horizontal {
+  padding-left: max(var(--spacing-lg), env(safe-area-inset-left));
+  padding-right: max(var(--spacing-lg), env(safe-area-inset-right));
+}
+
+// ============================================================================
+// RESPONSIVE DISPLAY HELPERS
+// ============================================================================
+
+.flex-responsive {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: var(--spacing-xl);
+  }
+}
+
+.flex-wrap-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    gap: var(--spacing-lg);
+  }
+
+  @media (min-width: 1200px) {
+    gap: var(--spacing-xl);
+  }
+}
+
+// ============================================================================
+// RESPONSIVE MAX-WIDTH CONSTRAINTS
+// ============================================================================
+
+.max-w-sm {
+  max-width: 400px;
+}
+
+.max-w-md {
+  max-width: 600px;
+}
+
+.max-w-lg {
+  max-width: 800px;
+}
+
+.max-w-xl {
+  max-width: 1000px;
+}
+
+.max-w-2xl {
+  max-width: 1200px;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+// ============================================================================
+// CENTER CONTENT HELPERS
+// ============================================================================
+
+.centered {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// ============================================================================
+// TRUNCATE HELPERS
+// ============================================================================
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  overflow: hidden;
+}
