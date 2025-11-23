@@ -27,6 +27,11 @@ export const routes: Routes = [
           import('../pages/leaderboard/leaderboard.page').then((m) => m.LeaderboardPage),
       },
       {
+        path: 'about',
+        loadComponent: () =>
+          import('../pages/about/about.page').then((m) => m.AboutPage),
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full',

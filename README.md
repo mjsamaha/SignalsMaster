@@ -112,7 +112,6 @@ src/app/
 │   ├── practice-results/    # Practice session results
 │   ├── competitive-results/ # Competitive results & leaderboard submission
 │   ├── leaderboard/         # Live rankings
-│   ├── settings/            # User preferences
 │   └── about/               # App information
 ├── core/services/
 │   ├── quiz.service.ts      # Quiz logic & session management
@@ -271,7 +270,7 @@ The production build includes:
 - Military-themed design system with Tailwind CSS
 - Flag database (54 complete naval signals)
 - Leaderboard page with real-time listeners
-- Settings and About pages
+- About page with app information
 - Ionic component integration
 - TypeScript strict mode
 
