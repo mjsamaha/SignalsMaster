@@ -1,0 +1,53 @@
+ionic serve
+> ng.cmd run app:serve --host=localhost --port=8100
+[ng] > Building...
+[ng] √ Building...
+[ng] Application bundle generation failed. [5.889 seconds] - 2025-11-23T16:19:51.913Z
+[ng] X [ERROR] Undefined mixin.
+[ng]   ╷
+[ng] 6 │   @include unified-header;
+[ng]   │   ^^^^^^^^^^^^^^^^^^^^^^^
+[ng]   ╵
+[ng]   src\app\pages\practice-mode\practice-mode.page.scss 6:3  root stylesheet [plugin angular-sass]
+[ng] X [ERROR] Undefined mixin.
+[ng]    ╷
+[ng] 12 │   @include unified-header;
+[ng]    │   ^^^^^^^^^^^^^^^^^^^^^^^
+[ng]    ╵
+[ng]   src\app\pages\leaderboard\leaderboard.page.scss 12:3  root stylesheet [plugin angular-sass]
+[ng] X [ERROR] Undefined mixin.
+[ng]    ╷
+[ng] 12 │   @include unified-header;
+[ng]    │   ^^^^^^^^^^^^^^^^^^^^^^^
+[ng]    ╵
+[ng]   src\app\pages\home\home.page.scss 12:3  root stylesheet [plugin angular-sass]
+[ng] X [ERROR] Undefined mixin.
+[ng]    ╷
+[ng] 18 │   @include unified-header;
+[ng]    │   ^^^^^^^^^^^^^^^^^^^^^^^
+[ng]    ╵
+[ng]   src\app\pages\quiz\quiz.page.scss 18:3  root stylesheet [plugin angular-sass]
+[ng] X [ERROR] Undefined mixin.
+[ng]   ╷
+[ng] 6 │   @include unified-header;
+[ng]   │   ^^^^^^^^^^^^^^^^^^^^^^^
+[ng]   ╵
+[ng]   src\app\pages\best-signaller\best-signaller.page.scss 6:3  root stylesheet [plugin angular-sass]
+[ng] X [ERROR] Undefined mixin.
+[ng]   ╷
+[ng] 6 │   @include unified-header;
+[ng]   │   ^^^^^^^^^^^^^^^^^^^^^^^
+[ng]   ╵
+[ng]   src\app\pages\about\about.page.scss 6:3  root stylesheet [plugin angular-sass]
+[ng] X [ERROR] Undefined mixin.
+[ng]   ╷
+[ng] 6 │   @include unified-header;
+[ng]   │   ^^^^^^^^^^^^^^^^^^^^^^^
+[ng]   ╵
+[ng]   src\app\pages\practice-results\practice-results.page.scss 6:3  root stylesheet [plugin angular-sass]
+[ng] X [ERROR] Undefined mixin.
+[ng]   ╷
+[ng] 6 │   @include unified-header;
+[ng]   │   ^^^^^^^^^^^^^^^^^^^^^^^
+[ng]   ╵
+[ng]   src\app\pages\competitive-results\competitive-results.page.scss 6:3  root stylesheet [plugin angular-sass]

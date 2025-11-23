@@ -8,6 +8,8 @@
 // - Standard white cards for other entries
 // ============================================================================
 
+@import '../../theme/mixins';
+
 ion-header {
   @include unified-header;
 }

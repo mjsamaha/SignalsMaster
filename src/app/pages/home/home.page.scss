@@ -8,6 +8,8 @@
 // - Accent Color: Gold #D4AF37
 // ============================================================================
 
+@import '../../theme/mixins';
+
 ion-header {
   @include unified-header;
 }

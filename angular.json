@@ -37,7 +37,10 @@
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": [],
-            "browser": "src/main.ts"
+            "browser": "src/main.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": ["src"]
+            }
           },
           "configurations": {
             "production": {
@@ -78,7 +81,7 @@
           "options": {
             "port": 5000,
             "host": "0.0.0.0",
-            "allowedHosts": "all"
+            "allowedHosts": ["all"]
           },
           "configurations": {
             "production": {
