@@ -132,7 +132,8 @@ export class QuizPage implements OnInit, OnDestroy {
       return;
     }
 
-
+    // Store username in localStorage for leaderboard current user highlighting
+    localStorage.setItem('lastCompetitiveUsername', this.username);
 
     // Subscribe to current question
     const questionSub = this.quizService.getCurrentQuestion().subscribe(question => {

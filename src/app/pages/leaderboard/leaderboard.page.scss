@@ -1,11 +1,13 @@
 // ============================================================================
-// LEADERBOARD PAGE STYLES - UNIFIED NAVAL THEME
+// LEADERBOARD PAGE STYLES - GAMIFIED TIER SYSTEM
 // ============================================================================
 // Features:
-// - Navy header with white text and gold accent
-// - Sky blue page background
-// - Gold-bordered cards for top 3 entries
-// - Standard white cards for other entries
+// - Tier-based gradient backgrounds (5 tiers: Gold, Blue, Green, Purple, Gray)
+// - Compact card design (30-35% smaller than original)
+// - Achievement labels for gamification
+// - Special borders for top performers (Rank #1 gold, #2-10 silver/blue)
+// - Current user highlighting with pulse animation
+// - Smooth fade/scale animations
 // ============================================================================
 
 @use '../../theme/mixins' as *;
@@ -59,220 +61,620 @@ h1 {
 }
 
 // ============================================================================
-// EMPTY STATE
+// EMPTY STATE - ENHANCED UI/UX
 // ============================================================================
 
-.empty-state {
-  text-align: center;
-  padding: var(--spacing-2xl);
-
-  p {
-    color: var(--color-white);
-    font-size: 16px;
-    margin-bottom: var(--spacing-lg);
-
-    &.subtitle {
-      color: var(--color-gray-400);
-      font-size: 14px;
-    }
-  }
-}
-
-// ============================================================================
-// LEADERBOARD ENTRY CARDS
-// ============================================================================
-
-.space-y-4 {
+.leaderboard-empty {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding: 48px 32px;
+  background: #FFFFFF;
 }
 
-// Top 10 entries (highlighted)
-.leaderboard-entry-top {
-  background: var(--color-white);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-xl);
-  box-shadow: var(--shadow-lg);
-  animation: slideInUp 0.3s ease-in-out;
-  transition: all var(--transition-base);
+// Section Header
+.empty-state-section-header {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #6B7280;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+// Divider
+.empty-state-divider {
+  width: 100%;
+  max-width: 600px;
+  height: 1px;
+  background: #E5E7EB;
+  margin: 32px 0;
+}
+
+// Icon with animation
+.empty-state-icon {
+  font-size: 72px;
+  line-height: 1;
+  margin-bottom: 24px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+// Headline
+.empty-state-headline {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1F2937;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+// Subheading
+.empty-state-subheading {
+  font-size: 16px;
+  font-weight: 400;
+  color: #6B7280;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 500px;
+  margin-bottom: 32px;
+}
+
+// Button Group
+.empty-state-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.btn-compete {
+  --background: #3B82F6;
+  --color: #FFFFFF;
+  --padding-start: 32px;
+  --padding-end: 32px;
+  --border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  height: 48px;
+  text-transform: none;
+  transition: all 150ms ease;
+
+  .btn-icon {
+    margin-right: 8px;
+  }
 
   &:hover {
-    box-shadow: var(--shadow-xl);
+    --background: #2563EB;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+}
+
+.btn-rules {
+  --background: #FFFFFF;
+  --color: #3B82F6;
+  --border-color: #3B82F6;
+  --border-width: 2px;
+  --padding-start: 28px;
+  --padding-end: 28px;
+  --border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  height: 48px;
+  text-transform: none;
+  transition: all 150ms ease;
+
+  .btn-icon {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    --background: #EFF6FF;
+    --border-color: #2563EB;
     transform: translateY(-2px);
   }
+}
 
-  // Rank-specific styling
-  &.rank-1 {
-    border: 2px solid var(--color-gold-500);
-    background: var(--color-white);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+// Tier Preview Section
+.tier-preview-container {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
 
-    &:hover {
-      box-shadow: 0 6px 16px rgba(212, 175, 55, 0.2);
-      border-color: var(--color-gold-600);
-    }
-  }
+.tier-preview-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #6B7280;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
 
-  &.rank-2 {
-    border: 2px solid var(--color-gold-500);
-    background: var(--color-white);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
-  }
+.tier-preview-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #9CA3AF;
+  margin-bottom: 24px;
+}
 
-  &.rank-3 {
-    border: 2px solid var(--color-gold-500);
-    background: var(--color-white);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
-  }
+.tier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
-  &:nth-child(n + 4) {
-    border: 1px solid var(--color-border-light);
-  }
+.tier-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  transition: all 150ms ease;
 
-  .rank-icon {
-    font-size: 36px;
-    text-align: center;
-  }
-
-  .flex-items-center {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--spacing-lg);
-
-    .entry-info {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-lg);
-      flex: 1;
-
-      h3 {
-        font-size: 20px;
-        font-weight: 600;
-        color: var(--color-navy-500);
-        margin: 0;
-      }
-
-      p {
-        margin: 0;
-        font-size: 12px;
-        color: var(--color-gray-dark);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-    }
-
-    .entry-rating {
-      text-align: right;
-
-      p {
-        margin: 0;
-
-        &.rating-value {
-          font-size: 28px;
-          font-weight: var(--font-weight-bold);
-          color: var(--color-gold-500);
-        }
-
-        &.rating-label {
-          font-size: 12px;
-          color: var(--color-gray-dark);
-          text-transform: uppercase;
-        }
-      }
-    }
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-lg);
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--color-border-light);
-
-    .stat {
-      text-align: center;
-
-      .stat-value {
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--color-navy-500);
-        margin-bottom: var(--spacing-xs);
-      }
-
-      .stat-label {
-        font-size: 11px;
-        color: var(--color-gray-dark);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-    }
+  &:hover {
+    background: #F3F4F6;
+    border-color: #D1D5DB;
+    transform: translateY(-1px);
   }
 }
 
-// Regular leaderboard entries (11+)
-.leaderboard-entry-regular {
-  background: var(--color-white);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-lg);
-  transition: all var(--transition-base);
+.tier-badge {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
 
-  &:hover {
-    background: var(--color-white);
-    border-color: var(--color-gold-500);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.tier-info {
+  text-align: left;
+  flex: 1;
+}
+
+.tier-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1F2937;
+  line-height: 1.3;
+}
+
+.tier-description {
+  font-size: 11px;
+  color: #9CA3AF;
+  line-height: 1.4;
+}
+
+// Responsive Design
+@media (max-width: 667px) {
+  .leaderboard-empty {
+    min-height: calc(100vh - 150px);
+    padding: 32px 20px;
   }
 
-  .entry-main {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .empty-state-section-header {
+    font-size: 12px;
+    margin-bottom: 24px;
+  }
 
-    .entry-info {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-md);
+  .empty-state-divider {
+    margin: 24px 0;
+  }
 
-      .rank {
-        width: 40px;
-        text-align: center;
-        font-weight: 600;
-        color: var(--color-navy-500);
-        font-size: 16px;
-      }
+  .empty-state-icon {
+    font-size: 56px;
+    margin-bottom: 20px;
+  }
 
-      .info-text {
-        h4 {
-          font-size: 16px;
-          font-weight: 600;
-          color: var(--color-navy-500);
-          margin: 0 0 var(--spacing-xs) 0;
-        }
+  .empty-state-headline {
+    font-size: 24px;
+    margin-bottom: 14px;
+  }
 
-        p {
-          font-size: 12px;
-          color: var(--color-gray-dark);
-          margin: 0;
-        }
-      }
+  .empty-state-subheading {
+    font-size: 14px;
+    max-width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .empty-state-buttons {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .btn-compete,
+  .btn-rules {
+    width: 100%;
+    --padding-start: 24px;
+    --padding-end: 24px;
+  }
+
+  .tier-preview-container {
+    max-width: 100%;
+  }
+
+  .tier-item {
+    padding: 10px 12px;
+  }
+
+  .tier-name {
+    font-size: 12px;
+  }
+
+  .tier-description {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 375px) {
+  .empty-state-icon {
+    font-size: 48px;
+  }
+
+  .empty-state-headline {
+    font-size: 20px;
+  }
+
+  .btn-compete,
+  .btn-rules {
+    font-size: 14px;
+    --padding-start: 20px;
+    --padding-end: 20px;
+  }
+}
+
+// ============================================================================
+// LEADERBOARD CARD GRID
+// ============================================================================
+
+.leaderboard-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; // Reduced from 16px
+}
+
+// ============================================================================
+// UNIFIED LEADERBOARD CARD BASE
+// ============================================================================
+
+.leaderboard-card {
+  border-radius: 10px;
+  padding: 16px;
+  border: 2px solid;
+  transition: all 200ms ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 100px;
+  max-height: 110px;
+
+  // Fade-in and scale animation
+  animation: fadeInScale 0.4s ease-out backwards;
+
+  // Stagger animation for each card
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
     }
+  }
 
-    .entry-stats {
-      text-align: right;
+  &:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  }
+}
 
-      .rating {
-        font-weight: 600;
-        color: var(--color-navy-500);
-        margin-bottom: var(--spacing-xs);
-      }
+// ============================================================================
+// TIER 1: SIGNALS MASTER (Rank #1)
+// ============================================================================
 
-      .details {
-        font-size: 12px;
-        color: var(--color-gray-dark);
-      }
-    }
+.leaderboard-card.tier-1 {
+  background: linear-gradient(135deg, #FCD34D 0%, #FEF08A 100%);
+  border-color: #F59E0B;
+  color: #78350F;
+
+  .rank-label {
+    color: #78350F;
+    font-weight: 600;
+  }
+
+  .rating-value {
+    color: #F59E0B;
+  }
+
+  .stats-row {
+    color: #78350F;
+    opacity: 0.9;
+  }
+}
+
+// ============================================================================
+// TIER 2: TOP SIGNALLER (Ranks #2-10)
+// ============================================================================
+
+.leaderboard-card.tier-2 {
+  background: linear-gradient(135deg, #93C5FD 0%, #DBEAFE 100%);
+  border-color: #3B82F6;
+  color: #1E40AF;
+
+  .rank-label {
+    color: #1E40AF;
+    font-weight: 600;
+  }
+
+  .rating-value {
+    color: #3B82F6;
+  }
+
+  .stats-row {
+    color: #1E40AF;
+    opacity: 0.9;
+  }
+}
+
+// ============================================================================
+// TIER 3: RISING STAR (Ranks #11-50)
+// ============================================================================
+
+.leaderboard-card.tier-3 {
+  background: linear-gradient(135deg, #86EFAC 0%, #DCFCE7 100%);
+  border-color: #10B981;
+  color: #15803D;
+
+  .rank-label {
+    color: #15803D;
+    font-weight: 600;
+  }
+
+  .rating-value {
+    color: #10B981;
+  }
+
+  .stats-row {
+    color: #15803D;
+    opacity: 0.9;
+  }
+}
+
+// ============================================================================
+// TIER 4: DEVELOPING (Ranks #51-100)
+// ============================================================================
+
+.leaderboard-card.tier-4 {
+  background: linear-gradient(135deg, #C4B5FD 0%, #EDE9FE 100%);
+  border-color: #8B5CF6;
+  color: #5B21B6;
+
+  .rank-label {
+    color: #5B21B6;
+    font-weight: 600;
+  }
+
+  .rating-value {
+    color: #8B5CF6;
+  }
+
+  .stats-row {
+    color: #5B21B6;
+    opacity: 0.9;
+  }
+}
+
+// ============================================================================
+// TIER 5: PARTICIPANT (Ranks #101+)
+// ============================================================================
+
+.leaderboard-card.tier-5 {
+  background: linear-gradient(135deg, #D1D5DB 0%, #F3F4F6 100%);
+  border-color: #D1D5DB;
+  color: #374151;
+
+  .rank-label {
+    color: #6B7280;
+    font-weight: 500;
+  }
+
+  .rating-value {
+    color: #6B7280;
+  }
+
+  .stats-row {
+    color: #374151;
+    opacity: 0.85;
+  }
+}
+
+// ============================================================================
+// TOP PERFORMER SPECIAL BORDERS
+// ============================================================================
+
+// Rank #1: Gold accent border
+.leaderboard-card.top-1-border {
+  border: 3px solid #F59E0B;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+  }
+}
+
+// Ranks #2-10: Silver/Blue accent border
+.leaderboard-card.top-10-border {
+  border: 2.5px solid #60A5FA;
+  box-shadow: 0 0 15px rgba(96, 165, 250, 0.25);
+
+  &:hover {
+    box-shadow: 0 8px 20px rgba(96, 165, 250, 0.35);
+  }
+}
+
+// ============================================================================
+// CURRENT USER HIGHLIGHT
+// ============================================================================
+
+.leaderboard-card.current-user {
+  position: relative;
+  animation: fadeInScale 0.4s ease-out, pulseGlow 2s ease-in-out infinite;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #F59E0B, #EF4444, #F59E0B);
+    z-index: -1;
+    opacity: 0.6;
+    animation: rotateBorder 3s linear infinite;
+  }
+}
+
+// ============================================================================
+// CARD HEADER LAYOUT
+// ============================================================================
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.badge {
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.username {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.you-badge {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+.rating {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.rating-value {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rating-label {
+  font-size: 9px;
+  font-weight: 600;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+// ============================================================================
+// RANK ACHIEVEMENT LABEL
+// ============================================================================
+
+.rank-label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0.95;
+  font-style: italic;
+}
+
+// ============================================================================
+// INLINE STATS ROW
+// ============================================================================
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  opacity: 0.85;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.stat-item {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.stat-divider {
+  opacity: 0.5;
+  font-weight: bold;
+}
+
+// ============================================================================
+// ANIMATIONS
+// ============================================================================
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+  }
+}
+
+@keyframes rotateBorder {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -280,62 +682,122 @@ h1 {
 // RESPONSIVE DESIGN
 // ============================================================================
 
-@media (max-width: 768px) {
-  .leaderboard-entry-top {
-    padding: var(--spacing-lg);
+// Tablet (668px - 1023px)
+@media (max-width: 1023px) {
+  .leaderboard-card {
+    padding: 14px;
+    gap: 7px;
+    min-height: 100px;
+    max-height: 105px;
+  }
 
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-md);
-    }
+  .badge {
+    font-size: 22px;
+  }
 
-    .flex-items-center {
-      flex-direction: column;
-      align-items: flex-start;
+  .username {
+    font-size: 15px;
+  }
 
-      .entry-rating {
-        align-self: flex-end;
-        margin-top: var(--spacing-md);
-      }
-    }
+  .rating-value {
+    font-size: 16px;
+  }
+
+  .rank-label {
+    font-size: 11px;
+  }
+
+  .stats-row {
+    font-size: 11px;
+    gap: 10px;
   }
 }
 
-@media (max-width: 375px) {
-  .space-y-4 {
-    gap: var(--spacing-md);
+// Mobile (375px - 667px)
+@media (max-width: 667px) {
+  .leaderboard-grid {
+    gap: 10px;
   }
 
-  .leaderboard-entry-top {
-    padding: var(--spacing-md);
-
-    .stats-grid {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-sm);
-    }
-
-    .rank-icon {
-      font-size: 28px;
-    }
+  .leaderboard-card {
+    padding: 12px;
+    gap: 6px;
+    min-height: 90px;
+    max-height: 100px;
   }
 
-  .leaderboard-entry-regular {
-    padding: var(--spacing-md);
+  .badge {
+    font-size: 20px;
+  }
 
-    .entry-main {
-      flex-direction: column;
-      align-items: flex-start;
+  .username {
+    font-size: 14px;
+  }
 
-      .entry-stats {
-        align-self: flex-end;
-        margin-top: var(--spacing-sm);
-      }
-    }
+  .rating-value {
+    font-size: 15px;
+  }
+
+  .rating-label {
+    font-size: 8px;
+  }
+
+  .rank-label {
+    font-size: 11px;
+  }
+
+  .stats-row {
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  .card-header {
+    gap: 8px;
+  }
+
+  .user-info {
+    gap: 8px;
+  }
+
+  .you-badge {
+    font-size: 8px;
+    padding: 2px 4px;
+  }
+}
+
+// Extra small mobile (< 375px)
+@media (max-width: 374px) {
+  .leaderboard-card {
+    padding: 10px;
+    gap: 5px;
+    min-height: 85px;
+    max-height: 95px;
+  }
+
+  .badge {
+    font-size: 18px;
+  }
+
+  .username {
+    font-size: 13px;
+  }
+
+  .rating-value {
+    font-size: 14px;
+  }
+
+  .rank-label {
+    font-size: 10px;
+  }
+
+  .stats-row {
+    font-size: 10px;
+    gap: 6px;
   }
 }
 
 // ============================================================================
-// DARK MODE
+// DARK MODE (Maintain light theme gradients in dark mode)
 // ============================================================================
 
 @media (prefers-color-scheme: dark) {
@@ -343,59 +805,9 @@ h1 {
     --background: var(--color-white);
   }
 
-  .leaderboard-entry-top {
-    background: var(--color-white);
-    border-color: var(--color-gold-500);
-
-    &.rank-1,
-    &.rank-2,
-    &.rank-3 {
-      background: var(--color-white);
-      border-color: var(--color-gold-500);
-    }
-
-    .entry-info h3 {
-      color: #000000;
-    }
-
-    .stats-grid {
-      border-top-color: #e2e8f0;
-
-      .stat-value {
-        color: #000000;
-      }
-
-      .stat-label {
-        color: #666666;
-      }
-    }
-
-    p {
-      color: #666666;
-    }
-  }
-
-  .leaderboard-entry-regular {
-    background: var(--color-white);
-    border-color: #e2e8f0;
-
-    .info-text h4 {
-      color: #000000;
-    }
-
-    .info-text p {
-      color: #666666;
-    }
-
-    .entry-stats {
-      .rating {
-        color: #000000;
-      }
-
-      .details {
-        color: #666666;
-      }
-    }
+  // Keep tier gradients visible in dark mode
+  .leaderboard-card {
+    // Gradients remain the same for visual consistency
   }
 }
 
@@ -404,16 +816,37 @@ h1 {
 // ============================================================================
 
 @media (prefers-reduced-motion: reduce) {
-  .leaderboard-entry-top {
-    animation: none;
+  .leaderboard-card {
+    animation: none !important;
     transition: none;
 
     &:hover {
-      transform: none;
+      transform: translateY(-2px); // Keep lift, remove scale
     }
   }
 
-  .leaderboard-entry-regular {
-    transition: none;
+  .leaderboard-card.current-user {
+    animation: none !important;
+
+    &::before {
+      animation: none !important;
+    }
+  }
+}
+
+// ============================================================================
+// PRINT STYLES
+// ============================================================================
+
+@media print {
+  .leaderboard-card {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
   }
 }

@@ -8,60 +8,103 @@
   <div class="container">
     <h1>Global Rankings</h1>
 
-    <div *ngIf="entries.length === 0" class="empty-state">
-      <p>No competition results yet.</p>
-      <p class="subtitle">Be the first to compete in Best Signaller mode!</p>
-    </div>
+    <div *ngIf="entries.length === 0" class="leaderboard-empty">
+      <!-- Section Header -->
+      <div class="empty-state-section-header">GLOBAL RANKINGS</div>
 
-    <div *ngIf="entries.length > 0" class="space-y-4">
-      <!-- Top 10 Highlight -->
-      <div *ngFor="let entry of entries.slice(0, 10); let i = index"
-           [class.leaderboard-entry-top]="true"
-           [ngClass]="'rank-' + entry.rank">
-        <div class="flex-items-center">
-          <div class="entry-info">
-            <div class="rank-icon">{{ getRankIcon(entry.rank) }}</div>
-            <div>
-              <h3>{{ entry.username }}</h3>
-              <p>{{ entry.tier }}</p>
+      <!-- Top Divider -->
+      <div class="empty-state-divider"></div>
+
+      <!-- Main Icon -->
+      <div class="empty-state-icon">🏆</div>
+
+      <!-- Headline -->
+      <h2 class="empty-state-headline">Accept the Challenge!</h2>
+
+      <!-- Description -->
+      <p class="empty-state-subheading">
+        Be the pioneer. Compete now to establish the first ranking on the global leaderboard and earn your place in history.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="empty-state-buttons">
+        <ion-button class="btn-compete" (click)="navigateToCompete()">
+          <span class="btn-icon">▶</span>
+          Compete Now
+        </ion-button>
+        <ion-button class="btn-rules" fill="outline" (click)="navigateToAbout()">
+          <span class="btn-icon">📖</span>
+          View Rules
+        </ion-button>
+      </div>
+
+      <!-- Bottom Divider -->
+      <div class="empty-state-divider"></div>
+
+      <!-- Tier Preview Section -->
+      <div class="tier-preview-container">
+        <div class="tier-preview-title">RANK TIERS</div>
+        <div class="tier-preview-subtitle">Start Your Journey</div>
+
+        <div class="tier-list">
+          <div class="tier-item">
+            <div class="tier-badge">🥇</div>
+            <div class="tier-info">
+              <div class="tier-name">Signals Master</div>
+              <div class="tier-description">The elite rank for competition champions</div>
             </div>
           </div>
-          <div class="entry-rating">
-            <p class="rating-value">{{ entry.rating }}</p>
-            <p class="rating-label">Rating</p>
+
+          <div class="tier-item">
+            <div class="tier-badge">🥈</div>
+            <div class="tier-info">
+              <div class="tier-name">Top Signaller</div>
+              <div class="tier-description">Recognition for consistent excellence</div>
+            </div>
           </div>
-        </div>
-        <div class="stats-grid">
-          <div class="stat">
-            <div class="stat-value">{{ entry.correctAnswers }}/{{ entry.totalQuestions }}</div>
-            <div class="stat-label">Correct</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value">{{ entry.accuracy.toFixed(1) }}%</div>
-            <div class="stat-label">Accuracy</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value">{{ formatTime(entry.totalTime) }}</div>
-            <div class="stat-label">Time</div>
+
+          <div class="tier-item">
+            <div class="tier-badge">🌟</div>
+            <div class="tier-info">
+              <div class="tier-name">Rising Star</div>
+              <div class="tier-description">Developing your competitive skills</div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Rest of Leaderboard -->
-      <div *ngFor="let entry of entries.slice(10)"
-           class="leaderboard-entry-regular">
-        <div class="entry-main">
-          <div class="entry-info">
-            <div class="rank">#{{ entry.rank }}</div>
-            <div class="info-text">
-              <h4>{{ entry.username }}</h4>
-              <p>{{ formatTime(entry.totalTime) }}</p>
-            </div>
+    <div *ngIf="entries.length > 0" class="leaderboard-grid">
+      <!-- Unified Card Structure for All Ranks -->
+      <div *ngFor="let entry of entries"
+           class="leaderboard-card"
+           [ngClass]="[getTierClass(entry.rank), getTopBorderClass(entry.rank), isCurrentUser(entry.username) ? 'current-user' : '']">
+
+        <!-- Header Row: Badge + Username + Rating -->
+        <div class="card-header">
+          <div class="user-info">
+            <span class="badge">{{ getTierBadge(entry.rank) }}</span>
+            <span class="username">{{ entry.username }}</span>
+            <span *ngIf="isCurrentUser(entry.username)" class="you-badge">YOU</span>
           </div>
-          <div class="entry-stats">
-            <div class="rating">{{ entry.rating }}</div>
-            <div class="details">{{ entry.correctAnswers }}/{{ entry.totalQuestions }} ({{ entry.accuracy.toFixed(1) }}%)</div>
+          <div class="rating">
+            <span class="rating-value">{{ entry.rating }}</span>
+            <span class="rating-label">RATING</span>
           </div>
+        </div>
+
+        <!-- Rank Achievement Label -->
+        <div class="rank-label">
+          {{ getTierLabel(entry.rank) }}
+        </div>
+
+        <!-- Inline Stats Row -->
+        <div class="stats-row">
+          <span class="stat-item">{{ entry.correctAnswers }}/{{ entry.totalQuestions }} Correct</span>
+          <span class="stat-divider">•</span>
+          <span class="stat-item">{{ entry.accuracy.toFixed(1) }}% Accuracy</span>
+          <span class="stat-divider">•</span>
+          <span class="stat-item">{{ formatTime(entry.totalTime) }}</span>
         </div>
       </div>
     </div>
