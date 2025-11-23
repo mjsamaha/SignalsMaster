@@ -5,6 +5,41 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <!-- DEBUG: Show component loaded status -->
+  <div style="padding: 10px; background: #ffcccc; margin: 10px; border-radius: 5px; border: 2px solid red;">
+    <p style="margin: 0; font-size: 14px; font-weight: bold; color: red;">
+      [DEBUG] results={{ results ? '✓ YES' : '✗ NO' }}
+    </p>
+    <p style="margin: 5px 0 0 0; font-size: 12px;">
+      username: {{ results?.username || 'EMPTY' }} |
+      finalRating: {{ results?.finalRating || 'EMPTY' }} |
+      hasSubmitted: {{ hasSubmitted }}
+    </p>
+  </div>
+
+  <!-- CRITICAL: Always visible submit button for testing -->
+  <ion-button
+    *ngIf="results && !hasSubmitted && !isSubmitting"
+    expand="full"
+    fill="solid"
+    color="success"
+    (click)="submitScore()"
+    style="margin: 10px; font-size: 16px; font-weight: bold;"
+    class="submit-btn">
+    ☁️ SUBMIT TO LEADERBOARD - CLICK HERE
+  </ion-button>
+
+  <ion-button
+    *ngIf="results && hasSubmitted"
+    expand="full"
+    fill="solid"
+    color="success"
+    disabled
+    style="margin: 10px; font-size: 14px;"
+    class="submit-btn">
+    ✓ Submitted: {{ submissionMessage }}
+  </ion-button>
+
   <div *ngIf="results" class="results-container">
     <!-- Header with Username and Trophy -->
     <div class="results-header">

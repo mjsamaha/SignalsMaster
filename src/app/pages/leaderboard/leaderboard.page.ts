@@ -18,12 +18,14 @@ export class LeaderboardPage implements OnInit, OnDestroy {
   constructor(private leaderboardService: LeaderboardService) {}
 
   ngOnInit(): void {
+    console.log('[DEBUG] LeaderboardPage.ngOnInit() called');
     this.leaderboardSubscription = this.leaderboardService.getLeaderboard().subscribe({
       next: entries => {
+        console.log('[DEBUG] Leaderboard received entries:', entries.length, 'entries:', entries);
         this.entries = entries;
       },
       error: error => {
-        console.error('Failed to load leaderboard:', error);
+        console.error('[DEBUG] Failed to load leaderboard:', error);
       }
     });
   }

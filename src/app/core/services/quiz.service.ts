@@ -650,6 +650,7 @@ export class QuizService {
     const question = this.currentQuestion$.value;
 
     if (!session || !question) {
+      console.log('[DEBUG] submitCompetitiveAnswer - early return, session:', !!session, 'question:', !!question);
       return null;
     }
 
@@ -672,6 +673,14 @@ export class QuizService {
     const newAnswers = [...session.questionsAnswered, record];
     const newIndex = session.currentQuestionIndex + 1;
 
+    console.log('[DEBUG] submitCompetitiveAnswer - updating session:', {
+      currentIndex: session.currentQuestionIndex,
+      newIndex,
+      newScore,
+      willSetEndTime: newIndex >= 50,
+      newIndexGreaterEqual50: newIndex >= 50
+    });
+
     const updatedSession: CompetitiveSession = {
       ...session,
       currentScore: newScore,
@@ -681,7 +690,14 @@ export class QuizService {
       isActive: newIndex < 50
     };
 
+    console.log('[DEBUG] Updated session created:', {
+      currentQuestionIndex: updatedSession.currentQuestionIndex,
+      endTimeSet: !!updatedSession.endTime,
+      isActive: updatedSession.isActive
+    });
+
     this.competitiveSession$.next(updatedSession);
+    console.log('[DEBUG] Emitted updated session');
     return record;
   }
 
@@ -725,7 +741,16 @@ export class QuizService {
 
   getCompetitiveResults(): CompetitiveResults | null {
     const session = this.competitiveSession$.value;
+    console.log('[DEBUG] getCompetitiveResults called, session:', {
+      exists: !!session,
+      endTimeSet: !!session?.endTime,
+      currentQuestionIndex: session?.currentQuestionIndex,
+      username: session?.username,
+      sessionId: session?.sessionId
+    });
+
     if (!session || !session.endTime) {
+      console.log('[DEBUG] getCompetitiveResults returning null - session or endTime missing');
       return null;
     }
 
@@ -735,7 +760,7 @@ export class QuizService {
 
     const rating = this.calculateCompetitiveRating(accuracy, totalTime);
 
-    return {
+    const result: CompetitiveResults = {
       username: session.username,
       totalQuestions: 50,
       correctAnswers: session.currentScore,
@@ -750,5 +775,15 @@ export class QuizService {
       completedAt: session.endTime,
       answers: [...session.questionsAnswered]
     };
+
+    console.log('[DEBUG] getCompetitiveResults returning:', {
+      username: result.username,
+      finalRating: result.finalRating,
+      accuracy: result.accuracy,
+      totalTime: result.totalTime,
+      sessionId: result.sessionId
+    });
+
+    return result;
   }
 }

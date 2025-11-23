@@ -1,8 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, orderBy, limit, onSnapshot, query, serverTimestamp } from '@angular/fire/firestore';
+import { Injectable, NgZone, inject } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  addDoc,
+  orderBy,
+  limit,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  QueryConstraint
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NgZone } from '@angular/core';
 import { CompetitiveResults } from './quiz.service';
 
 export interface LeaderboardEntry {
@@ -28,53 +37,105 @@ export interface SubmissionResponse {
   providedIn: 'root'
 })
 export class LeaderboardService {
+  private readonly firestore = inject(Firestore);
+  private readonly ngZone = inject(NgZone);
 
-  constructor(private firestore: Firestore, private ngZone: NgZone) {}
+  constructor() {
+    console.log('[DEBUG] LeaderboardService constructor called, firestore:', !!this.firestore);
+  }
 
   /**
    * Submit competitive results to Firestore
    */
   async submitScore(results: CompetitiveResults): Promise<SubmissionResponse> {
     console.log('[DEBUG] LeaderboardService.submitScore called with:', results);
+    console.log('[DEBUG] submitScore - Results check:', {
+      hasResults: !!results,
+      username: results?.username,
+      finalRating: results?.finalRating,
+      sessionId: results?.sessionId
+    });
 
     try {
-      // Client validation
+      // Validate results
       if (!this.validateResults(results)) {
         console.log('[DEBUG] Validation failed for results:', results);
         return { success: false, message: 'Invalid submission data' };
       }
 
-      // Prepare document data
+      console.log('[DEBUG] Validation passed, preparing document data');
+
+      // Prepare document data - MUST MATCH FIRESTORE RULES SCHEMA
       const docData = {
-        username: results.username,
-        accuracy: results.accuracy,
-        rating: results.finalRating,
-        totalTime: results.totalTime,
-        correctAnswers: results.correctAnswers,
-        totalQuestions: results.totalQuestions,
-        sessionId: results.sessionId,
-        createdAt: serverTimestamp()
+        username: results.username.trim(), // Ensure string, trim whitespace
+        rating: Math.round(results.finalRating), // Ensure number
+        accuracy: Math.round(results.accuracy), // Ensure number
+        totalTime: Math.round(results.totalTime), // Ensure number (seconds)
+        correctAnswers: results.correctAnswers, // number
+        totalQuestions: results.totalQuestions, // number (should be 50)
+        sessionId: results.sessionId, // string
+        createdAt: serverTimestamp() // Firestore server timestamp
       };
 
-      console.log('[DEBUG] Prepared document data:', docData);
+      console.log('[DEBUG] Prepared document data:', {
+        username: docData.username,
+        rating: docData.rating,
+        accuracy: docData.accuracy,
+        totalTime: docData.totalTime,
+        correctAnswers: docData.correctAnswers,
+        totalQuestions: docData.totalQuestions,
+        sessionId: docData.sessionId,
+        createdAt: '[serverTimestamp]'
+      });
 
-      // Add to Firestore
-      const docRef = await addDoc(collection(this.firestore, 'leaderboard'), docData);
+      console.log('[DEBUG] About to call addDoc with ngZone.run...');
+
+      // Wrap Firestore operation in ngZone for proper Angular change detection
+      const docRef = await this.ngZone.run(async () => {
+        console.log('[DEBUG] Inside ngZone.run, calling addDoc...');
+        const ref = await addDoc(collection(this.firestore, 'leaderboard'), docData);
+        console.log('[DEBUG] addDoc returned, docRef:', ref);
+        return ref;
+      });
+
       console.log('[DEBUG] Document added successfully, ID:', docRef.id);
+      console.log('[DEBUG] Full document ref:', docRef.path);
+      console.log('[DEBUG] Document write completed, returning success response');
 
-      return { success: true, message: 'Score submitted successfully!' };
+      return {
+        success: true,
+        message: 'Score submitted successfully!'
+      };
 
     } catch (error: any) {
-      console.error('[DEBUG] Error submitting score:', {
-        code: error.code,
-        message: error.message,
+      console.error('[DEBUG] CATCH BLOCK: Error submitting score:', {
+        code: error.code || 'UNKNOWN',
+        message: error.message || 'Unknown error',
+        errorType: error.constructor?.name,
         fullError: error
       });
 
+      // Handle specific Firebase errors
       if (error.code === 'permission-denied') {
-        return { success: false, message: 'Submission failed - duplicate session or invalid data' };
+        console.error('[DEBUG] Permission denied - check Firestore security rules');
+        return {
+          success: false,
+          message: 'Permission denied - check security rules'
+        };
       }
-      return { success: false, message: 'Failed to submit score. Please try again.' };
+
+      if (error.code === 'invalid-argument') {
+        console.error('[DEBUG] Invalid argument - data validation failed in Firestore');
+        return {
+          success: false,
+          message: 'Invalid data format - check rules'
+        };
+      }
+
+      return {
+        success: false,
+        message: 'Failed to submit score. Please try again.'
+      };
     }
   }
 
@@ -87,51 +148,82 @@ export class LeaderboardService {
     return new Observable<LeaderboardEntry[]>(observer => {
       console.log('[DEBUG] Creating leaderboard query');
 
-      const q = query(
-        collection(this.firestore, 'leaderboard'),
-        orderBy('rating', 'desc'),
-        orderBy('createdAt', 'asc'),
-        limit(100)
-      );
+      try {
+        // Wrap the ENTIRE Firestore operation in runOutsideAngular to prevent
+        // "Calling Firebase APIs outside of an Injection context" warnings
+        this.ngZone.runOutsideAngular(() => {
+          console.log('[DEBUG] Inside runOutsideAngular, building query');
 
-      console.log('[DEBUG] Query created, setting up listener');
+          // Build query - must happen inside runOutsideAngular
+          const constraints: QueryConstraint[] = [
+            orderBy('rating', 'desc'),   // Sort by rating descending
+            orderBy('createdAt', 'asc'), // Then by timestamp ascending
+            limit(100)                    // Limit to 100 documents
+          ];
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        console.log('[DEBUG] onSnapshot fired, docs count:', snapshot.docs.length);
+          console.log('[DEBUG] Firestore instance check:', {
+            firestoreExists: !!this.firestore,
+            type: typeof this.firestore
+          });
 
-        const entries: LeaderboardEntry[] = snapshot.docs.map((doc, index) => {
-          const data = doc.data() as any;
-          const rank = index + 1;
-          const tier = this.getTierLabel(rank);
+          const q = query(collection(this.firestore, 'leaderboard'), ...constraints);
 
-          return {
-            id: doc.id,
-            username: data.username,
-            rating: data.rating,
-            accuracy: data.accuracy,
-            totalTime: data.totalTime,
-            correctAnswers: data.correctAnswers,
-            totalQuestions: data.totalQuestions,
-            timestamp: data.createdAt?.toDate()?.getTime() || Date.now(),
-            rank,
-            tier,
-            sessionId: data.sessionId
-          };
+          console.log('[DEBUG] Query created, setting up listener');
+          console.log('[DEBUG] Calling onSnapshot');
+
+          const unsubscribe = onSnapshot(
+            q,
+            (snapshot) => {
+              console.log('[DEBUG] onSnapshot fired, docs count:', snapshot.docs.length);
+
+              try {
+                const entries: LeaderboardEntry[] = snapshot.docs.map((doc, index) => {
+                  const data = doc.data() as any;
+                  const rank = index + 1;
+                  const tier = this.getTierLabel(rank);
+
+                  return {
+                    id: doc.id,
+                    username: data.username || 'Anonymous',
+                    rating: data.rating || 0,
+                    accuracy: data.accuracy || 0,
+                    totalTime: data.totalTime || 0,
+                    correctAnswers: data.correctAnswers || 0,
+                    totalQuestions: data.totalQuestions || 0,
+                    timestamp: data.createdAt?.toDate?.()?.getTime() || Date.now(),
+                    rank,
+                    tier,
+                    sessionId: data.sessionId || ''
+                  };
+                });
+
+                console.log('[DEBUG] Processed entries:', entries.length,
+                  entries.length > 0 ? entries[0] : 'no entries');
+
+                // Emit data back to Angular zone for change detection
+                this.ngZone.run(() => observer.next(entries));
+              } catch (mapError) {
+                console.error('[DEBUG] Error mapping snapshot documents:', mapError);
+                this.ngZone.run(() => observer.error(mapError));
+              }
+            },
+            (error) => {
+              console.error('[DEBUG] Leaderboard listener error:', {
+                code: error.code || 'UNKNOWN',
+                message: error.message || 'Unknown error',
+                fullError: error
+              });
+              this.ngZone.run(() => observer.error(error));
+            }
+          );
+
+          // Return unsubscribe function
+          return unsubscribe;
         });
-
-        console.log('[DEBUG] Processed entries:', entries.length, entries.slice(0, 1));
-
-        this.ngZone.run(() => observer.next(entries));
-      }, (error) => {
-        console.error('[DEBUG] Leaderboard listener error:', {
-          code: error.code,
-          message: error.message,
-          fullError: error
-        });
+      } catch (error) {
+        console.error('[DEBUG] Error setting up leaderboard listener:', error);
         observer.error(error);
-      });
-
-      return { unsubscribe };
+      }
     });
   }
 
@@ -139,18 +231,62 @@ export class LeaderboardService {
    * Validate competitive results before submission
    */
   private validateResults(results: CompetitiveResults): boolean {
-    if (!results.username || results.username.length < 3 || results.username.length > 20) {
+    console.log('[DEBUG] Validating results:', {
+      username: results?.username,
+      finalRating: results?.finalRating,
+      accuracy: results?.accuracy,
+      totalTime: results?.totalTime,
+      sessionId: results?.sessionId
+    });
+
+    if (!results) {
+      console.log('[DEBUG] Validation: results is null/undefined');
       return false;
     }
-    if (results.finalRating < 0 || results.finalRating > 5000) {
+
+    // Username validation
+    const usernameValid = results.username && typeof results.username === 'string' &&
+                          results.username.length >= 3 && results.username.length <= 20;
+    console.log('[DEBUG] Validation: username =', results.username,
+                '(length:', results.username?.length || 0, 'valid:', usernameValid + ')');
+    if (!usernameValid) {
+      console.log('[DEBUG] Validation failed: invalid username');
       return false;
     }
-    if (results.accuracy < 0 || results.accuracy > 100) {
+
+    // Rating validation
+    const ratingValid = typeof results.finalRating === 'number' && results.finalRating >= 0 && results.finalRating <= 5000;
+    console.log('[DEBUG] Validation: rating =', results.finalRating, '(valid:', ratingValid + ')');
+    if (!ratingValid) {
+      console.log('[DEBUG] Validation failed: invalid rating');
       return false;
     }
-    if (results.totalTime <= 0) {
+
+    // Accuracy validation (0-100%)
+    const accuracyValid = typeof results.accuracy === 'number' && results.accuracy >= 0 && results.accuracy <= 100;
+    console.log('[DEBUG] Validation: accuracy =', results.accuracy, '(valid:', accuracyValid + ')');
+    if (!accuracyValid) {
+      console.log('[DEBUG] Validation failed: invalid accuracy');
       return false;
     }
+
+    // Time validation
+    const timeValid = typeof results.totalTime === 'number' && results.totalTime > 0;
+    console.log('[DEBUG] Validation: totalTime =', results.totalTime, '(valid:', timeValid + ')');
+    if (!timeValid) {
+      console.log('[DEBUG] Validation failed: invalid totalTime');
+      return false;
+    }
+
+    // Session ID validation
+    const sessionIdValid = results.sessionId && typeof results.sessionId === 'string' && results.sessionId.length > 0;
+    console.log('[DEBUG] Validation: sessionId exists =', sessionIdValid);
+    if (!sessionIdValid) {
+      console.log('[DEBUG] Validation failed: invalid sessionId');
+      return false;
+    }
+
+    console.log('[DEBUG] Validation passed for all fields');
     return true;
   }
 

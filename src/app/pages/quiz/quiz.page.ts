@@ -216,17 +216,38 @@ export class QuizPage implements OnInit, OnDestroy {
       }
     } else {
       // Competitive mode
+      console.log('[DEBUG] nextQuestion - competitive mode, checking if quiz complete');
       const session = this.quizService.getCompetitiveSessionValue();
+      console.log('[DEBUG] Current session:', {
+        currentQuestionIndex: session?.currentQuestionIndex,
+        totalQuestions: 50,
+        isActive: session?.isActive
+      });
+
       if (session && session.currentQuestionIndex < 50) {
         // More questions remaining
+        console.log('[DEBUG] More questions remaining, generating next question');
         this.quizService.generateCompetitiveQuestion().subscribe();
       } else {
         // Quiz completed - navigate to competitive results
+        console.log('[DEBUG] Quiz completed! Getting results...');
         const results = this.quizService.getCompetitiveResults();
+        console.log('[DEBUG] Results retrieved:', results);
+
         if (results) {
+          console.log('[DEBUG] Results exist, navigating to competitive-results with state:', results);
           this.router.navigate(['/competitive-results'], {
             state: { results }
+          }).then(success => {
+            console.log('[DEBUG] Navigation result:', success);
+            if (!success) {
+              console.error('[DEBUG] Navigation FAILED - router.navigate returned false');
+            }
+          }).catch(err => {
+            console.error('[DEBUG] Navigation EXCEPTION:', err);
           });
+        } else {
+          console.error('[DEBUG] ERROR: getCompetitiveResults returned null or undefined');
         }
       }
     }
