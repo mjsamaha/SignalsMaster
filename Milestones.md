@@ -1,5 +1,6 @@
 
 # Milestone 7: UI/UX Polish & Responsive Design
+blank comment
 
 ## Overview
 
