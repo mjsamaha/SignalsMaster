@@ -3,15 +3,7 @@
 // ============================================================================
 
 ion-header {
-  --background: var(--color-navy-500);
-  --border-color: transparent;
-  --color: var(--color-navy-500);
-
-  ion-title {
-    font-weight: 600;
-    font-size: 20px;
-    color: var(--color-white);
-  }
+  @include unified-header;
 }
 
 ion-content {

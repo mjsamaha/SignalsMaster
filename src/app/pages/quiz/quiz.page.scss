@@ -2,7 +2,7 @@
 // QUIZ PAGE STYLES - UNIFIED NAVAL THEME
 // ============================================================================
 // Color Palette:
-// - Header Background: Navy #0A3961
+// - Header Background: Navy #0A3961 with Gold accent
 // - Page Background: Sky #F0F6FA
 // - Text Color: Navy #0A3961
 // - Accent Color: Gold #D4AF37
@@ -15,15 +15,7 @@ ion-content {
 }
 
 ion-header {
-  --background: var(--color-navy-500);
-  --border-color: transparent;
-  --color: var(--color-navy-500);
-
-  ion-title {
-    font-weight: 600;
-    font-size: 20px;
-    color: var(--color-white);
-  }
+  @include unified-header;
 
   ion-button {
     --color: var(--color-gold-500);

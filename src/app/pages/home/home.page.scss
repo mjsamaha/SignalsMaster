@@ -2,29 +2,14 @@
 // HOME PAGE STYLES - UNIFIED NAVAL THEME
 // ============================================================================
 // Color Palette:
-// - Header Background: Navy #0A3961
+// - Header Background: Navy #0A3961 with Gold accent
 // - Page Background: Sky #F0F6FA
 // - Text Color: Navy #0A3961
 // - Accent Color: Gold #D4AF37
 // ============================================================================
 
 ion-header {
-  --background: var(--color-navy-500);
-  --border-color: transparent;
-  --color: var(--color-navy-500);
-
-  ion-toolbar {
-    --background: var(--color-navy-500);
-    --border-color: transparent;
-  }
-
-  ion-title {
-    font-weight: 600;
-    font-size: 22px;
-    color: var(--color-white);
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-  }
+  @include unified-header;
 }
 
 ion-content {
@@ -156,7 +141,7 @@ ion-content {
       flex: 1;
 
       h2 {
-        font-size: 24px;
+        font-size: var(--font-size-h2-mobile);
         font-weight: var(--font-weight-bold);
         color: var(--color-navy-500);
         margin: 0 0 var(--spacing-sm) 0;
@@ -312,5 +297,3 @@ ion-content {
     }
   }
 }
-
-

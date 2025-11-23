@@ -3,15 +3,7 @@
 // ============================================================================
 
 ion-header {
-  --background: var(--color-navy-500);
-  --border-color: transparent;
-  --color: var(--color-navy-500);
-
-  ion-title {
-    font-weight: 600;
-    font-size: 20px;
-    color: var(--color-white);
-  }
+  @include unified-header;
 }
 
 ion-content {
@@ -59,15 +51,15 @@ h1 {
 }
 
 h2 {
-  font-size: 24px;
+  font-size: var(--font-size-h2-mobile);
   font-weight: var(--font-weight-bold);
   color: var(--color-gold-500);
   margin: var(--spacing-2xl) 0 var(--spacing-lg) 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
-  @media (max-width: 768px) {
-    font-size: 20px;
+  @media (min-width: 1200px) {
+    font-size: var(--font-size-h2-desktop);
   }
 }
 
@@ -264,5 +256,3 @@ li {
     }
   }
 }
-
-
