@@ -6,6 +6,19 @@ A professional, mobile-first quiz application designed for military personnel, s
 
 ---
 
+## 📸 App Preview
+
+<div align="center">
+  <img src="screenshots/github/GitHub_QuizFeedback.png" alt="Quiz with Instant Feedback" width="30%" />
+  <img src="screenshots/github/GitHub_SubmitLeaderboard.png" alt="Submit to Leaderboard" width="30%" />
+</div>
+
+<p align="center">
+  <em>Interactive quiz feedback • Competitive leaderboard submission • Global rankings</em>
+</p>
+
+---
+
 ## 🎯 About SignalsMaster
 
 SignalsMaster is your all-in-one training platform for mastering the International Code of Signals. Whether you're a professional signaler, active-duty military personnel, or a cadet looking to earn your signals qualification, this app delivers:
