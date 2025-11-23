@@ -1,11 +1,11 @@
 // ============================================================================
-// HOME PAGE STYLES - UNIFIED NAVAL THEME
+// HOME PAGE STYLES - NAVAL LIGHT THEME
 // ============================================================================
-// Color Palette:
-// - Header Background: Navy #0A3961 with Gold accent
-// - Page Background: Sky #F0F6FA
-// - Text Color: Navy #0A3961
-// - Accent Color: Gold #D4AF37
+// Modern Light Naval Color Palette:
+// - Naval Blue: #0A2A43 (headers, buttons, text)
+// - Steel Gray: #6E829B (tabs, secondary elements)
+// - Signal Yellow: #F4D35E (CTAs, highlights)
+// - Light Background: #F5F7FA (main background)
 // ============================================================================
 
 @import '../../theme/mixins';
@@ -15,7 +15,7 @@ ion-header {
 }
 
 ion-content {
-  --background: var(--color-sky-50);
+  --background: var(--color-background-light);
 }
 
 // ============================================================================
