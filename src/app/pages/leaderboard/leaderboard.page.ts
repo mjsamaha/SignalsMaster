@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { LeaderboardService, LeaderboardEntry } from '../../core/services/leaderboard.service';
 
 @Component({
@@ -10,15 +11,27 @@ import { LeaderboardService, LeaderboardEntry } from '../../core/services/leader
   standalone: true,
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, CommonModule]
 })
-export class LeaderboardPage implements OnInit {
+export class LeaderboardPage implements OnInit, OnDestroy {
   entries: LeaderboardEntry[] = [];
+  private leaderboardSubscription: Subscription | null = null;
 
   constructor(private leaderboardService: LeaderboardService) {}
 
   ngOnInit(): void {
-    this.leaderboardService.getLeaderboard().subscribe(entries => {
-      this.entries = entries;
+    this.leaderboardSubscription = this.leaderboardService.getLeaderboard().subscribe({
+      next: entries => {
+        this.entries = entries;
+      },
+      error: error => {
+        console.error('Failed to load leaderboard:', error);
+      }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.leaderboardSubscription) {
+      this.leaderboardSubscription.unsubscribe();
+    }
   }
 
   getRankIcon(rank: number): string {

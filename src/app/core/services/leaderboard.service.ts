@@ -1,135 +1,138 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { QuizResults } from './quiz.service';
+import { Injectable, inject } from '@angular/core';
+import { Firestore, collection, collectionData, doc, addDoc, serverTimestamp, query, orderBy, limit, onSnapshot, DocumentData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { CompetitiveResults } from './quiz.service';
 
 export interface LeaderboardEntry {
   id: string;
   username: string;
-  score: number;
-  totalQuestions: number;
-  accuracy: number;
-  timeElapsed: number;
   rating: number;
-  date: Date;
+  accuracy: number;
+  totalTime: number;
+  correctAnswers: number;
+  totalQuestions: number;
+  timestamp: number;
+  rank: number;
+  tier: string;
+  sessionId: string;
+}
+
+export interface SubmissionResponse {
+  success: boolean;
+  message: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeaderboardService {
-  private leaderboard$ = new BehaviorSubject<LeaderboardEntry[]>([]);
-  private readonly STORAGE_KEY = 'signalsmaster_leaderboard';
+  private firestore: Firestore = inject(Firestore);
 
-  constructor() {
-    this.loadLeaderboard();
-  }
+  constructor() {}
 
   /**
-   * Add a quiz result to the leaderboard
+   * Submit competitive results to Firestore
    */
-  addResult(result: QuizResults, username: string = 'Anonymous'): void {
-    if (result.mode !== 'competitive') {
-      return; // Only add competition results
+  async submitScore(results: CompetitiveResults): Promise<SubmissionResponse> {
+    try {
+      // Client validation
+      if (!this.validateResults(results)) {
+        return { success: false, message: 'Invalid submission data' };
+      }
+
+      // Prepare document data
+      const docData = {
+        username: results.username,
+        accuracy: results.accuracy,
+        rating: results.finalRating,
+        totalTime: results.totalTime,
+        correctAnswers: results.correctAnswers,
+        totalQuestions: results.totalQuestions,
+        sessionId: results.sessionId,
+        createdAt: serverTimestamp()
+      };
+
+      // Add to Firestore
+      const leaderboardRef = collection(this.firestore, 'leaderboard');
+      await addDoc(leaderboardRef, docData);
+
+      return { success: true, message: 'Score submitted successfully!' };
+
+    } catch (error: any) {
+      console.error('Error submitting score:', error);
+      if (error.code === 'permission-denied') {
+        return { success: false, message: 'Submission failed - duplicate session or invalid data' };
+      }
+      return { success: false, message: 'Failed to submit score. Please try again.' };
     }
-
-    const entry: LeaderboardEntry = {
-      id: this.generateId(),
-      username: username,
-      score: result.correctAnswers,
-      totalQuestions: result.totalQuestions,
-      accuracy: result.accuracy,
-      timeElapsed: Math.round(result.totalTime), // Convert to seconds
-      rating: result.rating,
-      date: result.completedAt
-    };
-
-    const currentLeaderboard = this.leaderboard$.value;
-    const updatedLeaderboard = [...currentLeaderboard, entry]
-      .sort((a, b) => b.rating - a.rating)
-      .slice(0, 100); // Keep top 100
-
-    this.leaderboard$.next(updatedLeaderboard);
-    this.saveLeaderboard();
   }
 
   /**
-   * Get leaderboard entries
+   * Get real-time leaderboard from Firestore
    */
   getLeaderboard(): Observable<LeaderboardEntry[]> {
-    return this.leaderboard$.asObservable();
-  }
+    return new Observable<LeaderboardEntry[]>(observer => {
+      const leaderboardRef = collection(this.firestore, 'leaderboard');
+      const q = query(leaderboardRef, orderBy('rating', 'desc'), orderBy('createdAt', 'asc'), limit(100));
 
-  /**
-   * Get top N entries
-   */
-  getTopEntries(count: number = 10): Observable<LeaderboardEntry[]> {
-    return new Observable(observer => {
-      this.leaderboard$.subscribe(entries => {
-        observer.next(entries.slice(0, count));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const entries: LeaderboardEntry[] = querySnapshot.docs.map((doc, index) => {
+          const data = doc.data();
+          const rank = index + 1;
+          const tier = this.getTierLabel(rank);
+
+          return {
+            id: doc.id,
+            username: data['username'],
+            rating: data['rating'],
+            accuracy: data['accuracy'],
+            totalTime: data['totalTime'],
+            correctAnswers: data['correctAnswers'],
+            totalQuestions: data['totalQuestions'],
+            timestamp: data['createdAt']?.toDate()?.getTime() || Date.now(),
+            rank: rank,
+            tier: tier,
+            sessionId: data['sessionId']
+          };
+        });
+
+        observer.next(entries);
+      }, (error) => {
+        console.error('Leaderboard listener error:', error);
+        observer.error(error);
       });
+
+      // Return unsubscribe function
+      return { unsubscribe };
     });
   }
 
   /**
-   * Get user's rank
+   * Validate competitive results before submission
    */
-  getUserRank(username: string): Observable<number> {
-    return new Observable(observer => {
-      this.leaderboard$.subscribe(entries => {
-        const index = entries.findIndex(entry => entry.username === username);
-        observer.next(index >= 0 ? index + 1 : -1);
-      });
-    });
-  }
-
-  /**
-   * Clear leaderboard (for testing/admin)
-   */
-  clearLeaderboard(): void {
-    this.leaderboard$.next([]);
-    localStorage.removeItem(this.STORAGE_KEY);
-  }
-
-  /**
-   * Calculate rating based on score, accuracy, and time
-   */
-  private calculateRating(result: QuizResults): number {
-    return result.rating; // Use the rating from QuizResults
-  }
-
-  /**
-   * Generate unique ID
-   */
-  private generateId(): string {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  /**
-   * Load leaderboard from localStorage
-   */
-  private loadLeaderboard(): void {
-    try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      if (stored) {
-        const entries = JSON.parse(stored).map((entry: any) => ({
-          ...entry,
-          date: new Date(entry.date)
-        }));
-        this.leaderboard$.next(entries);
-      }
-    } catch (error) {
-      console.error('Error loading leaderboard:', error);
+  private validateResults(results: CompetitiveResults): boolean {
+    if (!results.username || results.username.length < 3 || results.username.length > 20) {
+      return false;
     }
+    if (results.finalRating < 0 || results.finalRating > 100) {
+      return false;
+    }
+    if (results.accuracy < 0 || results.accuracy > 100) {
+      return false;
+    }
+    if (results.totalTime <= 0) {
+      return false;
+    }
+    return true;
   }
 
   /**
-   * Save leaderboard to localStorage
+   * Get tier label based on rank
    */
-  private saveLeaderboard(): void {
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.leaderboard$.value));
-    } catch (error) {
-      console.error('Error saving leaderboard:', error);
-    }
+  private getTierLabel(rank: number): string {
+    if (rank === 1) return 'Signals Master';
+    if (rank <= 10) return 'Top Signaller';
+    return '';
   }
 }

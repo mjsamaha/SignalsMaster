@@ -136,6 +136,33 @@
       </ion-card-content>
     </ion-card>
 
+    <!-- Submit to Leaderboard Button -->
+    <ion-button
+      *ngIf="!hasSubmitted && !isSubmitting"
+      expand="full"
+      fill="solid"
+      color="success"
+      (click)="submitScore()"
+      class="submit-btn">
+      <ion-icon name="cloud-upload" slot="start"></ion-icon>
+      Submit to Leaderboard
+    </ion-button>
+
+    <ion-button
+      *ngIf="isSubmitting"
+      expand="full"
+      fill="solid"
+      color="medium"
+      disabled="true"
+      class="submit-btn">
+      <ion-icon name="sync" slot="start" class="spinning"></ion-icon>
+      Submitting...
+    </ion-button>
+
+    <ion-text *ngIf="submissionMessage" class="submission-message" [class]="submissionSuccess ? 'success' : 'error'">
+      {{ submissionMessage }}
+    </ion-text>
+
     <!-- Action Buttons -->
     <div class="action-buttons">
       <ion-button

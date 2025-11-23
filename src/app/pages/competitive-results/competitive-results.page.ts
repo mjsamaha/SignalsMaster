@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonBadge, IonProgressBar, IonGrid, IonRow, IonCol } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { CompetitiveResults } from '../../core/services/quiz.service';
+import { LeaderboardService } from '../../core/services/leaderboard.service';
 
 @Component({
   selector: 'app-competitive-results',
@@ -31,10 +32,15 @@ import { CompetitiveResults } from '../../core/services/quiz.service';
 })
 export class CompetitiveResultsPage implements OnInit {
   results: CompetitiveResults | null = null;
+  isSubmitting = false;
+  hasSubmitted = false;
+  submissionMessage = '';
+  submissionSuccess = false;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private leaderboardService: LeaderboardService
   ) {}
 
   ngOnInit() {
@@ -133,5 +139,31 @@ export class CompetitiveResultsPage implements OnInit {
 
   goHome(): void {
     this.router.navigate(['/tabs/home']);
+  }
+
+  async submitScore(): Promise<void> {
+    if (!this.results || this.isSubmitting) return;
+
+    this.isSubmitting = true;
+    this.submissionMessage = '';
+
+    try {
+      const response = await this.leaderboardService.submitScore(this.results);
+      this.isSubmitting = false;
+
+      if (response.success) {
+        this.hasSubmitted = true;
+        this.submissionSuccess = true;
+        this.submissionMessage = response.message;
+      } else {
+        this.submissionSuccess = false;
+        this.submissionMessage = response.message || 'Failed to submit score';
+      }
+    } catch (error) {
+      this.isSubmitting = false;
+      this.submissionSuccess = false;
+      this.submissionMessage = 'Network error. Please try again.';
+      console.error('Submission error:', error);
+    }
   }
 }
