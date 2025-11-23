@@ -1,28 +1,36 @@
 // ============================================================================
-// MIXINS - UNIFIED HEADER & FOOTER STYLING
+// MIXINS - UNIFIED HEADER & FOOTER STYLING (NAVAL LIGHT THEME)
 // ============================================================================
 
 @mixin unified-header {
-  --background: var(--color-navy-500);
-  --border-color: var(--color-navy-500);
-  --color: var(--color-navy-500);
-  border-bottom: 3px solid var(--color-gold-500);
-  box-shadow: var(--shadow-md);
+  --background: var(--color-naval-blue);
+  --border-color: var(--color-naval-blue);
+  --color: var(--color-naval-blue);
+  border-bottom: var(--border-width-medium) solid var(--color-signal-yellow);
+  box-shadow: var(--shadow-sm);
 
   ion-toolbar {
-    --background: var(--color-navy-500);
-    --border-color: var(--color-navy-500);
+    --background: var(--color-naval-blue);
+    --border-color: var(--color-naval-blue);
   }
 
   ion-title {
-    font-weight: 600;
-    font-size: 20px;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
     color: var(--color-white);
     letter-spacing: 0.5px;
 
     @media (min-width: 768px) {
-      font-size: 22px;
-      letter-spacing: 1.2px;
+      font-size: var(--font-size-2xl);
+      letter-spacing: 0.75px;
+    }
+  }
+
+  ion-button {
+    --color: var(--color-signal-yellow);
+    
+    &:hover {
+      --color: var(--color-signal-yellow-light);
     }
   }
 
@@ -32,22 +40,29 @@
 }
 
 @mixin unified-footer {
+  --background: var(--color-white);
+  --border-color: var(--color-gray-200);
+  border-top: var(--border-width-thin) solid var(--color-gray-200);
+  box-shadow: var(--shadow-md);
+  
   ion-tab-button {
-    --color: var(--color-gray-600);
-    --color-selected: var(--color-gold-500);
-    --background: var(--color-navy-600);
-    --background-focused: var(--color-navy-700);
-    --padding-top: var(--spacing-md);
-    --padding-bottom: var(--spacing-md);
-    font-weight: 500;
+    --color: var(--color-steel-gray);
+    --color-selected: var(--color-signal-yellow);
+    --background: var(--color-white);
+    --background-focused: var(--color-gray-50);
+    --padding-top: var(--spacing-sm);
+    --padding-bottom: var(--spacing-sm);
+    font-weight: var(--font-weight-medium);
     transition: all var(--transition-base);
 
     &.tab-selected {
-      border-top: 3px solid var(--color-gold-500);
+      --color: var(--color-naval-blue);
+      border-top: var(--border-width-thick) solid var(--color-signal-yellow);
+      font-weight: var(--font-weight-semibold);
     }
 
     &:hover {
-      background-color: rgba(212, 175, 55, 0.1);
+      --background: var(--color-gray-50);
     }
   }
 

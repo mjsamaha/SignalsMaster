@@ -9,9 +9,10 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
-// Import animations and responsive utilities (using @use for modern Sass) - MUST BE FIRST
+// Import animations, responsive utilities, and mixins (using @use for modern Sass) - MUST BE FIRST
 @use './app/theme/animations' as *;
 @use './app/theme/responsive' as *;
+@use './app/theme/mixins' as *;
 
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
@@ -46,122 +47,7 @@
 @tailwind utilities;
 
 // ============================================================================
-// DESIGN TOKENS & CSS CUSTOM PROPERTIES
-// ============================================================================
-
-:root {
-  // ===== UNIFIED MODERN NAVAL COLOR SYSTEM =====
-  // PRIMARY PALETTE - Use these EVERYWHERE
-  --color-navy-50: #f0f6fa;
-  --color-navy-100: #e0eefb;
-  --color-navy-300: #7fa4c8;
-  --color-navy-500: #0a3961;      // PRIMARY: Navy blue
-  --color-navy-600: #082d4f;      // Hover state
-  --color-navy-700: #061d38;      // Active state
-  --color-navy-900: #001428;
-
-  --color-sky-50: #f0f6fa;        // PRIMARY: Light sky (main background)
-  --color-sky-100: #e8f4f8;
-  --color-sky-200: #d0e8f2;
-
-  --color-gold-50: #fffbf0;
-  --color-gold-200: #fce8c3;
-  --color-gold-400: #f4d27f;
-  --color-gold-500: #d4af37;      // PRIMARY: Gold (CTA buttons)
-  --color-gold-600: #c9a932;      // Hover state
-  --color-gold-700: #b8952a;      // Active state
-
-  --color-success-500: #22c55e;   // Correct answers
-  --color-success-600: #16a34a;
-
-  --color-error-500: #ef4444;     // Incorrect answers
-  --color-error-600: #dc2626;
-
-  --color-border-light: var(--color-gray-100);  // Light border color
-
-  --color-ocean-blue: #3498DB;    // Interactive elements, secondary accent
-
-  --color-gray-50: #f1f5f9;       // Light gray (inputs, disabled)
-  --color-gray-100: #e2e8f0;      // Border gray
-  --color-gray-200: #cbd5e1;
-  --color-gray-600: #64748b;      // Neutral (secondary text)
-  --color-gray-700: #475569;
-  --color-gray-900: #0f172a;
-
-  --color-white: #ffffff;
-
-  // ---- Spacing (8px base unit) ----
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 12px;
-  --spacing-lg: 16px;
-  --spacing-xl: 20px;
-  --spacing-2xl: 24px;
-  --spacing-3xl: 32px;
-  --spacing-4xl: 40px;
-
-  // ---- Typography ----
-  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-
-  // Mobile font sizes
-  --font-size-h1-mobile: 28px;
-  --font-size-h2-mobile: 20px;
-  --font-size-h3-mobile: 18px;
-  --font-size-body-mobile: 16px;
-  --font-size-label-mobile: 12px;
-
-  // Desktop font sizes
-  --font-size-h1-desktop: 36px;
-  --font-size-h2-desktop: 24px;
-  --font-size-h3-desktop: 20px;
-  --font-size-body-desktop: 16px;
-  --font-size-label-desktop: 14px;
-
-  // Line heights
-  --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.6;
-
-  // ---- Shadows (Subtle, Refined) ----
-  --shadow-light: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.12);
-  --shadow-gold: 0 4px 12px rgba(212, 175, 55, 0.2);
-  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-
-  // ---- Border Radius ----
-  --border-radius-sm: 4px;
-  --border-radius-md: 8px;
-  --border-radius-lg: 12px;
-  --border-radius-xl: 16px;
-
-  // ---- Transitions ----
-  --transition-fast: 150ms ease-out;
-  --transition-base: 300ms ease-in-out;
-  --transition-slow: 500ms ease-in-out;
-
-  // ---- Touch Target Min Height ----
-  --touch-target-min: 44px;
-  --touch-target-preferred: 48px;
-}
-
-// Dark mode adjustments
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-white: #0f1419;
-    --color-gray-900: #f3f4f6;
-    --color-gray-700: #e5e7eb;
-    --color-gray-600: #d1d5db;
-  }
-}
-
-// ============================================================================
-// BASE STYLES
+// BASE STYLES - NAVAL LIGHT THEME
 // ============================================================================
 
 * {
@@ -176,11 +62,11 @@ html {
 }
 
 body {
-  background-color: var(--color-navy-500);
-  color: var(--color-white);
+  background-color: var(--color-background-light);
+  color: var(--color-naval-blue);
   margin: 0;
   padding: 0;
-  font-size: var(--font-size-body-mobile);
+  font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
   font-weight: var(--font-weight-normal);
 }
@@ -192,15 +78,15 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-navy-700);
+  background: var(--color-gray-100);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-navy-300);
-  border-radius: 4px;
+  background: var(--color-steel-gray);
+  border-radius: var(--border-radius-sm);
 
   &:hover {
-    background: var(--color-gold-500);
+    background: var(--color-signal-yellow);
   }
 }
 
@@ -220,67 +106,61 @@ body {
 }
 
 // ============================================================================
-// TYPOGRAPHY
+// TYPOGRAPHY - NAVAL LIGHT THEME
 // ============================================================================
 
 h1 {
-  font-size: var(--font-size-h1-mobile);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   margin: 0 0 var(--spacing-2xl) 0;
-  color: var(--color-white);
+  color: var(--color-naval-blue);
 }
 
 h2 {
-  font-size: var(--font-size-h2-mobile);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   margin: 0 0 var(--spacing-lg) 0;
-  color: var(--color-white);
+  color: var(--color-naval-blue);
 }
 
 h3 {
-  font-size: var(--font-size-h3-mobile);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-naval-blue);
 }
 
 p {
   margin: 0 0 var(--spacing-lg) 0;
-  font-size: var(--font-size-body-mobile);
+  font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
+  color: var(--color-gray-700);
 }
 
 label {
   display: block;
-  font-size: var(--font-size-label-mobile);
-  font-weight: 600;
-  color: var(--color-gray-600);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-steel-gray);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 }
 
 // Desktop typography
-@media (min-width: 1200px) {
+@media (min-width: 768px) {
   h1 {
-    font-size: var(--font-size-h1-desktop);
+    font-size: var(--font-size-4xl);
   }
 
   h2 {
-    font-size: var(--font-size-h2-desktop);
+    font-size: var(--font-size-3xl);
   }
 
   h3 {
-    font-size: var(--font-size-h3-desktop);
-  }
-
-  p {
-    font-size: var(--font-size-body-desktop);
-  }
-
-  label {
-    font-size: var(--font-size-label-desktop);
+    font-size: var(--font-size-2xl);
   }
 }
 
@@ -289,7 +169,7 @@ label {
 // ============================================================================
 
 :focus-visible {
-  outline: 3px solid var(--color-gold-500);
+  outline: var(--border-width-thick) solid var(--color-signal-yellow);
   outline-offset: 2px;
 }
 
@@ -298,77 +178,17 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--color-gold-500);
+  outline: var(--border-width-medium) solid var(--color-signal-yellow);
   outline-offset: 2px;
 }
 
 // ============================================================================
-// MIXINS - UNIFIED HEADER & FOOTER STYLING
-// ============================================================================
-
-@mixin unified-header {
-  --background: var(--color-navy-500);
-  --border-color: var(--color-navy-500);
-  --color: var(--color-navy-500);
-  border-bottom: 3px solid var(--color-gold-500);
-  box-shadow: var(--shadow-md);
-
-  ion-toolbar {
-    --background: var(--color-navy-500);
-    --border-color: var(--color-navy-500);
-  }
-
-  ion-title {
-    font-weight: 600;
-    font-size: 20px;
-    color: var(--color-white);
-    letter-spacing: 0.5px;
-
-    @media (min-width: 768px) {
-      font-size: 22px;
-      letter-spacing: 1.2px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    box-shadow: none;
-  }
-}
-
-@mixin unified-footer {
-  ion-tab-button {
-    --color: var(--color-gray-600);
-    --color-selected: var(--color-gold-500);
-    --background: var(--color-navy-600);
-    --background-focused: var(--color-navy-700);
-    --padding-top: var(--spacing-md);
-    --padding-bottom: var(--spacing-md);
-    font-weight: 500;
-    transition: all var(--transition-base);
-
-    &.tab-selected {
-      border-top: 3px solid var(--color-gold-500);
-    }
-
-    &:hover {
-      background-color: rgba(212, 175, 55, 0.1);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    ion-tab-button {
-      transition: none;
-    }
-  }
-}
-
-// ============================================================================
-// IONIC OVERRIDES
+// IONIC OVERRIDES - NAVAL LIGHT THEME
 // ============================================================================
 
 ion-content {
-  --background: var(--color-navy-500);
-  --color: var(--color-white);
+  --background: var(--color-background-light);
+  --color: var(--color-naval-blue);
 }
 
 ion-header {
@@ -376,16 +196,7 @@ ion-header {
 }
 
 ion-tabs {
-  --background: var(--color-navy-600);
-  --border-color: var(--color-navy-700);
-
   @include unified-footer;
-}
-
-ion-tab-button {
-  --color: var(--color-gray-600);
-  --color-selected: var(--color-gold-500);
-  --background: var(--color-navy-600);
 }
 
 ion-button {
@@ -393,8 +204,31 @@ ion-button {
   --padding-end: var(--spacing-lg);
   --padding-top: var(--spacing-md);
   --padding-bottom: var(--spacing-md);
-  --border-radius: var(--border-radius-md);
-  --min-height: var(--touch-target-min);
+  --border-radius: var(--border-radius-pill);
+  --min-height: var(--touch-target-preferred);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.025em;
+  transition: all var(--transition-fast);
+  
+  &.primary {
+    --background: var(--color-naval-blue);
+    --background-hover: var(--color-naval-blue-hover);
+    --background-activated: var(--color-naval-blue-active);
+    --color: var(--color-white);
+  }
+  
+  &.accent {
+    --background: var(--color-signal-yellow);
+    --background-hover: var(--color-signal-yellow-hover);
+    --background-activated: var(--color-signal-yellow-active);
+    --color: var(--color-naval-blue);
+  }
+  
+  &.outline {
+    --border-width: var(--border-width-medium);
+    --border-color: var(--color-naval-blue);
+    --color: var(--color-naval-blue);
+  }
 }
 
 // ============================================================================

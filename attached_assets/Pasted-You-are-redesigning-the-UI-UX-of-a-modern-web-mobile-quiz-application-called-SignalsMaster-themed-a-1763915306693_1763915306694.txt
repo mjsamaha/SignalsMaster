@@ -1,0 +1,123 @@
+You are redesigning the UI/UX of a modern web/mobile quiz application called SignalsMaster, themed around naval/military signaling. Your task is to generate clean, consistent, modern UI/UX code (Ionic + Angular + Tailwind) that matches the following design goals and acceptance criteria.
+
+🎨 Visual Style & Theme
+
+Create a modern light naval theme, not cartoonish, not dark and muddy. The UI should evoke:
+
+naval command centers
+
+maritime training tools
+
+modern tactical interfaces
+
+Use a consistent modern palette:
+
+Primary: naval blue (#0A2A43)
+
+Secondary: steel gray (#6E829B)
+
+Accent: signal yellow (#F4D35E)
+
+Background: light off-white (#F5F7FA)
+
+Correct: military green (#2ECC71)
+
+Incorrect: alert red (#E74C3C)
+
+Use thin, clean borders, subtle shadows, and well-spaced sections.
+Typography should be bold, readable, and crisp — think “military UI”, not “comic app”.
+
+Apply these themes consistently across:
+
+buttons
+
+quiz containers
+
+flag images
+
+headers
+
+footer/tab bar
+
+progress indicators
+
+📱 Layout & Responsiveness (Milestone: Responsive Layout)
+
+Produce a layout that is fully responsive on small iPhone screens up to tablets:
+
+No overlapping elements.
+
+Buttons must remain large and tappable.
+
+Text remains readable at all sizes.
+
+Container widths must scale intelligently.
+
+Use Tailwind utilities for spacing, typography, margins, and responsive classes.
+
+🧭 Quiz Screen Requirements
+
+Your layout should include:
+
+A header with quiz title + subtle naval iconography
+
+A large centered flag image with proper aspect ratio
+
+Multiple-choice options as clean pill-style buttons
+
+A fixed footer or bottom action area
+
+Light background with enough contrast for buttons
+
+🎯 User Interaction & Feedback (Milestone Features)
+1. Smooth Transitions (Milestone: Smooth Transitions)
+
+Add simple micro-animations:
+
+Fade or slide between questions
+
+No flicker
+
+Next question appears within ~200ms
+
+Subtle, modern motion — not distracting
+
+2. Clear Correct/Incorrect Indicators (Milestone: Correct/Incorrect Indicators)
+
+When a user selects an answer:
+
+Correct answer button flashes or highlights green
+
+Incorrect answer flashes or highlights red
+
+Feedback remains visible for 1 full second
+
+Then animate to next question
+
+3. Thematic Quiz Interface (Milestone: Thematic Quiz Interface)
+
+Ensure the UI feels cohesive, modern, consistent:
+
+Buttons use same radius, font weight, and spacing everywhere
+
+Flag images displayed cleanly with consistent sizing
+
+No random shapes, mismatched shadows, or inconsistent colors
+
+🛠 Output Expectations
+
+Output:
+
+Updated HTML template
+
+Tailwind-based styling
+
+Ionic components where appropriate
+
+Angular animations for transitions
+
+Any necessary CSS utility classes
+
+Make the design production-ready, readable, and clean
+
+Keep the tone and styling professional, tactical, and naval-themed, with a consistent visual identity.
