@@ -22,6 +22,7 @@ import { PracticeSummary } from '../../core/services/quiz.service';
 })
 export class PracticeResultsPage {
   summary: PracticeSummary | null = null;
+  showAllQuestions = false;
 
   constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();
@@ -63,6 +64,38 @@ export class PracticeResultsPage {
     if (accuracy >= 75) return 'success';
     if (accuracy >= 50) return 'warning';
     return 'danger';
+  }
+
+  getPerformanceTier(): 'excellent' | 'good' | 'fair' | 'poor' {
+    if (!this.summary) return 'fair';
+
+    const accuracy = this.summary.accuracy;
+    if (accuracy >= 90) return 'excellent';
+    if (accuracy >= 70) return 'good';
+    if (accuracy >= 50) return 'fair';
+    return 'poor';
+  }
+
+  getPerformanceBadge(): string {
+    const tier = this.getPerformanceTier();
+    const badges = {
+      excellent: '⭐ Excellent',
+      good: '👍 Good Job',
+      fair: '📈 Keep Going',
+      poor: '💪 Keep Practicing'
+    };
+    return badges[tier];
+  }
+
+  getVisibleQuestions() {
+    if (!this.summary) return [];
+    return this.showAllQuestions
+      ? this.summary.answers
+      : this.summary.answers.slice(0, 5);
+  }
+
+  toggleShowAllQuestions(): void {
+    this.showAllQuestions = !this.showAllQuestions;
   }
 
   tryAgain(): void {

@@ -5,44 +5,104 @@
 
 :root {
   // ===== PRIMARY NAVAL PALETTE =====
-  
+
   // Naval Blue - Primary brand color for headers, buttons, text
   --color-naval-blue: #0A2A43;
   --color-naval-blue-hover: #08223a;
   --color-naval-blue-active: #061a2f;
   --color-naval-blue-light: #1a3a53;
-  
+
   // Steel Gray - Secondary color for tabs, subtle elements
   --color-steel-gray: #6E829B;
   --color-steel-gray-hover: #5d7089;
   --color-steel-gray-active: #4d5f77;
   --color-steel-gray-light: #8a9db3;
-  
+
   // Signal Yellow - Accent color for CTAs, highlights, active states
   --color-signal-yellow: #F4D35E;
   --color-signal-yellow-hover: #f2ca47;
   --color-signal-yellow-active: #f0c130;
   --color-signal-yellow-light: #f6dc7e;
-  
+
   // Light Background - Main page background (off-white)
   --color-background-light: #F5F7FA;
   --color-background-white: #FFFFFF;
   --color-background-overlay: rgba(245, 247, 250, 0.95);
-  
+
   // ===== SEMANTIC COLORS =====
-  
+
   // Success - Correct answers, confirmations (military green)
   --color-success: #2ECC71;
   --color-success-hover: #27ae60;
   --color-success-light: rgba(46, 204, 113, 0.1);
-  
+
   // Error - Incorrect answers, warnings (alert red)
   --color-error: #E74C3C;
   --color-error-hover: #c0392b;
   --color-error-light: rgba(231, 76, 60, 0.1);
-  
+
+  // ===== PERFORMANCE TIER COLORS (Results Pages) =====
+
+  // Excellent (90%+) - Green
+  --color-excellent: #10B981;
+  --color-excellent-light: #D1FAE5;
+  --color-excellent-hover: #059669;
+
+  // Good (70-89%) - Blue
+  --color-good: #3B82F6;
+  --color-good-light: #DBEAFE;
+  --color-good-hover: #2563EB;
+
+  // Fair (50-69%) - Orange
+  --color-fair: #F59E0B;
+  --color-fair-light: #FEF3C7;
+  --color-fair-hover: #D97706;
+
+  // Poor (<50%) - Red
+  --color-poor: #EF4444;
+  --color-poor-light: #FEE2E2;
+  --color-poor-hover: #DC2626;
+
+  // ===== EXTENDED COLOR SCALES (Navy, Gold, Sky) =====
+
+  // Navy Scale
+  --color-navy-50: #E8EDF2;
+  --color-navy-100: #D1DBE5;
+  --color-navy-200: #A3B7CB;
+  --color-navy-300: #7593B1;
+  --color-navy-400: #476F97;
+  --color-navy-500: #0A2A43;  // Base naval blue
+  --color-navy-600: #08223a;
+  --color-navy-700: #061a2f;
+  --color-navy-800: #041224;
+  --color-navy-900: #020a19;
+
+  // Gold/Yellow Scale
+  --color-gold-50: #FEF9E7;
+  --color-gold-100: #FDF3CF;
+  --color-gold-200: #FBE79F;
+  --color-gold-300: #F9DB6F;
+  --color-gold-400: #F7CF3F;
+  --color-gold-500: #F4D35E;  // Base signal yellow
+  --color-gold-600: #f2ca47;
+  --color-gold-700: #f0c130;
+  --color-gold-800: #c29a26;
+  --color-gold-900: #94741d;
+
+  // Sky/Background Scale
+  --color-sky-50: #F5F7FA;   // Base background light
+  --color-sky-100: #EDF1F7;
+  --color-sky-200: #DBE3EF;
+  --color-sky-300: #C9D5E7;
+  --color-sky-400: #B7C7DF;
+  --color-sky-500: #94A3B8;
+  --color-sky-600: #7589A5;
+  --color-sky-700: #566F92;
+  --color-sky-800: #3D4F6C;
+  --color-sky-900: #243046;
+
   // ===== NEUTRAL GRAYS =====
-  
+
   --color-gray-50: #F8FAFC;
   --color-gray-100: #F1F5F9;
   --color-gray-200: #E2E8F0;
@@ -53,15 +113,15 @@
   --color-gray-700: #334155;
   --color-gray-800: #1E293B;
   --color-gray-900: #0F172A;
-  
+
   --color-white: #FFFFFF;
   --color-black: #000000;
-  
+
   // ===== TYPOGRAPHY =====
-  
+
   --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  
+
   --font-size-xs: 0.75rem;    // 12px
   --font-size-sm: 0.875rem;   // 14px
   --font-size-base: 1rem;     // 16px
@@ -70,18 +130,18 @@
   --font-size-2xl: 1.5rem;    // 24px
   --font-size-3xl: 1.875rem;  // 30px
   --font-size-4xl: 2.25rem;   // 36px
-  
+
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  
+
   --line-height-tight: 1.25;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
-  
+
   // ===== SPACING SYSTEM =====
-  
+
   --spacing-xs: 0.25rem;   // 4px
   --spacing-sm: 0.5rem;    // 8px
   --spacing-md: 1rem;      // 16px
@@ -89,39 +149,39 @@
   --spacing-xl: 2rem;      // 32px
   --spacing-2xl: 3rem;     // 48px
   --spacing-3xl: 4rem;     // 64px
-  
+
   // ===== BORDER & RADIUS =====
-  
+
   --border-width-thin: 1px;
   --border-width-medium: 2px;
   --border-width-thick: 3px;
-  
+
   --border-radius-sm: 0.25rem;   // 4px
   --border-radius-md: 0.5rem;    // 8px
   --border-radius-lg: 0.75rem;   // 12px
   --border-radius-xl: 1rem;      // 16px
   --border-radius-pill: 9999px;  // Pill-shaped buttons
-  
+
   // ===== SHADOWS (SUBTLE, MODERN) =====
-  
+
   --shadow-sm: 0 1px 2px 0 rgba(10, 42, 67, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(10, 42, 67, 0.08), 0 2px 4px -1px rgba(10, 42, 67, 0.04);
   --shadow-lg: 0 10px 15px -3px rgba(10, 42, 67, 0.1), 0 4px 6px -2px rgba(10, 42, 67, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(10, 42, 67, 0.1), 0 10px 10px -5px rgba(10, 42, 67, 0.04);
-  
+
   // ===== TRANSITIONS =====
-  
+
   --transition-fast: 150ms ease-in-out;
   --transition-base: 250ms ease-in-out;
   --transition-slow: 350ms ease-in-out;
-  
+
   // ===== TOUCH TARGETS (MOBILE-FIRST) =====
-  
+
   --touch-target-min: 44px;       // Minimum tappable area
   --touch-target-preferred: 48px; // Preferred size
-  
+
   // ===== Z-INDEX LAYERS =====
-  
+
   --z-index-base: 1;
   --z-index-dropdown: 100;
   --z-index-sticky: 200;

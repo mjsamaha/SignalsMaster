@@ -6,65 +6,92 @@
 
 <ion-content [fullscreen]="true">
   <div class="results-container" *ngIf="summary">
-    <!-- Header with motivational message -->
-    <div class="results-header">
-      <ion-text class="results-title">Practice Complete!</ion-text>
-      <ion-text class="motivational-message">{{ getMotivationalMessage() }}</ion-text>
-    </div>
-
-    <!-- Score banner -->
-    <div class="score-banner" [class]="'score-' + getAccuracyColor()">
-      <ion-text class="score-text">{{ summary.correctAnswers }}/{{ summary.totalQuestions }}</ion-text>
-      <ion-text class="accuracy-text">{{ summary.accuracy | number:'1.0-1' }}%</ion-text>
-    </div>
-
-    <!-- Stats grid -->
-    <div class="stats-grid" *ngIf="summary">
-      <div class="stat-item">
-        <div class="stat-label">Total Time</div>
-        <div class="stat-value">{{ formatTime(summary.totalTime) }}</div>
+    <!-- Hero Score Card with Performance Gradient -->
+    <div class="hero-card" [attr.data-tier]="getPerformanceTier()">
+      <ion-text class="hero-title">PRACTICE COMPLETE!</ion-text>
+      <div class="hero-score">
+        <ion-text class="score-main">✓ {{ summary.correctAnswers }} out of {{ summary.totalQuestions }}</ion-text>
+        <ion-text class="score-subtitle">Questions Correct</ion-text>
       </div>
-      <div class="stat-item">
-        <div class="stat-label">Avg/Question</div>
-        <div class="stat-value">{{ formatTime(summary.averageTimePerQuestion) }}</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Correct</div>
-        <div class="stat-value">{{ summary.correctAnswers }}</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Incorrect</div>
-        <div class="stat-value">{{ summary.totalQuestions - summary.correctAnswers }}</div>
+      <div class="hero-metrics">
+        <span class="metric-item">📊 {{ summary.accuracy | number:'1.0-1' }}% Accuracy</span>
+        <span class="metric-divider">•</span>
+        <span class="metric-item">⏱ {{ formatTime(summary.totalTime) }} Completed</span>
+        <span class="metric-divider">•</span>
+        <span class="metric-item">{{ getPerformanceBadge() }}</span>
       </div>
     </div>
 
-    <!-- Question breakdown -->
+    <!-- Compact Stats Grid -->
+    <div class="stats-grid">
+      <div class="metric-card">
+        <div class="metric-icon">⏱</div>
+        <div class="metric-label">TOTAL TIME</div>
+        <div class="metric-value">{{ formatTime(summary.totalTime) }}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">📊</div>
+        <div class="metric-label">AVG/QUESTION</div>
+        <div class="metric-value">{{ formatTime(summary.averageTimePerQuestion) }}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">✓</div>
+        <div class="metric-label">CORRECT</div>
+        <div class="metric-value">{{ summary.correctAnswers }}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">✗</div>
+        <div class="metric-label">INCORRECT</div>
+        <div class="metric-value">{{ summary.totalQuestions - summary.correctAnswers }}</div>
+      </div>
+    </div>
+
+    <!-- Question Breakdown Section -->
     <div class="breakdown-section">
-      <ion-text class="breakdown-title">Question Breakdown</ion-text>
-      <div class="breakdown-list">
-        <div class="question-item" *ngFor="let answer of summary.answers">
-          <div class="question-info">
-            <ion-text class="question-number">Q{{ answer.questionNumber }}</ion-text>
-            <ion-text class="question-text">{{ answer.flag.name }}</ion-text>
-            <ion-text class="question-time">{{ formatTime(answer.timeSpent) }}</ion-text>
+      <ion-text class="breakdown-title">QUESTION BREAKDOWN</ion-text>
+      <div class="breakdown-container">
+        <div class="question-card"
+             *ngFor="let answer of getVisibleQuestions()"
+             [attr.data-status]="answer.isCorrect ? 'correct' : 'incorrect'">
+          <div class="question-flag">
+            <img [src]="answer.flag.imagePath" [alt]="answer.flag.name" />
           </div>
-          <div class="question-result">
-            <ion-icon
-              [name]="answer.isCorrect ? 'checkmark-circle' : 'close-circle'"
-              [class]="answer.isCorrect ? 'correct-icon' : 'incorrect-icon'">
-            </ion-icon>
+          <div class="question-details">
+            <div class="question-header">
+              <span class="question-badge">Q{{ answer.questionNumber }}</span>
+              <span class="question-name">{{ answer.flag.name }}</span>
+            </div>
+            <div class="question-answer">
+              <span class="answer-label">Your Answer:</span>
+              <span class="answer-text">{{ answer.flag.meaning }}</span>
+              <ion-icon
+                [name]="answer.isCorrect ? 'checkmark-circle' : 'close-circle'"
+                [class]="answer.isCorrect ? 'status-icon correct' : 'status-icon incorrect'">
+              </ion-icon>
+            </div>
+            <div class="question-time">Time: {{ formatTime(answer.timeSpent) }}</div>
           </div>
         </div>
+
+        <!-- Show More/Less Button -->
+        <ion-button
+          *ngIf="summary.answers.length > 5"
+          expand="block"
+          fill="clear"
+          (click)="toggleShowAllQuestions()"
+          class="show-more-btn">
+          {{ showAllQuestions ? 'Show Less' : 'Show More (' + (summary.answers.length - 5) + ' more)' }}
+        </ion-button>
       </div>
     </div>
 
-    <!-- Action buttons -->
+    <!-- Action Buttons -->
     <div class="action-buttons">
-      <ion-button expand="block" (click)="tryAgain()" class="try-again-btn">
-        Try Again
+      <ion-button (click)="tryAgain()" class="btn-primary">
+        TRY AGAIN
       </ion-button>
-      <ion-button expand="block" fill="outline" (click)="goHome()" class="home-btn">
-        Back to Home
+      <ion-button (click)="goHome()" class="btn-secondary">
+        BACK TO HOME
       </ion-button>
     </div>
   </div>
