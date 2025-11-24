@@ -82,12 +82,12 @@ jobs:
 
       - name: Start Ionic Dev Server
         run: |
-          ionic serve --no-open --port 8100 &
+          ionic serve --host=0.0.0.0 --port 8100 &
           echo $! > ionic.pid
 
           # Wait for Ionic dev server
           echo "Waiting for Ionic dev server..."
-          npx wait-on http://127.0.0.1:8100 -t 120000 || {
+          npx wait-on http://localhost:8100 -t 300000 || {
             echo "Ionic server failed to start"
             kill $(cat ionic.pid) 2>/dev/null || true
             kill $(cat emulator.pid) 2>/dev/null || true
