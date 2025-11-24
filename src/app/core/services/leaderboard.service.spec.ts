@@ -32,10 +32,11 @@ describe('LeaderboardService', () => {
 
     // Mock ApplicationRef for Angular's ChangeDetectionScheduler
     const applicationRefMock = {
-      isStable: jasmine.createSpyObj('BehaviorSubject', ['subscribe']),
-      tick: jasmine.createSpy('tick')
+      isStable: {
+        subscribe: () => ({ unsubscribe: () => {} })
+      },
+      tick: () => {}
     };
-    applicationRefMock.isStable.subscribe.and.returnValue({ unsubscribe: () => {} });
 
     TestBed.configureTestingModule({
       providers: [
@@ -214,10 +215,11 @@ describe('Leaderboard Data Processing', () => {
 
     // Mock ApplicationRef for Angular's ChangeDetectionScheduler
     const applicationRefMock = {
-      isStable: jasmine.createSpyObj('BehaviorSubject', ['subscribe']),
-      tick: jasmine.createSpy('tick')
+      isStable: {
+        subscribe: () => ({ unsubscribe: () => {} })
+      },
+      tick: () => {}
     };
-    applicationRefMock.isStable.subscribe.and.returnValue({ unsubscribe: () => {} });
 
     TestBed.configureTestingModule({
       providers: [
