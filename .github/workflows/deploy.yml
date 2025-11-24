@@ -65,6 +65,16 @@ jobs:
           export const environment = {
             production: true,
             useEmulators: false,
+            emulators: {
+              firestore: {
+                host: '',
+                port: 0
+              },
+              auth: {
+                host: '',
+                port: 0
+              }
+            },
             firebase: {
               apiKey: "${{ secrets.FIREBASE_API_KEY }}",
               authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN }}",
