@@ -2,8 +2,8 @@
 
 import { TestBed } from '@angular/core/testing';
 import { Firestore } from '@angular/fire/firestore';
-import { NgZone } from '@angular/core';
-import { addDoc, collection, query, orderBy, limit, onSnapshot, serverTimestamp } from '@angular/fire/firestore';
+import { NgZone, ApplicationRef } from '@angular/core';
+import { of } from 'rxjs';
 
 import { LeaderboardService } from './leaderboard.service';
 import { CompetitiveResults } from './quiz.service';
@@ -18,8 +18,8 @@ describe('LeaderboardService', () => {
   beforeEach(() => {
     // Mock NgZone
     ngZoneMock = {
-      run: jasmine.createSpy('run').and.callFake((fn) => fn()),
-      runOutsideAngular: jasmine.createSpy('runOutsideAngular').and.callFake((fn) => fn())
+      run: jasmine.createSpy('run').and.callFake((fn: any) => fn()),
+      runOutsideAngular: jasmine.createSpy('runOutsideAngular').and.callFake((fn: any) => fn())
     };
 
     // Mock Firestore methods
@@ -30,12 +30,10 @@ describe('LeaderboardService', () => {
       collection: collectionSpy
     };
 
-    // Mock ApplicationRef for Angular's ChangeDetectionScheduler
+    // Mock ApplicationRef - FIXED: Use the actual ApplicationRef token
     const applicationRefMock = {
-      isStable: {
-        subscribe: () => ({ unsubscribe: () => {} })
-      },
-      tick: () => {}
+      isStable: of(true),
+      tick: jasmine.createSpy('tick')
     };
 
     TestBed.configureTestingModule({
@@ -43,7 +41,7 @@ describe('LeaderboardService', () => {
         LeaderboardService,
         { provide: Firestore, useValue: firestoreMock },
         { provide: NgZone, useValue: ngZoneMock },
-        { provide: 'ApplicationRef', useValue: applicationRefMock }
+        { provide: ApplicationRef, useValue: applicationRefMock } // FIXED: Remove quotes
       ]
     });
 
@@ -61,7 +59,7 @@ describe('LeaderboardService', () => {
         averageTimePerQuestion: 10,
         baseRating: 75,
         speedBonus: 15,
-        finalRating: 150, // Between 0-5000 as per rules
+        finalRating: 150,
         ratingTier: 'Expert Signaller',
         sessionId: 'session123',
         completedAt: new Date(),
@@ -69,12 +67,12 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(validResults);
-      expect(result).toEqual(true);
+      expect(result).toBe(true); // FIXED: Changed from .equal() to .toBe()
     });
 
     it('should reject username too short', () => {
       const invalidResults: CompetitiveResults = {
-        username: 'Ab', // Too short, min 3 chars
+        username: 'Ab',
         totalQuestions: 50,
         correctAnswers: 40,
         accuracy: 80,
@@ -90,12 +88,12 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(invalidResults);
-      expect(result).toEqual(false);
+      expect(result).toBe(false); // FIXED
     });
 
     it('should reject username too long', () => {
       const invalidResults: CompetitiveResults = {
-        username: 'VeryLongUsernameThatExceedsTwentyCharacters', // >20 chars
+        username: 'VeryLongUsernameThatExceedsTwentyCharacters',
         totalQuestions: 50,
         correctAnswers: 40,
         accuracy: 80,
@@ -111,7 +109,7 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(invalidResults);
-      expect(result).toEqual(false);
+      expect(result).toBe(false); // FIXED
     });
 
     it('should reject negative rating', () => {
@@ -124,7 +122,7 @@ describe('LeaderboardService', () => {
         averageTimePerQuestion: 10,
         baseRating: 75,
         speedBonus: 15,
-        finalRating: -10, // Negative
+        finalRating: -10,
         ratingTier: 'Expert Signaller',
         sessionId: 'session123',
         completedAt: new Date(),
@@ -132,19 +130,14 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(invalidResults);
-      expect(result).toEqual(false);
+      expect(result).toBe(false); // FIXED
     });
-
-// TODO: Update remaining test cases with full CompetitiveResults objects
-// Keeping validation focused on key fields (username, rating >100, accuracy, totalTime)
   });
 
   describe('submitScore', () => {
     beforeEach(() => {
       // Mock addDoc to resolve successfully
       addDocSpy.and.returnValue(Promise.resolve({ id: 'testDocId' }));
-
-      // Use actual addDoc and collection for the spy chain
       spyOn(service, 'submitScore' as any).and.callThrough();
     });
 
@@ -167,13 +160,13 @@ describe('LeaderboardService', () => {
 
       const response = await service.submitScore(validResults);
 
-      expect(response.success).toEqual(true);
-      expect(response.message).toEqual('Score submitted successfully!');
+      expect(response.success).toBe(true); // FIXED
+      expect(response.message).toBe('Score submitted successfully!'); // FIXED
     });
 
     it('should reject submission for invalid data', async () => {
       const invalidResults: CompetitiveResults = {
-        username: 'A', // Too short
+        username: 'A',
         totalQuestions: 50,
         correctAnswers: 40,
         accuracy: 80,
@@ -190,17 +183,12 @@ describe('LeaderboardService', () => {
 
       const response = await service.submitScore(invalidResults);
 
-      expect(response.success).toEqual(false);
-      expect(response.message).toEqual('Invalid submission data');
+      expect(response.success).toBe(false); // FIXED
+      expect(response.message).toBe('Invalid submission data'); // FIXED
     });
   });
-
-// Tests for getLeaderboard would require more complex mocking of onSnapshot and Observable
-// For now, focus on validation and submitScore since that's where the issue likely is
-
 });
 
-// Additional helper test for data transformation
 describe('Leaderboard Data Processing', () => {
   let service: LeaderboardService;
   let firestoreMock: any;
@@ -208,17 +196,15 @@ describe('Leaderboard Data Processing', () => {
 
   beforeEach(() => {
     ngZoneMock = {
-      run: jasmine.createSpy('run').and.callFake((fn) => fn()),
-      runOutsideAngular: jasmine.createSpy('runOutsideAngular').and.callFake((fn) => fn())
+      run: jasmine.createSpy('run').and.callFake((fn: any) => fn()),
+      runOutsideAngular: jasmine.createSpy('runOutsideAngular').and.callFake((fn: any) => fn())
     };
     firestoreMock = {};
 
-    // Mock ApplicationRef for Angular's ChangeDetectionScheduler
+    // FIXED: Simplified ApplicationRef mock - just return of(true) directly
     const applicationRefMock = {
-      isStable: {
-        subscribe: () => ({ unsubscribe: () => {} })
-      },
-      tick: () => {}
+      isStable: of(true),
+      tick: jasmine.createSpy('tick')
     };
 
     TestBed.configureTestingModule({
@@ -226,7 +212,7 @@ describe('Leaderboard Data Processing', () => {
         LeaderboardService,
         { provide: Firestore, useValue: firestoreMock },
         { provide: NgZone, useValue: ngZoneMock },
-        { provide: 'ApplicationRef', useValue: applicationRefMock }
+        { provide: ApplicationRef, useValue: applicationRefMock } // FIXED: Use token, not string
       ]
     });
 
@@ -234,8 +220,8 @@ describe('Leaderboard Data Processing', () => {
   });
 
   it('should correctly generate tier labels', () => {
-    expect((service as any).getTierLabel(1)).toEqual('Signals Master');
-    expect((service as any).getTierLabel(5)).toEqual('Top Signaller');
-    expect((service as any).getTierLabel(12)).toEqual('');
+    expect((service as any).getTierLabel(1)).toBe('Signals Master'); // FIXED
+    expect((service as any).getTierLabel(5)).toBe('Top Signaller'); // FIXED
+    expect((service as any).getTierLabel(12)).toBe(''); // FIXED
   });
 });
