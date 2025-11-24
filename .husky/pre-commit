@@ -4,8 +4,8 @@
 # Secret scanning pre-commit hook
 echo "🔍 Scanning for secrets before commit..."
 
-# Check for Firebase API keys
-if git diff --cached --name-only | grep -E "environment\.(ts|prod\.ts)$" > /dev/null; then
+# Check for Firebase API keys (allow deletions, block additions)
+if git diff --cached --name-status | grep -E "^[AM].*environment\.(ts|prod\.ts)$" > /dev/null; then
   echo "❌ ERROR: Attempting to commit environment files with secrets!"
   echo "   Files like environment.ts and environment.prod.ts should not be committed."
   echo "   These files are gitignored. Please check your git configuration."
