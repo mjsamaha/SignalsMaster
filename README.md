@@ -59,11 +59,24 @@ cd SignalsMaster
 # Install dependencies
 npm install
 
+# Set up environment configuration
+# Copy the template and add your Firebase credentials
+cp src/environments/environment.template.ts src/environments/environment.ts
+cp src/environments/environment.template.ts src/environments/environment.prod.ts
+
+# Edit the environment files with your Firebase config:
+# - Get your Firebase config from Firebase Console > Project Settings
+# - Replace placeholder values in environment.ts and environment.prod.ts
+# - Set production: false in environment.ts
+# - Set production: true in environment.prod.ts
+
 # Start the development server
 npm start
 ```
 
 The app runs on `http://localhost:4200`
+
+> **⚠️ Important:** The `environment.ts` and `environment.prod.ts` files are gitignored for security. Each developer must create these files locally using the template.
 
 #### Build for Production
 

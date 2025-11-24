@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Secret scanning pre-commit hook
+echo "🔍 Scanning for secrets before commit..."
+
+# Check for Firebase API keys
+if git diff --cached --name-only | grep -E "environment\.(ts|prod\.ts)$" > /dev/null; then
+  echo "❌ ERROR: Attempting to commit environment files with secrets!"
+  echo "   Files like environment.ts and environment.prod.ts should not be committed."
+  echo "   These files are gitignored. Please check your git configuration."
+  exit 1
+fi
+
+# Check for API keys in any file (but allow deletions)
+if git diff --cached -U0 | grep -E "^\+.*AIzaSy[0-9A-Za-z_-]{33}"; then
+  echo "❌ ERROR: Google API key detected in commit!"
+  echo "   Remove the API key before committing."
+  exit 1
+fi
+
+# Check for common secret patterns
+if git diff --cached -U0 | grep -iE "(api[_-]?key|secret|password|token).*['\"][A-Za-z0-9_-]{20,}['\"]"; then
+  echo "⚠️  WARNING: Possible secret detected in commit."
+  echo "   Please review your changes carefully."
+  echo "   If this is a false positive, you can skip this hook with --no-verify"
+  # Don't exit here - just warn
+fi
+
+echo "✅ Secret scan passed"
