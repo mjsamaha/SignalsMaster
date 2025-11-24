@@ -1,10 +1,10 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="safe-area-horizontal">
   <ion-toolbar>
     <ion-title>Competition Results</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="safe-area-padding">
   <!-- Status Message -->
   <div *ngIf="submissionMessage" class="status-message" [class.success]="submissionSuccess" [class.error]="!submissionSuccess">
     <ion-text>{{ submissionSuccess ? '✓ ' : '✗ ' }}{{ submissionMessage }}</ion-text>

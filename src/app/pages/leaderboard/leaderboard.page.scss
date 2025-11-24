@@ -330,7 +330,7 @@ h1 {
   flex-direction: column;
   gap: 8px;
   min-height: 100px;
-  max-height: 110px;
+  // max-height removed to allow content to fit properly inside card
 
   // Fade-in and scale animation
   animation: fadeInScale 0.4s ease-out backwards;
@@ -651,13 +651,112 @@ h1 {
 // RESPONSIVE DESIGN
 // ============================================================================
 
+// Desktop (1024px+) - 2 Column Grid
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-3xl) var(--spacing-4xl);
+  }
+
+  h1 {
+    font-size: 42px;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .leaderboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+  }
+
+  .leaderboard-card {
+    padding: var(--spacing-xl);
+    gap: var(--spacing-md);
+    min-height: 130px;
+    // No max-height to ensure all content fits inside card
+  }
+
+  .badge {
+    font-size: 28px;
+  }
+
+  .username {
+    font-size: 18px;
+  }
+
+  .rating-value {
+    font-size: 20px;
+  }
+
+  .stats-row {
+    font-size: 13px;
+    gap: var(--spacing-lg);
+  }
+}
+
+// Large Desktop (1280px+) - 2 Column Grid Enhanced
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--spacing-4xl) var(--spacing-5xl);
+  }
+
+  h1 {
+    font-size: 48px;
+  }
+
+  .leaderboard-grid {
+    gap: var(--spacing-2xl);
+  }
+
+  .leaderboard-card {
+    padding: var(--spacing-2xl);
+    min-height: 145px;
+  }
+
+  .badge {
+    font-size: 32px;
+  }
+
+  .username {
+    font-size: 20px;
+  }
+
+  .rating-value {
+    font-size: 22px;
+  }
+
+  .stats-row {
+    font-size: 14px;
+  }
+}
+
+// Ultra-Wide Desktop (1440px+) - 3 Column Grid
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .leaderboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-2xl);
+  }
+
+  .leaderboard-card {
+    min-height: 140px;
+  }
+}
+
 // Tablet (668px - 1023px)
 @media (max-width: 1023px) {
   .leaderboard-card {
     padding: 14px;
     gap: 7px;
     min-height: 100px;
-    max-height: 105px;
+    // Remove max-height for content flexibility
   }
 
   .badge {
@@ -775,9 +874,7 @@ h1 {
   }
 
   // Keep tier gradients visible in dark mode
-  .leaderboard-card {
-    // Gradients remain the same for visual consistency
-  }
+  // Removed empty ruleset for .leaderboard-card
 }
 
 // ============================================================================

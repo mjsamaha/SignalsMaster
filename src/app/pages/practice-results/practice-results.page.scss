@@ -24,6 +24,17 @@ ion-content {
   padding-bottom: var(--spacing-xl);
   animation: fadeIn 0.4s ease-in-out;
 
+  @media (min-width: 1024px) {
+    max-width: 800px;
+    padding: var(--spacing-2xl);
+    padding-bottom: var(--spacing-3xl);
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1000px;
+    padding: var(--spacing-3xl);
+  }
+
   @media (max-width: 667px) {
     padding: var(--spacing-md);
     padding-bottom: var(--spacing-lg);
@@ -135,7 +146,33 @@ ion-content {
 
   // Responsive height optimization
   @media (min-width: 1024px) {
-    min-height: 200px;
+    min-height: 220px;
+    padding: var(--spacing-2xl);
+
+    .hero-title {
+      font-size: 32px;
+    }
+
+    .score-main {
+      font-size: 64px;
+    }
+
+    .score-subtitle {
+      font-size: 18px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    min-height: 240px;
+    padding: var(--spacing-3xl);
+
+    .hero-title {
+      font-size: 36px;
+    }
+
+    .score-main {
+      font-size: 72px;
+    }
   }
 
   @media (max-width: 667px) {
@@ -154,6 +191,15 @@ ion-content {
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
   animation: fadeIn 0.5s ease-in-out 0.2s backwards;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+  }
+
+  @media (min-width: 1280px) {
+    gap: var(--spacing-2xl);
+  }
 
   @media (max-width: 667px) {
     grid-template-columns: 1fr;

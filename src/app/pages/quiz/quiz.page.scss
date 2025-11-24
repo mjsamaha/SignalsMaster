@@ -580,6 +580,80 @@ ion-header {
   }
 }
 
+// Large Desktop (1280px+) - 3 Column Layout
+@media (min-width: 1280px) {
+  .question-container {
+    max-width: 1000px;
+  }
+
+  .flag-container {
+    height: 220px;
+  }
+
+  .question-text {
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .options-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+
+    .option-button {
+      font-size: 16px;
+      min-height: 60px;
+
+      .option-text {
+        -webkit-line-clamp: 3;
+      }
+    }
+  }
+
+  .next-button {
+    min-height: 56px;
+    font-size: 18px;
+  }
+}
+
+// Ultra-Wide Desktop (1440px+) - 4 Column Layout
+@media (min-width: 1440px) {
+  .question-container {
+    max-width: 1200px;
+  }
+
+  .flag-container {
+    height: 250px;
+  }
+
+  .question-text {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .options-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+
+    .option-button {
+      font-size: 17px;
+      min-height: 64px;
+
+      .option-text {
+        -webkit-line-clamp: 4;
+      }
+    }
+  }
+
+  .next-button {
+    min-height: 60px;
+    font-size: 20px;
+  }
+
+  .results-container {
+    max-width: 1000px;
+  }
+}
+
 // ============================================================================
 // ACCESSIBILITY: PREFERS-REDUCED-MOTION
 // ============================================================================

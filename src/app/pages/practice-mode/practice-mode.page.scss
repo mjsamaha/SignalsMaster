@@ -77,7 +77,7 @@ h1 {
     font-size: 16px;
     font-family: var(--font-family-base);
     transition: all var(--transition-fast);
-    min-height: var(--touch-target-min);
+    min-height: var(--touch-target-preferred);
 
     &:hover {
       border-color: var(--color-gold-500);
@@ -118,6 +118,61 @@ h1 {
 // RESPONSIVE
 // ============================================================================
 
+// Desktop (1024px+)
+@media (min-width: 1024px) {
+  .practice-container {
+    max-width: 900px;
+    padding: var(--spacing-3xl) var(--spacing-4xl);
+  }
+
+  h1 {
+    font-size: 36px;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .form-group {
+    margin-bottom: var(--spacing-2xl);
+
+    label {
+      font-size: 15px;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"] {
+      font-size: 18px;
+      padding: var(--spacing-lg) var(--spacing-xl);
+    }
+  }
+
+  .button-group {
+    flex-direction: row;
+    gap: var(--spacing-xl);
+
+    ion-button {
+      flex: 1;
+    }
+  }
+}
+
+// Large Desktop (1280px+)
+@media (min-width: 1280px) {
+  .practice-container {
+    max-width: 1000px;
+    padding: var(--spacing-4xl) var(--spacing-5xl);
+  }
+
+  h1 {
+    font-size: 42px;
+  }
+
+  .form-group label {
+    font-size: 16px;
+  }
+}
+
+// Mobile
 @media (max-width: 375px) {
   .practice-container {
     padding: var(--spacing-md);

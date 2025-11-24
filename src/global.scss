@@ -69,12 +69,21 @@ body {
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
   font-weight: var(--font-weight-normal);
+  overflow-x: hidden; // Prevent horizontal scroll
+  overscroll-behavior-x: none; // Prevent horizontal bounce/pull-to-refresh
+  overscroll-behavior-y: contain; // Contain vertical overscroll within element
 }
 
 // Scrollbar styling
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
+}
+
+// Firefox scrollbar styling
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-steel-gray) var(--color-gray-100);
 }
 
 ::-webkit-scrollbar-track {
@@ -164,6 +173,25 @@ label {
   }
 }
 
+// Large desktop typography
+@media (min-width: 1280px) {
+  h1 {
+    font-size: var(--font-size-5xl); // 48px
+  }
+
+  h2 {
+    font-size: var(--font-size-4xl); // 36px
+  }
+
+  h3 {
+    font-size: var(--font-size-3xl); // 30px
+  }
+
+  p {
+    font-size: var(--font-size-lg); // 18px
+  }
+}
+
 // ============================================================================
 // FOCUS STATES (ACCESSIBILITY)
 // ============================================================================
@@ -189,6 +217,10 @@ textarea:focus-visible {
 ion-content {
   --background: var(--color-background-light);
   --color: var(--color-naval-blue);
+  // Mobile scroll optimizations
+  overscroll-behavior: contain; // Prevent iOS bounce effect and pull-to-refresh
+  touch-action: pan-y; // Allow vertical scrolling only, prevent horizontal drag
+  -webkit-overflow-scrolling: touch; // Smooth momentum scrolling on iOS
 }
 
 ion-header {
@@ -205,7 +237,7 @@ ion-button {
   --padding-top: var(--spacing-md);
   --padding-bottom: var(--spacing-md);
   --border-radius: var(--border-radius-pill);
-  --min-height: var(--touch-target-preferred);
+  --min-height: var(--touch-target-preferred); // 48px minimum for accessibility
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.025em;
   transition: all var(--transition-fast);
@@ -228,6 +260,36 @@ ion-button {
     --border-width: var(--border-width-medium);
     --border-color: var(--color-naval-blue);
     --color: var(--color-naval-blue);
+  }
+}
+
+// Icon-only buttons (ensure minimum touch target)
+ion-button[slot="icon-only"],
+ion-button ion-icon[slot="icon-only"] {
+  min-width: var(--touch-target-preferred);
+  min-height: var(--touch-target-preferred);
+}
+
+// ============================================================================
+// MODAL & OVERLAY OPTIMIZATIONS (DESKTOP)
+// ============================================================================
+
+ion-modal {
+  // Desktop modal sizing
+  @media (min-width: 1024px) {
+    --width: 90%;
+    --max-width: 700px;
+    --height: auto;
+    --max-height: 85vh;
+    --border-radius: 12px;
+  }
+
+  @media (min-width: 1280px) {
+    --max-width: 800px;
+  }
+
+  @media (min-width: 1440px) {
+    --max-width: 900px;
   }
 }
 

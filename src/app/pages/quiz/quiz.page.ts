@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { QuizService, Question, AnswerOption, QuizResults, QuizState, PracticeSession, PracticeSummary } from '../../core/services/quiz.service';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 @Component({
   selector: 'app-quiz',
@@ -111,12 +112,12 @@ export class QuizPage implements OnInit, OnDestroy {
     // Initialize practice session
     this.quizService.initializePracticeSession(this.questionCount).subscribe({
       next: () => {
-        // Timer updates every 100ms for smooth display
+        // Timer updates every 250ms (optimized for battery life)
         this.timerInterval = setInterval(() => {
           if (this.practiceSession?.isActive) {
             this.currentQuestionTime = this.quizService.getCurrentQuestionTime();
           }
-        }, 100);
+        }, 250);
       },
       error: (err) => {
         console.error('Failed to initialize practice session:', err);
@@ -158,13 +159,13 @@ export class QuizPage implements OnInit, OnDestroy {
     // Initialize competitive session
     this.quizService.initializeCompetitiveSession(this.username).subscribe({
       next: () => {
-        // Timer updates every 100ms for smooth display
+        // Timer updates every 250ms (optimized for battery life)
         this.timerInterval = setInterval(() => {
           const session = this.quizService.getCompetitiveSessionValue();
           if (session?.isActive) {
             this.currentQuestionTime = this.quizService.getCurrentQuestionTime();
           }
-        }, 100);
+        }, 250);
       },
       error: (err) => {
         console.error('Failed to initialize competitive session:', err);
@@ -172,8 +173,15 @@ export class QuizPage implements OnInit, OnDestroy {
     });
   }
 
-  onAnswerSelected(answerId: string) {
+  async onAnswerSelected(answerId: string) {
     if (this.feedbackVisible || !this.currentQuestion) return;
+
+    // Haptic feedback on selection
+    try {
+      await Haptics.impact({ style: ImpactStyle.Light });
+    } catch (err) {
+      // Haptics not available (web or unsupported device)
+    }
 
     this.selectedAnswerId = answerId;
 
@@ -182,12 +190,34 @@ export class QuizPage implements OnInit, OnDestroy {
       const record = this.quizService.submitPracticeAnswer(answerId);
       if (record) {
         this.feedbackCorrect = record.isCorrect;
+
+        // Additional haptic feedback for correct/incorrect
+        try {
+          if (record.isCorrect) {
+            await Haptics.impact({ style: ImpactStyle.Medium });
+          } else {
+            await Haptics.impact({ style: ImpactStyle.Heavy });
+          }
+        } catch (err) {
+          // Haptics not available
+        }
       }
     } else {
       // Competitive mode
       const record = this.quizService.submitCompetitiveAnswer(answerId);
       if (record) {
         this.feedbackCorrect = record.isCorrect;
+
+        // Additional haptic feedback for correct/incorrect
+        try {
+          if (record.isCorrect) {
+            await Haptics.impact({ style: ImpactStyle.Medium });
+          } else {
+            await Haptics.impact({ style: ImpactStyle.Heavy });
+          }
+        } catch (err) {
+          // Haptics not available
+        }
       }
     }
 

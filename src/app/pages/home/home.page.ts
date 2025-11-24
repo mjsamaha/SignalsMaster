@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 
 
@@ -15,33 +16,46 @@ import { CommonModule } from '@angular/common';
 export class HomePage {
   constructor(private router: Router) {}
 
-  navigateToPracticeMode(): void {
+  async navigateToPracticeMode(): Promise<void> {
+    await this.triggerHaptic();
     this.router.navigate(['/tabs/practice-mode']);
   }
 
-  navigateToBestSignaller(): void {
+  async navigateToBestSignaller(): Promise<void> {
+    await this.triggerHaptic();
     this.router.navigate(['/tabs/best-signaller']);
   }
 
-  navigateToLeaderboard(): void {
+  async navigateToLeaderboard(): Promise<void> {
+    await this.triggerHaptic();
     this.router.navigate(['/tabs/leaderboard']);
   }
 
-  startPractice(questionCount: number) {
-  this.router.navigate(['/quiz'], {
-    queryParams: {
-      mode: 'practice',
-      count: questionCount
-    }
-  });
-}
+  async startPractice(questionCount: number) {
+    await this.triggerHaptic();
+    this.router.navigate(['/quiz'], {
+      queryParams: {
+        mode: 'practice',
+        count: questionCount
+      }
+    });
+  }
 
-startBestSignaller() {
-  this.router.navigate(['/quiz'], {
-    queryParams: {
-      mode: 'competitive'
+  async startBestSignaller() {
+    await this.triggerHaptic();
+    this.router.navigate(['/quiz'], {
+      queryParams: {
+        mode: 'competitive'
+      }
+    });
+  }
+
+  private async triggerHaptic(): Promise<void> {
+    try {
+      await Haptics.impact({ style: ImpactStyle.Light });
+    } catch (err) {
+      // Haptics not available (web or unsupported device)
     }
-  });
-}
+  }
 }
 

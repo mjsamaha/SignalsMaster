@@ -1,10 +1,10 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="safe-area-horizontal">
   <ion-toolbar>
     <ion-title>Practice Mode</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="bg-gradient-to-b from-blue-50 to-white">
+<ion-content [fullscreen]="true" class="bg-gradient-to-b from-blue-50 to-white safe-area-padding">
   <div class="container mx-auto px-4 py-8 max-w-2xl">
     <!-- Instructions -->
     <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
@@ -34,10 +34,10 @@
       <h3 class="text-xl font-bold text-gray-900 mb-4">Number of Questions</h3>
       <ion-item>
         <ion-label>Questions: {{ questionCount }}</ion-label>
-        <input 
-          type="range" 
-          min="5" 
-          max="50" 
+        <input
+          type="range"
+          min="5"
+          max="50"
           step="5"
           [(ngModel)]="questionCount"
           class="w-full"
@@ -46,8 +46,8 @@
     </div>
 
     <!-- Start Button -->
-    <ion-button 
-      expand="block" 
+    <ion-button
+      expand="block"
       size="large"
       fill="solid"
       color="primary"

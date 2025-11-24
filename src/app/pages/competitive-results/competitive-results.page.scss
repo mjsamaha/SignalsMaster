@@ -51,6 +51,16 @@ ion-content {
   margin: 0 auto;
   padding: 24px 20px 80px 20px;
 
+  @media (min-width: 1024px) {
+    max-width: 1000px;
+    padding: var(--spacing-3xl) var(--spacing-2xl) var(--spacing-4xl);
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1200px;
+    padding: var(--spacing-4xl) var(--spacing-3xl) var(--spacing-5xl);
+  }
+
   @media (max-width: 667px) {
     padding: 16px 16px 80px 16px;
   }
@@ -166,6 +176,16 @@ ion-content {
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin-bottom: 24px;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  @media (min-width: 1280px) {
+    gap: var(--spacing-2xl);
+  }
 
   @media (max-width: 667px) {
     grid-template-columns: 1fr;

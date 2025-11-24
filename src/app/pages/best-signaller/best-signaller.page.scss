@@ -185,6 +185,60 @@ ion-button[color="warning"],
 // RESPONSIVE
 // ============================================================================
 
+// Desktop (1024px+)
+@media (min-width: 1024px) {
+  .best-signaller-container {
+    max-width: 900px;
+    padding: var(--spacing-3xl) var(--spacing-4xl);
+  }
+
+  h1 {
+    font-size: 36px;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .form-group {
+    margin-bottom: var(--spacing-2xl);
+
+    label {
+      font-size: 15px;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    ion-input,
+    ion-textarea {
+      font-size: 18px;
+      padding: var(--spacing-lg) var(--spacing-xl);
+    }
+  }
+
+  ion-button[color="warning"],
+  .compete-button {
+    --padding-start: var(--spacing-2xl);
+    --padding-end: var(--spacing-2xl);
+    --padding-top: var(--spacing-xl);
+    --padding-bottom: var(--spacing-xl);
+    font-size: 18px;
+  }
+}
+
+// Large Desktop (1280px+)
+@media (min-width: 1280px) {
+  .best-signaller-container {
+    max-width: 1000px;
+    padding: var(--spacing-4xl) var(--spacing-5xl);
+  }
+
+  h1 {
+    font-size: 42px;
+  }
+
+  .form-group label {
+    font-size: 16px;
+  }
+}
+
+// Mobile
 @media (max-width: 375px) {
   .best-signaller-container {
     padding: var(--spacing-md);
