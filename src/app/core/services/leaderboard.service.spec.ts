@@ -16,7 +16,8 @@ describe('LeaderboardService', () => {
   beforeEach(() => {
     // Mock NgZone
     ngZoneMock = {
-      run: jasmine.createSpy('run').and.callFake((fn) => fn())
+      run: jasmine.createSpy('run').and.callFake((fn) => fn()),
+      runOutsideAngular: jasmine.createSpy('runOutsideAngular').and.callFake((fn) => fn())
     };
 
     // Mock Firestore methods
@@ -27,11 +28,19 @@ describe('LeaderboardService', () => {
       collection: collectionSpy
     };
 
+    // Mock ApplicationRef for Angular's ChangeDetectionScheduler
+    const applicationRefMock = {
+      isStable: jasmine.createSpyObj('BehaviorSubject', ['subscribe']),
+      tick: jasmine.createSpy('tick')
+    };
+    applicationRefMock.isStable.subscribe.and.returnValue({ unsubscribe: () => {} });
+
     TestBed.configureTestingModule({
       providers: [
         LeaderboardService,
         { provide: Firestore, useValue: firestoreMock },
-        { provide: NgZone, useValue: ngZoneMock }
+        { provide: NgZone, useValue: ngZoneMock },
+        { provide: 'ApplicationRef', useValue: applicationRefMock }
       ]
     });
 
@@ -201,11 +210,19 @@ describe('Leaderboard Data Processing', () => {
     };
     firestoreMock = {};
 
+    // Mock ApplicationRef for Angular's ChangeDetectionScheduler
+    const applicationRefMock = {
+      isStable: jasmine.createSpyObj('BehaviorSubject', ['subscribe']),
+      tick: jasmine.createSpy('tick')
+    };
+    applicationRefMock.isStable.subscribe.and.returnValue({ unsubscribe: () => {} });
+
     TestBed.configureTestingModule({
       providers: [
         LeaderboardService,
         { provide: Firestore, useValue: firestoreMock },
-        { provide: NgZone, useValue: ngZoneMock }
+        { provide: NgZone, useValue: ngZoneMock },
+        { provide: 'ApplicationRef', useValue: applicationRefMock }
       ]
     });
 

@@ -63,7 +63,33 @@ jobs:
 
       - name: Generate environment files from secrets
         run: |
-          # Create environment.prod.ts
+          # Create environment.ts for testing phase
+          cat > src/environments/environment.ts << 'EOF'
+          export const environment = {
+            production: false,
+            useEmulators: true,
+            firebase: {
+              apiKey: "fake-api-key-for-testing",
+              authDomain: "localhost",
+              projectId: "signalsmaster-40d2f",
+              storageBucket: "signalsmaster-40d2f.firebasestorage.app",
+              messagingSenderId: "303346601142",
+              appId: "fake-app-id-for-testing",
+              measurementId: "G-XXXXXXXX"
+            },
+            emulators: {
+              firestore: {
+                host: 'localhost',
+                port: 8080
+              },
+              auth: {
+                host: 'localhost',
+                port: 9099
+              }
+            }
+          };
+          EOF
+          # Create environment.prod.ts for production build
           cat > src/environments/environment.prod.ts << 'EOF'
           export const environment = {
             production: true,
