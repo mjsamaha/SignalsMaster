@@ -149,77 +149,72 @@ export class LeaderboardService {
       console.log('[DEBUG] Creating leaderboard query');
 
       try {
-        // Wrap the ENTIRE Firestore operation in runOutsideAngular to prevent
-        // "Calling Firebase APIs outside of an Injection context" warnings
-        this.ngZone.runOutsideAngular(() => {
-          console.log('[DEBUG] Inside runOutsideAngular, building query');
+        // Build query constraints
+        const constraints: QueryConstraint[] = [
+          orderBy('rating', 'desc'),   // Sort by rating descending
+          orderBy('createdAt', 'asc'), // Then by timestamp ascending
+          limit(100)                    // Limit to 100 documents
+        ];
 
-          // Build query - must happen inside runOutsideAngular
-          const constraints: QueryConstraint[] = [
-            orderBy('rating', 'desc'),   // Sort by rating descending
-            orderBy('createdAt', 'asc'), // Then by timestamp ascending
-            limit(100)                    // Limit to 100 documents
-          ];
-
-          console.log('[DEBUG] Firestore instance check:', {
-            firestoreExists: !!this.firestore,
-            type: typeof this.firestore
-          });
-
-          const q = query(collection(this.firestore, 'leaderboard'), ...constraints);
-
-          console.log('[DEBUG] Query created, setting up listener');
-          console.log('[DEBUG] Calling onSnapshot');
-
-          const unsubscribe = onSnapshot(
-            q,
-            (snapshot) => {
-              console.log('[DEBUG] onSnapshot fired, docs count:', snapshot.docs.length);
-
-              try {
-                const entries: LeaderboardEntry[] = snapshot.docs.map((doc, index) => {
-                  const data = doc.data() as any;
-                  const rank = index + 1;
-                  const tier = this.getTierLabel(rank);
-
-                  return {
-                    id: doc.id,
-                    username: data.username || 'Anonymous',
-                    rating: data.rating || 0,
-                    accuracy: data.accuracy || 0,
-                    totalTime: data.totalTime || 0,
-                    correctAnswers: data.correctAnswers || 0,
-                    totalQuestions: data.totalQuestions || 0,
-                    timestamp: data.createdAt?.toDate?.()?.getTime() || Date.now(),
-                    rank,
-                    tier,
-                    sessionId: data.sessionId || ''
-                  };
-                });
-
-                console.log('[DEBUG] Processed entries:', entries.length,
-                  entries.length > 0 ? entries[0] : 'no entries');
-
-                // Emit data back to Angular zone for change detection
-                this.ngZone.run(() => observer.next(entries));
-              } catch (mapError) {
-                console.error('[DEBUG] Error mapping snapshot documents:', mapError);
-                this.ngZone.run(() => observer.error(mapError));
-              }
-            },
-            (error) => {
-              console.error('[DEBUG] Leaderboard listener error:', {
-                code: error.code || 'UNKNOWN',
-                message: error.message || 'Unknown error',
-                fullError: error
-              });
-              this.ngZone.run(() => observer.error(error));
-            }
-          );
-
-          // Return unsubscribe function
-          return unsubscribe;
+        console.log('[DEBUG] Firestore instance check:', {
+          firestoreExists: !!this.firestore,
+          type: typeof this.firestore
         });
+
+        const q = query(collection(this.firestore, 'leaderboard'), ...constraints);
+
+        console.log('[DEBUG] Query created, setting up listener');
+        console.log('[DEBUG] Calling onSnapshot');
+
+        // onSnapshot runs in the correct injection context when called here
+        const unsubscribe = onSnapshot(
+          q,
+          (snapshot) => {
+            console.log('[DEBUG] onSnapshot fired, docs count:', snapshot.docs.length);
+
+            try {
+              const entries: LeaderboardEntry[] = snapshot.docs.map((doc, index) => {
+                const data = doc.data() as any;
+                const rank = index + 1;
+                const tier = this.getTierLabel(rank);
+
+                return {
+                  id: doc.id,
+                  username: data.username || 'Anonymous',
+                  rating: data.rating || 0,
+                  accuracy: data.accuracy || 0,
+                  totalTime: data.totalTime || 0,
+                  correctAnswers: data.correctAnswers || 0,
+                  totalQuestions: data.totalQuestions || 0,
+                  timestamp: data.createdAt?.toDate?.()?.getTime() || Date.now(),
+                  rank,
+                  tier,
+                  sessionId: data.sessionId || ''
+                };
+              });
+
+              console.log('[DEBUG] Processed entries:', entries.length,
+                entries.length > 0 ? entries[0] : 'no entries');
+
+              // Emit data back to Angular zone for change detection
+              this.ngZone.run(() => observer.next(entries));
+            } catch (mapError) {
+              console.error('[DEBUG] Error mapping snapshot documents:', mapError);
+              this.ngZone.run(() => observer.error(mapError));
+            }
+          },
+          (error) => {
+            console.error('[DEBUG] Leaderboard listener error:', {
+              code: error.code || 'UNKNOWN',
+              message: error.message || 'Unknown error',
+              fullError: error
+            });
+            this.ngZone.run(() => observer.error(error));
+          }
+        );
+
+        // Return unsubscribe function
+        return unsubscribe;
       } catch (error) {
         console.error('[DEBUG] Error setting up leaderboard listener:', error);
         observer.error(error);

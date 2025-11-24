@@ -6,7 +6,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { APP_INITIALIZER } from '@angular/core';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideFirestore, getFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
 import { environment } from './environments/environment';
 
 import { routes } from './app/app.routes';
@@ -28,7 +28,18 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
+    provideFirestore(() => {
+      const firestore = getFirestore();
+      // Connect to emulators in test environment
+      if (environment.useEmulators && environment.emulators?.firestore) {
+        connectFirestoreEmulator(
+          firestore,
+          environment.emulators.firestore.host,
+          environment.emulators.firestore.port
+        );
+      }
+      return firestore;
+    }),
     {
       provide: APP_INITIALIZER,
       useFactory: initializePlatform,

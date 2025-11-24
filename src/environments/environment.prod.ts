@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  useEmulators: false, // Never use emulators in production
   firebase: {
     apiKey: "***REMOVED***",
     authDomain: "signalsmaster-40d2f.firebaseapp.com",

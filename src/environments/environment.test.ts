@@ -1,18 +1,18 @@
 // This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
+// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
   production: false,
-  useEmulators: true, // Set to true to use Firebase emulators locally
+  useEmulators: true, // Enable emulators for testing
   firebase: {
-    apiKey: "***REMOVED***",
-    authDomain: "signalsmaster-40d2f.firebaseapp.com",
-    projectId: "signalsmaster-40d2f",
-    storageBucket: "signalsmaster-40d2f.firebasestorage.app",
-    messagingSenderId: "303346601142",
-    appId: "1:303346601142:web:b02bf34ab3bdd1def7aaa17",
-    measurementId: "G-849GLLYS63"
+    apiKey: 'fake-api-key-for-emulator',
+    authDomain: 'localhost',
+    projectId: 'signalsmaster-40d2f',
+    storageBucket: 'signalsmaster-40d2f.firebasestorage.app',
+    messagingSenderId: '303346601142',
+    appId: 'fake-app-id-for-emulator',
+    measurementId: 'G-XXXXXXXX'
   },
   emulators: {
     firestore: {
@@ -22,6 +22,10 @@ export const environment = {
     auth: {
       host: 'localhost',
       port: 9099
+    },
+    hosting: {
+      host: 'localhost',
+      port: 5000
     }
   }
 };

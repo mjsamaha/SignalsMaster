@@ -1,0 +1,54 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Leaderboard entries - read public, write with validation
+    match /competitiveResults/{resultId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['username', 'score', 'timeSpent', 'difficulty', 'questionsCount', 'timestamp'])
+                    && request.resource.data.username is string
+                    && request.resource.data.username.size() >= 3
+                    && request.resource.data.username.size() <= 20
+                    && request.resource.data.score is number
+                    && request.resource.data.score >= 0
+                    && request.resource.data.score <= 100
+                    && request.resource.data.timeSpent is number
+                    && request.resource.data.questionsCount is number;
+      allow update, delete: if false; // No updates or deletes allowed
+    }
+
+    // Practice results - read public, write with validation
+    match /practiceResults/{resultId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['username', 'flagsLearned', 'practiceTime', 'timestamp'])
+                    && request.resource.data.username is string
+                    && request.resource.data.username.size() >= 3
+                    && request.resource.data.flagsLearned is number
+                    && request.resource.data.practiceTime is number;
+      allow update, delete: if false;
+    }
+
+    // Leaderboard collection - read public, write with validation
+    match /leaderboard/{entryId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['username', 'rating', 'accuracy', 'totalTime', 'correctAnswers', 'totalQuestions', 'sessionId', 'createdAt'])
+                    && request.resource.data.username is string
+                    && request.resource.data.username.size() >= 3
+                    && request.resource.data.username.size() <= 20
+                    && request.resource.data.rating is number
+                    && request.resource.data.accuracy is number
+                    && request.resource.data.accuracy >= 0
+                    && request.resource.data.accuracy <= 100
+                    && request.resource.data.totalTime is number
+                    && request.resource.data.correctAnswers is number
+                    && request.resource.data.totalQuestions is number
+                    && request.resource.data.sessionId is string;
+      allow update, delete: if false;
+    }
+
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
