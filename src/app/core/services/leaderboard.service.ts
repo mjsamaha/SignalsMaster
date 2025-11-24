@@ -218,6 +218,7 @@ export class LeaderboardService {
       } catch (error) {
         console.error('[DEBUG] Error setting up leaderboard listener:', error);
         observer.error(error);
+        return () => {}; // Return empty unsubscribe function on error
       }
     });
   }
