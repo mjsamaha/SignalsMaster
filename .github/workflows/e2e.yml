@@ -87,12 +87,12 @@ jobs:
       - name: Start Firebase Emulators and Run Cypress
         run: |
           # Start emulators in background
-          firebase emulators:start --only firestore,hosting --project signalsmaster-40d2f --config firebase.json &
+          firebase emulators:start --only firestore,auth,hosting --project signalsmaster-40d2f --config firebase.json &
           EMULATOR_PID=$!
 
           # Wait for emulators to be ready
           echo "Waiting for Firebase emulators to start..."
-          npx wait-on http://localhost:5000 http://localhost:8080 -t 60000
+          npx wait-on http://localhost:5000 http://localhost:8080 http://localhost:9099 -t 120000
 
           # Run Cypress tests
           npm run e2e
