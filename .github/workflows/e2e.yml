@@ -31,8 +31,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Firebase Tools
-        run: npm install -g firebase-tools
+      - name: Install Firebase Tools and Ionic CLI
+        run: |
+          npm install -g firebase-tools
+          npm install -g @ionic/cli
 
       - name: Generate environment files
         run: |
@@ -61,50 +63,53 @@ jobs:
             }
           };
           EOF
-          cat > src/environments/environment.prod.ts << 'EOF'
-          export const environment = {
-            production: true,
-            useEmulators: false,
-            firebase: {
-              apiKey: "fake-api-key-for-testing",
-              authDomain: "localhost",
-              projectId: "signalsmaster-40d2f",
-              storageBucket: "signalsmaster-40d2f.firebasestorage.app",
-              messagingSenderId: "303346601142",
-              appId: "fake-app-id-for-testing",
-              measurementId: "G-XXXXXXXX"
-            },
-            emulators: {
-              firestore: {
-                host: 'localhost',
-                port: 8080
-              },
-              auth: {
-                host: 'localhost',
-                port: 9099
-              }
-            }
-          };
-          EOF
 
-      - name: Build application
-        run: npm run build
-
-      - name: Start Firebase Emulators and Run Cypress
+      - name: Start Firebase Emulators
         run: |
-          # Start emulators in background
-          firebase emulators:start --only firestore,auth,hosting --project signalsmaster-40d2f --config firebase.json &
-          EMULATOR_PID=$!
+          firebase emulators:start --only firestore,auth --project signalsmaster-40d2f &
+          echo $! > emulator.pid
 
-          # Wait for emulators to be ready
-          echo "Waiting for Firebase emulators to start..."
-          npx wait-on http://localhost:4000 -t 180000
+          # Wait for Firestore emulator
+          echo "Waiting for Firebase emulators..."
+          npx wait-on http://127.0.0.1:4400 -t 120000 || {
+            echo "Emulators failed to start. Checking logs..."
+            cat firebase-debug.log 2>/dev/null || echo "No debug log found"
+            kill $(cat emulator.pid) 2>/dev/null || true
+            exit 1
+          }
 
-          # Run Cypress tests
-          npm run e2e
+          echo "Firebase emulators ready!"
 
-          # Stop emulators
-          kill $EMULATOR_PID || true
+      - name: Start Ionic Dev Server
+        run: |
+          ionic serve --no-open --port 8100 &
+          echo $! > ionic.pid
+
+          # Wait for Ionic dev server
+          echo "Waiting for Ionic dev server..."
+          npx wait-on http://127.0.0.1:8100 -t 120000 || {
+            echo "Ionic server failed to start"
+            kill $(cat ionic.pid) 2>/dev/null || true
+            kill $(cat emulator.pid) 2>/dev/null || true
+            exit 1
+          }
+
+          echo "Ionic dev server ready!"
+
+      - name: Run Cypress Tests
+        run: npm run e2e
+
+      - name: Stop Servers
+        if: always()
+        run: |
+          if [ -f ionic.pid ]; then
+            kill $(cat ionic.pid) 2>/dev/null || true
+            rm ionic.pid
+          fi
+          if [ -f emulator.pid ]; then
+            kill $(cat emulator.pid) 2>/dev/null || true
+            rm emulator.pid
+          fi
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v4
@@ -113,6 +118,7 @@ jobs:
           name: cypress-screenshots
           path: cypress/screenshots/
           retention-days: 7
+          if-no-files-found: ignore
 
       - name: Upload Cypress videos
         uses: actions/upload-artifact@v4
@@ -121,14 +127,11 @@ jobs:
           name: cypress-videos
           path: cypress/videos/
           retention-days: 7
+          if-no-files-found: ignore
 
       - name: Generate Cypress report
         if: always()
         run: |
           echo "## Cypress E2E Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ -f cypress/results/output.json ]; then
-            echo "Test results available in artifacts" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "E2E tests completed. Check artifacts for details." >> $GITHUB_STEP_SUMMARY
-          fi
+          echo "E2E tests completed. Check artifacts for details." >> $GITHUB_STEP_SUMMARY
