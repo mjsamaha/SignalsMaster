@@ -68,7 +68,6 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(validResults);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
       expect(result).toEqual(true);
     });
 
@@ -90,7 +89,6 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(invalidResults);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
       expect(result).toEqual(false);
     });
 
@@ -112,7 +110,6 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(invalidResults);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
       expect(result).toEqual(false);
     });
 
@@ -134,7 +131,6 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(invalidResults);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
       expect(result).toEqual(false);
     });
 
@@ -170,9 +166,7 @@ describe('LeaderboardService', () => {
 
       const response = await service.submitScore(validResults);
 
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
       expect(response.success).toEqual(true);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
       expect(response.message).toEqual('Score submitted successfully!');
     });
 
@@ -195,9 +189,7 @@ describe('LeaderboardService', () => {
 
       const response = await service.submitScore(invalidResults);
 
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
       expect(response.success).toEqual(false);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
       expect(response.message).toEqual('Invalid submission data');
     });
   });
@@ -240,11 +232,8 @@ describe('Leaderboard Data Processing', () => {
   });
 
   it('should correctly generate tier labels', () => {
-    // @ts-expect-error - Jasmine types are correct, IDE shows false positive
     expect((service as any).getTierLabel(1)).toEqual('Signals Master');
-    // @ts-expect-error - Jasmine types are correct, IDE shows false positive
     expect((service as any).getTierLabel(5)).toEqual('Top Signaller');
-    // @ts-expect-error - Jasmine types are correct, IDE shows false positive
     expect((service as any).getTierLabel(12)).toEqual('');
   });
 });
