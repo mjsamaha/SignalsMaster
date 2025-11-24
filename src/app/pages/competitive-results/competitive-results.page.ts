@@ -47,7 +47,9 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    // Intentionally blank
+  }
 
   getRatingColor(): string {
     if (!this.results) return 'medium';

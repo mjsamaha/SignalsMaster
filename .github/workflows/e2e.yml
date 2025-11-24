@@ -87,7 +87,7 @@ jobs:
       - name: Start Firebase Emulators and Run Cypress
         run: |
           # Start emulators in background
-          firebase emulators:start --only firestore,hosting --project signalsmaster-40d2f &
+          firebase emulators:start --only firestore,hosting --project signalsmaster-40d2f --config firebase.json &
           EMULATOR_PID=$!
 
           # Wait for emulators to be ready

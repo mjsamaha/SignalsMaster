@@ -68,8 +68,7 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(validResults);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-      expect(result).toEqual(true);
+      expect(result).equal(true);
     });
 
     it('should reject username too short', () => {
@@ -90,8 +89,7 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(invalidResults);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-      expect(result).toEqual(false);
+      expect(result).equal(false);
     });
 
     it('should reject username too long', () => {
@@ -112,8 +110,7 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(invalidResults);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-      expect(result).toEqual(false);
+      expect(result).equal(false);
     });
 
     it('should reject negative rating', () => {
@@ -134,8 +131,7 @@ describe('LeaderboardService', () => {
       };
 
       const result = (service as any).validateResults(invalidResults);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-      expect(result).toEqual(false);
+      expect(result).equal(false);
     });
 
 // TODO: Update remaining test cases with full CompetitiveResults objects
@@ -170,10 +166,8 @@ describe('LeaderboardService', () => {
 
       const response = await service.submitScore(validResults);
 
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-      expect(response.success).toEqual(true);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-      expect(response.message).toEqual('Score submitted successfully!');
+      expect(response.success).equal(true);
+      expect(response.message).equal('Score submitted successfully!');
     });
 
     it('should reject submission for invalid data', async () => {
@@ -195,10 +189,8 @@ describe('LeaderboardService', () => {
 
       const response = await service.submitScore(invalidResults);
 
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-      expect(response.success).toEqual(false);
-      // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-      expect(response.message).toEqual('Invalid submission data');
+      expect(response.success).equal(false);
+      expect(response.message).equal('Invalid submission data');
     });
   });
 
@@ -240,11 +232,8 @@ describe('Leaderboard Data Processing', () => {
   });
 
   it('should correctly generate tier labels', () => {
-    // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-    expect((service as any).getTierLabel(1)).toEqual('Signals Master');
-    // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-    expect((service as any).getTierLabel(5)).toEqual('Top Signaller');
-    // @ts-expect-error - Jasmine types are correct, IDE shows false positive
-    expect((service as any).getTierLabel(12)).toEqual('');
+    expect((service as any).getTierLabel(1)).equal('Signals Master');
+    expect((service as any).getTierLabel(5)).equal('Top Signaller');
+    expect((service as any).getTierLabel(12)).equal('');
   });
 });
