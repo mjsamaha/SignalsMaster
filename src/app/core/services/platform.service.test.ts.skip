@@ -1,0 +1,151 @@
+/**
+ * Unit Tests for PlatformService
+ * 
+ * Tests platform detection logic for iOS, Android, mobile, desktop, and hybrid platforms.
+ * Example of simple pure logic testing with mocked dependencies.
+ */
+
+import { PlatformService } from './platform.service';describe('PlatformService', () => {
+  let service: PlatformService;
+  let platformSpy: jasmine.SpyObj<Platform>;
+
+  beforeEach(() => {
+    // Create mock Platform with spy methods
+    const spy = jasmine.createSpyObj('Platform', ['is', 'ready']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        PlatformService,
+        { provide: Platform, useValue: spy }
+      ]
+    });
+
+    service = TestBed.inject(PlatformService);
+    platformSpy = TestBed.inject(Platform) as jasmine.SpyObj<Platform>;
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  describe('Platform Detection', () => {
+    it('should detect iOS platform', () => {
+      platformSpy.is.and.returnValue(true);
+
+      expect(service.isIOS()).toBe(true);
+      expect(platformSpy.is).toHaveBeenCalledWith('ios');
+    });
+
+    it('should detect Android platform', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'android');
+
+      expect(service.isAndroid()).toBe(true);
+      expect(platformSpy.is).toHaveBeenCalledWith('android');
+    });
+
+    it('should detect mobile platform', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'mobile');
+
+      expect(service.isMobile()).toBe(true);
+      expect(platformSpy.is).toHaveBeenCalledWith('mobile');
+    });
+
+    it('should detect desktop platform', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'desktop');
+
+      expect(service.isDesktop()).toBe(true);
+      expect(platformSpy.is).toHaveBeenCalledWith('desktop');
+    });
+
+    it('should detect mobile web', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'mobileweb');
+
+      expect(service.isMobileWeb()).toBe(true);
+      expect(platformSpy.is).toHaveBeenCalledWith('mobileweb');
+    });
+
+    it('should detect hybrid platform', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'hybrid');
+
+      expect(service.isHybrid()).toBe(true);
+      expect(platformSpy.is).toHaveBeenCalledWith('hybrid');
+    });
+  });
+
+  describe('getPlatformClasses', () => {
+    it('should return iOS classes', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'ios');
+
+      const classes = service.getPlatformClasses();
+
+      expect(classes).toContain('ios');
+    });
+
+    it('should return Android classes including md', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'android');
+
+      const classes = service.getPlatformClasses();
+
+      expect(classes).toContain('android');
+      expect(classes).toContain('md');
+    });
+
+    it('should return mobile class', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'mobile');
+
+      const classes = service.getPlatformClasses();
+
+      expect(classes).toContain('mobile');
+    });
+
+    it('should return desktop class', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'desktop');
+
+      const classes = service.getPlatformClasses();
+
+      expect(classes).toContain('desktop');
+    });
+
+    it('should return hybrid class', () => {
+      platformSpy.is.and.callFake((platform: string) => platform === 'hybrid');
+
+      const classes = service.getPlatformClasses();
+
+      expect(classes).toContain('hybrid');
+    });
+
+    it('should return multiple classes for mobile iOS', () => {
+      platformSpy.is.and.callFake((platform: string) =>
+        platform === 'ios' || platform === 'mobile'
+      );
+
+      const classes = service.getPlatformClasses();
+
+      expect(classes).toContain('ios');
+      expect(classes).toContain('mobile');
+      expect(classes.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('should return empty array when no platform matches', () => {
+      platformSpy.is.and.returnValue(false);
+
+      const classes = service.getPlatformClasses();
+
+      expect(classes).toEqual([]);
+    });
+  });
+
+  describe('ready', () => {
+    it('should wait for platform ready', async () => {
+      platformSpy.ready.and.returnValue(Promise.resolve());
+
+      await service.ready();
+
+      expect(platformSpy.ready).toHaveBeenCalled();
+    });
+  });
+});

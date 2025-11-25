@@ -1,0 +1,214 @@
+/**
+ * Component Tests for TimerComponent
+ *
+ * Tests timer functionality including elapsed time tracking and countdown modes.
+ * Example of Testing Library component tests with lifecycle hooks and intervals.
+ */
+
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TimerComponent } from './timer.component';
+
+describe('TimerComponent', () => {
+  let component: TimerComponent;
+  let fixture: ComponentFixture<TimerComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TimerComponent]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TimerComponent);
+    component = fixture.componentInstance;
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    if (component.interval) {
+      clearInterval(component.interval);
+    }
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('Elapsed Timer Mode', () => {
+    beforeEach(() => {
+      component.mode = 'elapsed';
+    });
+
+    it('should start elapsed timer on init', fakeAsync(() => {
+      const startTime = Date.now();
+      component.startTime = startTime;
+
+      fixture.detectChanges();
+
+      expect(component.elapsedTime).toBe(0);
+
+      tick(1000);
+
+      expect(component.elapsedTime).toBeGreaterThanOrEqual(900);
+      expect(component.elapsedTime).toBeLessThanOrEqual(1100);
+    }));
+
+    it('should format elapsed time correctly', () => {
+      component.elapsedTime = 0;
+      expect(component.formattedTime).toBe('00:00');
+
+      component.elapsedTime = 30000; // 30 seconds
+      expect(component.formattedTime).toBe('00:30');
+
+      component.elapsedTime = 90000; // 1 minute 30 seconds
+      expect(component.formattedTime).toBe('01:30');
+
+      component.elapsedTime = 3661000; // 61 minutes 1 second
+      expect(component.formattedTime).toBe('61:01');
+    });
+
+    it('should update elapsed time every 100ms', fakeAsync(() => {
+      const startTime = Date.now();
+      component.startTime = startTime;
+
+      fixture.detectChanges();
+
+      tick(500);
+      const elapsed1 = component.elapsedTime;
+
+      tick(500);
+      const elapsed2 = component.elapsedTime;
+
+      expect(elapsed2).toBeGreaterThan(elapsed1);
+      expect(elapsed2 - elapsed1).toBeGreaterThanOrEqual(400);
+    }));
+
+    it('should not be expired in elapsed mode', () => {
+      component.mode = 'elapsed';
+      fixture.detectChanges();
+
+      expect(component.isExpired).toBe(false);
+    });
+  });
+
+  describe('Countdown Timer Mode', () => {
+    beforeEach(() => {
+      component.mode = 'countdown';
+      component.countdownSeconds = 60;
+    });
+
+    it('should start countdown timer on init', fakeAsync(() => {
+      fixture.detectChanges();
+
+      expect(component.remainingTime).toBe(60);
+
+      tick(1000);
+
+      expect(component.remainingTime).toBe(59);
+
+      tick(2000);
+
+      expect(component.remainingTime).toBe(57);
+    }));
+
+    it('should format countdown time correctly', () => {
+      component.mode = 'countdown';
+
+      component.remainingTime = 0;
+      expect(component.formattedTime).toBe('00:00');
+
+      component.remainingTime = 30;
+      expect(component.formattedTime).toBe('00:30');
+
+      component.remainingTime = 90;
+      expect(component.formattedTime).toBe('01:30');
+
+      component.remainingTime = 3661;
+      expect(component.formattedTime).toBe('61:01');
+    });
+
+    it('should stop countdown at zero', fakeAsync(() => {
+      component.countdownSeconds = 3;
+      fixture.detectChanges();
+
+      tick(1000);
+      expect(component.remainingTime).toBe(2);
+
+      tick(1000);
+      expect(component.remainingTime).toBe(1);
+
+      tick(1000);
+      expect(component.remainingTime).toBe(0);
+
+      tick(1000);
+      expect(component.remainingTime).toBe(0); // Should stay at 0
+    }));
+
+    it('should set isExpired when countdown reaches zero', fakeAsync(() => {
+      component.countdownSeconds = 2;
+      fixture.detectChanges();
+
+      expect(component.isExpired).toBe(false);
+
+      tick(2000);
+
+      expect(component.isExpired).toBe(true);
+    }));
+
+    it('should use custom countdown seconds', fakeAsync(() => {
+      component.countdownSeconds = 10;
+      fixture.detectChanges();
+
+      expect(component.remainingTime).toBe(10);
+
+      tick(1000);
+
+      expect(component.remainingTime).toBe(9);
+    }));
+  });
+
+  describe('Lifecycle Management', () => {
+    it('should clear interval on destroy', fakeAsync(() => {
+      component.mode = 'elapsed';
+      fixture.detectChanges();
+
+      const clearIntervalSpy = jest.spyOn(global, 'clearInterval');
+
+      component.ngOnDestroy();
+
+      expect(clearIntervalSpy).toHaveBeenCalled();
+
+      clearIntervalSpy.mockRestore();
+    }));
+
+    it('should handle ngOnDestroy without active interval', () => {
+      expect(() => component.ngOnDestroy()).not.toThrow();
+    });
+  });
+
+  describe('Input Properties', () => {
+    it('should accept startTime input', () => {
+      const customStartTime = Date.now() - 5000;
+      component.startTime = customStartTime;
+      component.mode = 'elapsed';
+
+      fixture.detectChanges();
+
+      expect(component.startTime).toBe(customStartTime);
+    });
+
+    it('should accept mode input', () => {
+      component.mode = 'countdown';
+
+      expect(component.mode).toBe('countdown');
+
+      component.mode = 'elapsed';
+
+      expect(component.mode).toBe('elapsed');
+    });
+
+    it('should accept countdownSeconds input', () => {
+      component.countdownSeconds = 120;
+
+      expect(component.countdownSeconds).toBe(120);
+    });
+  });
+});

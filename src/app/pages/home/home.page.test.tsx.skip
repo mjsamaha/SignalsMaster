@@ -1,0 +1,189 @@
+/**
+ * Component Tests for HomePage
+ *
+ * Tests page navigation, button interactions, and haptic feedback.
+ * Example of Testing Library tests for Ionic pages with Router navigation.
+ */
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { HomePage } from './home.page';
+import { Haptics } from '@capacitor/haptics';
+
+// Mock Capacitor Haptics
+jest.mock('@capacitor/haptics', () => ({
+  Haptics: {
+    impact: jest.fn().mockResolvedValue(undefined)
+  },
+  ImpactStyle: {
+    Light: 'LIGHT',
+    Medium: 'MEDIUM',
+    Heavy: 'HEAVY'
+  }
+}));
+
+describe('HomePage', () => {
+  let component: HomePage;
+  let fixture: ComponentFixture<HomePage>;
+  let router: Router;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [HomePage],
+      providers: [
+        {
+          provide: Router,
+          useValue: {
+            navigate: jest.fn().mockResolvedValue(true)
+          }
+        }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(HomePage);
+    component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+
+    fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('Navigation', () => {
+    it('should navigate to practice mode', async () => {
+      await component.navigateToPracticeMode();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/tabs/practice-mode']);
+      expect(Haptics.impact).toHaveBeenCalled();
+    });
+
+    it('should navigate to best signaller', async () => {
+      await component.navigateToBestSignaller();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/tabs/best-signaller']);
+      expect(Haptics.impact).toHaveBeenCalled();
+    });
+
+    it('should navigate to leaderboard', async () => {
+      await component.navigateToLeaderboard();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/tabs/leaderboard']);
+      expect(Haptics.impact).toHaveBeenCalled();
+    });
+
+    it('should start practice mode with question count', async () => {
+      const questionCount = 10;
+
+      await component.startPractice(questionCount);
+
+      expect(router.navigate).toHaveBeenCalledWith(['/quiz'], {
+        queryParams: {
+          mode: 'practice',
+          count: questionCount
+        }
+      });
+      expect(Haptics.impact).toHaveBeenCalled();
+    });
+
+    it('should start best signaller competitive mode', async () => {
+      await component.startBestSignaller();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/quiz'], {
+        queryParams: {
+          mode: 'competitive'
+        }
+      });
+      expect(Haptics.impact).toHaveBeenCalled();
+    });
+
+    it('should open feedback link in new tab', async () => {
+      const windowOpenSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
+
+      await component.navigateToFeedback();
+
+      expect(windowOpenSpy).toHaveBeenCalledWith(
+        'https://signalsmaster.sleekplan.app',
+        '_blank',
+        'noopener,noreferrer'
+      );
+      expect(Haptics.impact).toHaveBeenCalled();
+
+      windowOpenSpy.mockRestore();
+    });
+  });
+
+  describe('Haptic Feedback', () => {
+    it('should trigger haptic feedback with light impact', async () => {
+      await component.navigateToPracticeMode();
+
+      expect(Haptics.impact).toHaveBeenCalledWith({ style: 'LIGHT' });
+    });
+
+    it('should handle haptic errors gracefully', async () => {
+      (Haptics.impact as jest.Mock).mockRejectedValueOnce(new Error('Haptics not available'));
+
+      await expect(component.navigateToPracticeMode()).resolves.not.toThrow();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/tabs/practice-mode']);
+    });
+
+    it('should trigger haptics before navigation', async () => {
+      const callOrder: string[] = [];
+
+      (Haptics.impact as jest.Mock).mockImplementation(() => {
+        callOrder.push('haptics');
+        return Promise.resolve();
+      });
+
+      (router.navigate as jest.Mock).mockImplementation(() => {
+        callOrder.push('navigate');
+        return Promise.resolve(true);
+      });
+
+      await component.navigateToPracticeMode();
+
+      expect(callOrder).toEqual(['haptics', 'navigate']);
+    });
+  });
+
+  describe('Practice Mode Options', () => {
+    it('should start practice with different question counts', async () => {
+      await component.startPractice(5);
+      expect(router.navigate).toHaveBeenCalledWith(['/quiz'], {
+        queryParams: { mode: 'practice', count: 5 }
+      });
+
+      await component.startPractice(10);
+      expect(router.navigate).toHaveBeenCalledWith(['/quiz'], {
+        queryParams: { mode: 'practice', count: 10 }
+      });
+
+      await component.startPractice(20);
+      expect(router.navigate).toHaveBeenCalledWith(['/quiz'], {
+        queryParams: { mode: 'practice', count: 20 }
+      });
+    });
+  });
+
+  describe('Component Rendering', () => {
+    it('should render page title', () => {
+      const compiled = fixture.nativeElement as HTMLElement;
+      const title = compiled.querySelector('ion-title');
+
+      expect(title).toBeTruthy();
+    });
+
+    it('should render navigation buttons', () => {
+      const compiled = fixture.nativeElement as HTMLElement;
+      const buttons = compiled.querySelectorAll('ion-button');
+
+      expect(buttons.length).toBeGreaterThan(0);
+    });
+  });
+});
