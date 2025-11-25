@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { addIcons } from 'ionicons';
 import { chatbubblesOutline } from 'ionicons/icons';
+import { APP_VERSION } from '../../config/app-version';
 
 @Component({
   selector: 'app-about',
@@ -13,6 +14,8 @@ import { chatbubblesOutline } from 'ionicons/icons';
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonIcon, CommonModule]
 })
 export class AboutPage {
+  appVersion = APP_VERSION;
+
   constructor() {
     addIcons({ chatbubblesOutline });
   }
