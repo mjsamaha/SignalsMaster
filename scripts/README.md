@@ -10,6 +10,10 @@ Automated PowerShell script for streamlined git workflow with branch-aware prefi
 # Interactive commit (prompts for message)
 npm run commit
 
+# then do:
+git push origin BRANCHNAME
+
+
 # Commit and push in one command
 npm run commit:push
 

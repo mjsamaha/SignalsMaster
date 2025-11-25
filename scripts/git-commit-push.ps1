@@ -133,27 +133,41 @@ function Get-CurrentBranch {
 function Get-BranchPrefix {
     param([string]$Branch)
 
-    # Map branch patterns to conventional commit prefixes
+    # Map branch patterns to conventional commit prefixes (without colon for scope support)
     $prefixMap = @{
-        'feat/'     = 'feat: '
-        'feature/'  = 'feat: '
-        'hotfix/'   = 'hotfix: '
-        'bug/'      = 'fix: '
-        'fix/'      = 'fix: '
-        'refactor/' = 'refactor: '
-        'perf/'     = 'perf: '
-        'docs/'     = 'docs: '
-        'ci/'       = 'ci: '
-        'exp/'      = 'chore: '
-        'test/'     = 'test: '
-        'style/'    = 'style: '
-        'chore/'    = 'chore: '
+        'feat/'     = 'feat'
+        'feature/'  = 'feat'
+        'hotfix/'   = 'hotfix'
+        'bug/'      = 'fix'
+        'fix/'      = 'fix'
+        'refactor/' = 'refactor'
+        'perf/'     = 'perf'
+        'docs/'     = 'docs'
+        'ci/'       = 'ci'
+        'exp/'      = 'chore'
+        'test/'     = 'test'
+        'style/'    = 'style'
+        'chore/'    = 'chore'
     }
 
     foreach ($pattern in $prefixMap.Keys) {
         if ($Branch -like "$pattern*") {
             return $prefixMap[$pattern]
         }
+    }
+
+    return $null
+}
+
+function Get-TicketNumber {
+    param([string]$Branch)
+
+    # Extract ticket/issue numbers from branch names
+    # Matches patterns like: alpha-2411-008, JIRA-123, PROJ-456, etc.
+    # Looks for word-number combinations separated by hyphens
+
+    if ($Branch -match '([a-zA-Z]+-\d+(-\d+)*)') {
+        return $matches[1]
     }
 
     return $null
@@ -166,13 +180,14 @@ function Apply-BranchPrefix {
     )
 
     $prefix = Get-BranchPrefix -Branch $Branch
+    $ticket = Get-TicketNumber -Branch $Branch
 
     if ($null -eq $prefix) {
         return $Message
     }
 
-    # Check if message already has a conventional commit prefix
-    $conventionalPrefixes = @('feat:', 'fix:', 'docs:', 'style:', 'refactor:', 'perf:', 'test:', 'build:', 'ci:', 'chore:', 'revert:', 'hotfix:')
+    # Check if message already has a conventional commit prefix with or without scope
+    $conventionalPrefixes = @('feat:', 'feat(', 'fix:', 'fix(', 'docs:', 'docs(', 'style:', 'style(', 'refactor:', 'refactor(', 'perf:', 'perf(', 'test:', 'test(', 'build:', 'build(', 'ci:', 'ci(', 'chore:', 'chore(', 'revert:', 'revert(', 'hotfix:', 'hotfix(')
     $hasPrefix = $false
 
     foreach ($convPrefix in $conventionalPrefixes) {
@@ -183,7 +198,15 @@ function Apply-BranchPrefix {
     }
 
     if (-not $hasPrefix) {
-        return "$prefix$Message"
+        # Build the prefix with optional scope (ticket number)
+        if ($null -ne $ticket) {
+            $formattedMessage = "$prefix($ticket)" + ": $Message"
+            return $formattedMessage
+        }
+        else {
+            $formattedMessage = "$prefix" + ": $Message"
+            return $formattedMessage
+        }
     }
 
     return $Message
@@ -201,10 +224,17 @@ function Show-Preview {
 
     Write-Info "Current Branch: $Branch"
 
-    # Show branch type
+    # Show branch type and ticket number
     $prefix = Get-BranchPrefix -Branch $Branch
+    $ticket = Get-TicketNumber -Branch $Branch
+
     if ($null -ne $prefix) {
-        Write-Info "Branch Type: Auto-prefix detected ($prefix)"
+        $prefixInfo = "Branch Type: Auto-prefix detected ($prefix"
+        if ($null -ne $ticket) {
+            $prefixInfo += " with scope: $ticket"
+        }
+        $prefixInfo += ")"
+        Write-Info $prefixInfo
     }
 
     # Check if master/main
