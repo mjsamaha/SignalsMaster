@@ -182,12 +182,8 @@ function Apply-BranchPrefix {
     $prefix = Get-BranchPrefix -Branch $Branch
     $ticket = Get-TicketNumber -Branch $Branch
 
-    if ($null -eq $prefix) {
-        return $Message
-    }
-
     # Check if message already has a conventional commit prefix with or without scope
-    $conventionalPrefixes = @('feat:', 'feat(', 'fix:', 'fix(', 'docs:', 'docs(', 'style:', 'style(', 'refactor:', 'refactor(', 'perf:', 'perf(', 'test:', 'test(', 'build:', 'build(', 'ci:', 'ci(', 'chore:', 'chore(', 'revert:', 'revert(', 'hotfix:', 'hotfix(')
+    $conventionalPrefixes = @('feat:', 'feat(', 'fix:', 'fix(', 'docs:', 'docs(', 'style:', 'style(', 'refactor:', 'refactor(', 'perf:', 'perf(', 'test:', 'test(', 'build:', 'build(', 'ci:', 'ci(', 'chore:', 'chore(', 'revert:', 'revert(', 'hotfix:', 'hotfix(', 'master:', 'master(', 'main:', 'main(')
     $hasPrefix = $false
 
     foreach ($convPrefix in $conventionalPrefixes) {
@@ -197,7 +193,18 @@ function Apply-BranchPrefix {
         }
     }
 
-    if (-not $hasPrefix) {
+    if ($hasPrefix) {
+        return $Message
+    }
+
+    # Handle master/main branches - use branch name as prefix
+    if ($Branch -eq "master" -or $Branch -eq "main") {
+        $formattedMessage = "$Branch" + ": $Message"
+        return $formattedMessage
+    }
+
+    # Handle feature branches with conventional commit prefixes
+    if ($null -ne $prefix) {
         # Build the prefix with optional scope (ticket number)
         if ($null -ne $ticket) {
             $formattedMessage = "$prefix($ticket)" + ": $Message"
@@ -225,16 +232,22 @@ function Show-Preview {
     Write-Info "Current Branch: $Branch"
 
     # Show branch type and ticket number
-    $prefix = Get-BranchPrefix -Branch $Branch
-    $ticket = Get-TicketNumber -Branch $Branch
+    if ($Branch -eq "master" -or $Branch -eq "main") {
+        $branchPrefix = "$Branch" + ":"
+        Write-Info "Branch Type: Production branch - will prefix with '$branchPrefix'"
+    }
+    else {
+        $prefix = Get-BranchPrefix -Branch $Branch
+        $ticket = Get-TicketNumber -Branch $Branch
 
-    if ($null -ne $prefix) {
-        $prefixInfo = "Branch Type: Auto-prefix detected ($prefix"
-        if ($null -ne $ticket) {
-            $prefixInfo += " with scope: $ticket"
+        if ($null -ne $prefix) {
+            $prefixInfo = "Branch Type: Auto-prefix detected ($prefix"
+            if ($null -ne $ticket) {
+                $prefixInfo += " with scope: $ticket"
+            }
+            $prefixInfo += ")"
+            Write-Info $prefixInfo
         }
-        $prefixInfo += ")"
-        Write-Info $prefixInfo
     }
 
     # Check if master/main
