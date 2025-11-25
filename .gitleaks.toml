@@ -1,0 +1,48 @@
+# Gitleaks Configuration for SignalsMaster
+# https://github.com/gitleaks/gitleaks#configuration
+
+title = "SignalsMaster Gitleaks Configuration"
+
+[extend]
+# useDefault will extend the base configuration with the default gitleaks config:
+# https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
+useDefault = true
+
+[allowlist]
+description = "Allowlist for template files and false positives"
+
+# Allow template files that contain placeholder values
+paths = [
+  '''environment\.template\.ts''',
+  '''.*\.template\..*''',
+  '''\.gitleaks\.toml''',
+  '''SECURITY-REMEDIATION-STEPS\.md''',
+  '''gitleaks-report\.sarif''',
+]
+
+# Allowlist specific patterns that are known false positives
+regexes = [
+  # Placeholders in template files
+  '''YOUR_API_KEY_HERE''',
+  '''REPLACE_WITH_YOUR_.*''',
+  '''<YOUR_.*>''',
+  '''your-.*-here''',
+
+  # Common false positives in Angular/Ionic
+  '''capacitor://localhost''',
+  '''http://localhost''',
+  '''firebase\.app''',
+
+  # Documentation examples
+  '''example\.com''',
+  '''test-key-123''',
+]
+
+# Stopwords to ignore in entropy checks
+stopwords = [
+  "SignalsMaster",
+  "firebase",
+  "capacitor",
+  "ionic",
+  "angular",
+]

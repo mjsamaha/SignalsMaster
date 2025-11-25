@@ -72,3 +72,6 @@ Thumbs.db
 # Environment files with secrets (use environment.template.ts as reference)
 src/environments/environment.ts
 src/environments/environment.prod.ts
+
+# Security scan reports (may contain historical secret information)
+gitleaks-report.sarif

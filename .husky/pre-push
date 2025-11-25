@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔒 Running final security checks before push..."
+
+# Check if gitleaks is installed
+if command -v gitleaks > /dev/null 2>&1; then
+  echo "🔍 Running comprehensive Gitleaks scan on all tracked files..."
+  gitleaks protect --verbose --config .gitleaks.toml
+  GITLEAKS_EXIT=$?
+
+  if [ $GITLEAKS_EXIT -ne 0 ]; then
+    echo "❌ Gitleaks found secrets in your repository!"
+    echo "   Please review and remove secrets before pushing."
+    echo "   To skip this check (NOT RECOMMENDED): git push --no-verify"
+    exit 1
+  fi
+  echo "✅ Gitleaks comprehensive scan passed"
+else
+  echo "⚠️  Gitleaks not installed - skipping comprehensive scan"
+  echo "   Install with: winget install gitleaks"
+  echo "   Basic checks were performed during commit."
+fi
+
+echo "✅ Pre-push security checks completed"
