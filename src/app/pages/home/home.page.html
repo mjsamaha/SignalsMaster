@@ -55,10 +55,15 @@
       </div>
     </div>
 
-    <!-- Quick Link to Leaderboard -->
-    <div class="text-center cta-section">
-      <button (click)="navigateToLeaderboard()">
+    <!-- Quick Links Section -->
+    <div class="cta-section">
+      <button class="leaderboard-link" (click)="navigateToLeaderboard()">
         View Leaderboard →
+      </button>
+      <div class="divider"></div>
+      <button class="feedback-link" (click)="navigateToFeedback()">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        <span>Share Your Feedback</span>
       </button>
     </div>
   </div>

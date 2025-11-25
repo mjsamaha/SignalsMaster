@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { addIcons } from 'ionicons';
+import { chatbubblesOutline } from 'ionicons/icons';
 
 
 
@@ -11,10 +13,12 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, CommonModule]
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, CommonModule]
 })
 export class HomePage {
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    addIcons({ chatbubblesOutline });
+  }
 
   async navigateToPracticeMode(): Promise<void> {
     await this.triggerHaptic();
@@ -48,6 +52,11 @@ export class HomePage {
         mode: 'competitive'
       }
     });
+  }
+
+  async navigateToFeedback(): Promise<void> {
+    await this.triggerHaptic();
+    window.open('https://signalsmaster.sleekplan.app', '_blank', 'noopener,noreferrer');
   }
 
   private async triggerHaptic(): Promise<void> {
