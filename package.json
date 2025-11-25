@@ -16,6 +16,9 @@
     "deploy:rules": "firebase deploy --only firestore:rules",
     "serve:emulator": "firebase emulators:start --only firestore,hosting",
     "serve:with-emulators": "concurrently \"npm run emulator:start\" \"npm start\"",
+    "commit": "powershell -ExecutionPolicy Bypass -File scripts/git-commit-push.ps1",
+    "commit:push": "powershell -ExecutionPolicy Bypass -File scripts/git-commit-push.ps1 -Push",
+    "commit:preview": "powershell -ExecutionPolicy Bypass -File scripts/git-commit-push.ps1 -WhatIf",
     "prepare": "husky"
   },
   "private": true,
