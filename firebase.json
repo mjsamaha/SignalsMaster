@@ -4,7 +4,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "site": "signalsmaster-40d2f-42cd0",
+    "site": "signalsmaster-40d2f",
     "public": "www",
     "ignore": [
       "firebase.json",
