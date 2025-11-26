@@ -487,12 +487,9 @@ function Invoke-E2ETests {
         }
 
         Write-Info "Executing: npm run test:e2e"
-        $e2eOutput = npm run test:e2e 2>&1
-        $e2eExitCode = $LASTEXITCODE
-        
-        Write-Output $e2eOutput
+        npm run test:e2e
 
-        if ($e2eExitCode -ne 0) {
+        if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-ErrorMsg "E2E tests failed"
             Write-Host ""
