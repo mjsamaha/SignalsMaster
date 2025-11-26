@@ -1,5 +1,9 @@
 # SignalsMaster Documentation
 
+> **📖 Documentation has moved to the [GitHub Wiki](https://github.com/mjsamaha/SignalsMaster/wiki)**
+>
+> All documentation is now available in the project wiki for better navigation and discoverability.
+
 Welcome to the SignalsMaster documentation hub! This directory contains all project documentation organized by category.
 
 ## 📖 Documentation Structure

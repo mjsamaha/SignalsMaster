@@ -342,6 +342,12 @@ Update with your own Firebase project credentials for deployment.
 
 ## 📖 Resources
 
+### Project Documentation
+- **[GitHub Wiki](https://github.com/mjsamaha/SignalsMaster/wiki)** - Complete project documentation
+  - [Firebase Emulator Guide](https://github.com/mjsamaha/SignalsMaster/wiki/Firebase-Emulator-Guide)
+  - [Testing Guide](https://github.com/mjsamaha/SignalsMaster/wiki/Testing-Guide)
+  - [Project Milestones](https://github.com/mjsamaha/SignalsMaster/wiki/Project-Milestones)
+
 ### Naval Signal Flags
 - [U.S. Navy International Code of Signals](https://www.navy.mil/)
 - [International Code of Signals (ICS) Reference](https://www.imo.org/)
