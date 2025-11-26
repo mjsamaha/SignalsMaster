@@ -502,8 +502,11 @@ function Invoke-E2ETests {
         Write-Success "E2E tests passed"
         
         # Open the Playwright HTML report in browser
-        Write-Info "Opening Playwright test report in browser..."
-        Start-Job -ScriptBlock { npx playwright show-report } | Out-Null
+        $reportPath = Join-Path $PWD.Path "playwright-report\index.html"
+        if (Test-Path $reportPath) {
+            Write-Info "Opening Playwright test report in browser..."
+            Start-Process $reportPath
+        }
         
         Write-Host ""
         return $true
