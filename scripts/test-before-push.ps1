@@ -501,9 +501,9 @@ function Invoke-E2ETests {
         Write-Host ""
         Write-Success "E2E tests passed"
         
-        # Open the Playwright HTML report
-        Write-Info "Opening Playwright test report..."
-        Start-Process "npx" -ArgumentList "playwright", "show-report" -NoNewWindow -PassThru | Out-Null
+        # Open the Playwright HTML report in browser
+        Write-Info "Opening Playwright test report in browser..."
+        Start-Job -ScriptBlock { npx playwright show-report } | Out-Null
         
         Write-Host ""
         return $true
