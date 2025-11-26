@@ -27,7 +27,7 @@ test.describe('HomePage', () => {
     // Check for any navigation buttons on the page
     const buttons = page.locator('ion-button');
     const buttonCount = await buttons.count();
-    
+
     // HomePage should have multiple navigation buttons
     expect(buttonCount).toBeGreaterThan(0);
   });
