@@ -217,7 +217,7 @@ textarea:focus-visible {
 ion-content {
   --background: var(--color-background-light);
   --color: var(--color-naval-blue);
-  // Mobile scroll optimizations
+  --padding-bottom: 100px; // Increased padding for taller tab bar
   overscroll-behavior: contain; // Prevent iOS bounce effect and pull-to-refresh
   touch-action: pan-y; // Allow vertical scrolling only, prevent horizontal drag
   -webkit-overflow-scrolling: touch; // Smooth momentum scrolling on iOS
@@ -228,7 +228,23 @@ ion-header {
 }
 
 ion-tabs {
+  z-index: var(--z-index-sticky);
   @include unified-footer;
+}
+
+ion-content {
+  --background: var(--color-background-light);
+  --color: var(--color-naval-blue);
+  --padding-bottom: 100px; // Increased padding for taller tab bar
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+ion-tab-bar {
+  min-height: 64px; // Increase tab bar height for better visibility
+  height: 64px;
+  font-size: 1.1rem;
 }
 
 ion-button {
