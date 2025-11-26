@@ -77,3 +77,6 @@ src/environments/environment.prod.ts
 
 # Security scan reports (may contain historical secret information)
 gitleaks-report.sarif
+
+# Local workflow documentation
+GIT-WORKFLOW.md
