@@ -270,6 +270,33 @@ $breakpoint-5xl: 1600px; // Max desktop
 }
 
 // ============================================================================
+// DESKTOP FOOTER/TABS ENHANCEMENT
+// ============================================================================
+
+@media (min-width: 768px) {
+  ion-tabs {
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 0 -2px 8px rgba(10, 42, 67, 0.1);
+
+    ion-tab-bar {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    ion-tab-button {
+      display: inline-flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+  }
+}
+
+// ============================================================================
 // RESPONSIVE MAX-WIDTH CONSTRAINTS
 // ============================================================================
 
@@ -374,6 +401,7 @@ body.ios {
 
   // iOS-specific safe area for footer/tabs
   ion-footer,
+  ion-tabs,
   ion-tab-bar {
     padding-bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
   }
