@@ -447,8 +447,8 @@ function Stop-DevServer {
         $processesToKill = Get-NetTCPConnection -LocalPort 8100 -ErrorAction SilentlyContinue |
                           Select-Object -ExpandProperty OwningProcess -Unique
 
-        foreach ($pid in $processesToKill) {
-            Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+        foreach ($processId in $processesToKill) {
+            Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
         }
 
         Write-Success "Dev server stopped"
@@ -487,7 +487,9 @@ function Invoke-E2ETests {
         }
 
         Write-Info "Executing: npm run test:e2e"
-        npm run test:e2e
+        Write-Host ""
+        & npm run test:e2e
+        Write-Host ""
 
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
