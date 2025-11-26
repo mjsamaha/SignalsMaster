@@ -1,0 +1,238 @@
+/**
+ * Unit Tests for FlagService
+ *
+ * Tests HTTP observable patterns, data caching, filtering, and random selection.
+ * Example of testing Angular services with HttpClient and RxJS operators.
+ */
+
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { FlagService, Flag, FlagsData } from './flag.service';
+
+describe('FlagService', () => {
+  let service: FlagService;
+  let httpMock: HttpTestingController;
+
+  const mockFlagsData: FlagsData = {
+    flags: [
+      {
+        id: 'a',
+        name: 'Alpha',
+        meaning: 'I have a diver down; keep well clear at slow speed',
+        category: 'letters',
+        imagePath: 'assets/flags/letters/alpha.svg'
+      },
+      {
+        id: 'b',
+        name: 'Bravo',
+        meaning: 'I am taking in, discharging, or carrying dangerous goods',
+        category: 'letters',
+        imagePath: 'assets/flags/letters/bravo.svg'
+      },
+      {
+        id: '1',
+        name: 'One',
+        meaning: 'Number 1',
+        category: 'numbers',
+        imagePath: 'assets/flags/numbers/1.svg'
+      },
+      {
+        id: '2',
+        name: 'Two',
+        meaning: 'Number 2',
+        category: 'numbers',
+        imagePath: 'assets/flags/numbers/2.svg'
+      }
+    ]
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [FlagService]
+    });
+
+    service = TestBed.inject(FlagService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+    jest.clearAllMocks();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  describe('getAllFlags', () => {
+    it('should return all flags', (done) => {
+      service.getAllFlags().subscribe(flags => {
+        expect(flags).toBeDefined();
+        expect(flags.length).toBe(4);
+        expect(flags[0].name).toBe('Alpha');
+        expect(flags[1].name).toBe('Bravo');
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      expect(req.request.method).toBe('GET');
+      req.flush(mockFlagsData);
+    });
+
+    it('should cache the flags data', (done) => {
+      // First subscription
+      service.getAllFlags().subscribe();
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+
+      // Second subscription should use cached data (no new HTTP request)
+      service.getAllFlags().subscribe(flags => {
+        expect(flags.length).toBe(4);
+        done();
+      });
+
+      // Verify no additional HTTP requests were made
+      httpMock.expectNone('assets/data/flags.json');
+    });
+  });
+
+  describe('getFlagsByCategory', () => {
+    it('should return only letter flags', (done) => {
+      service.getFlagsByCategory('letters').subscribe(flags => {
+        expect(flags.length).toBe(2);
+        expect(flags.every(f => f.category === 'letters')).toBe(true);
+        expect(flags[0].name).toBe('Alpha');
+        expect(flags[1].name).toBe('Bravo');
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+
+    it('should return only number flags', (done) => {
+      service.getFlagsByCategory('numbers').subscribe(flags => {
+        expect(flags.length).toBe(2);
+        expect(flags.every(f => f.category === 'numbers')).toBe(true);
+        expect(flags[0].name).toBe('One');
+        expect(flags[1].name).toBe('Two');
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+
+    it('should return empty array for non-existent category', (done) => {
+      service.getFlagsByCategory('invalid').subscribe(flags => {
+        expect(flags.length).toBe(0);
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+  });
+
+  describe('getFlagById', () => {
+    it('should return specific flag by id', (done) => {
+      service.getFlagById('a').subscribe(flag => {
+        expect(flag).toBeDefined();
+        expect(flag?.id).toBe('a');
+        expect(flag?.name).toBe('Alpha');
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+
+    it('should return undefined for non-existent id', (done) => {
+      service.getFlagById('invalid').subscribe(flag => {
+        expect(flag).toBeUndefined();
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+  });
+
+  describe('getRandomFlags', () => {
+    it('should return requested number of random flags', (done) => {
+      service.getRandomFlags(2).subscribe(flags => {
+        expect(flags.length).toBe(2);
+        expect(flags[0]).toBeDefined();
+        expect(flags[1]).toBeDefined();
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+
+    it('should return all flags if count exceeds total', (done) => {
+      service.getRandomFlags(10).subscribe(flags => {
+        expect(flags.length).toBe(4);
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+
+    it('should return unique flags (no duplicates)', (done) => {
+      service.getRandomFlags(3).subscribe(flags => {
+        const ids = flags.map(f => f.id);
+        const uniqueIds = new Set(ids);
+        expect(uniqueIds.size).toBe(flags.length);
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+  });
+
+  describe('getCategories', () => {
+    it('should return unique categories', (done) => {
+      service.getCategories().subscribe(categories => {
+        expect(categories.length).toBe(2);
+        expect(categories).toContain('letters');
+        expect(categories).toContain('numbers');
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+
+    it('should not have duplicate categories', (done) => {
+      service.getCategories().subscribe(categories => {
+        const uniqueCategories = new Set(categories);
+        expect(uniqueCategories.size).toBe(categories.length);
+        done();
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush(mockFlagsData);
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should handle HTTP errors gracefully', (done) => {
+      service.getAllFlags().subscribe({
+        next: () => fail('should have failed with 404'),
+        error: (error) => {
+          expect(error.status).toBe(404);
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne('assets/data/flags.json');
+      req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+    });
+  });
+});
