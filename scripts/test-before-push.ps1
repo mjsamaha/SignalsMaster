@@ -8,6 +8,7 @@
     - Hard-blocking execution on master/main branches
     - Bootstrap mode: detecting and auto-installing missing test dependencies
     - Running tests sequentially (Jest → Testing Library → Playwright) with fail-fast
+    - Auto-starting dev server for E2E tests (stops automatically when done)
     - Auto-staging and committing with conventional commit messages on success
     - Respecting existing security hooks and git workflow
 
@@ -371,23 +372,145 @@ function Invoke-ComponentTests {
     return $true
 }
 
+function Start-DevServer {
+    Write-Info "Starting development server in background..."
+
+    # Start the Ionic dev server using ionic serve
+    # Find the path to ionic executable
+    $ionicPath = Join-Path $PWD.Path "node_modules\.bin\ionic.cmd"
+
+    if (-not (Test-Path $ionicPath)) {
+        $ionicPath = "ionic"  # Fall back to global ionic if local not found
+    }
+
+    $serverProcess = Start-Process cmd -ArgumentList "/c", "$ionicPath serve" -PassThru -WindowStyle Hidden -WorkingDirectory $PWD.Path
+
+    Write-Info "Waiting for server to be ready on http://localhost:8100..."
+    Write-Host "  (Ionic dev server typically takes 20-40 seconds to start)" -ForegroundColor Gray
+
+    $maxAttempts = 120  # Wait up to 2 minutes for Ionic/Angular
+    $attempt = 0
+    $serverReady = $false
+
+    while ($attempt -lt $maxAttempts -and -not $serverReady) {
+        Start-Sleep -Seconds 1
+        $attempt++
+
+        # Check if process is still running
+        if ($serverProcess.HasExited) {
+            Write-ErrorMsg "Server process terminated unexpectedly (exit code: $($serverProcess.ExitCode))"
+            return $null
+        }
+
+        try {
+            $response = Invoke-WebRequest -Uri "http://localhost:8100" -TimeoutSec 2 -UseBasicParsing -ErrorAction SilentlyContinue
+            if ($response.StatusCode -eq 200) {
+                $serverReady = $true
+            }
+        }
+        catch {
+            # Server not ready yet, continue waiting
+        }
+
+        # Show progress every 10 seconds
+        if ($attempt % 10 -eq 0) {
+            Write-Host "  Still waiting... ($attempt seconds elapsed)" -ForegroundColor Gray
+        }
+    }
+
+    if ($serverReady) {
+        Write-Success "Dev server ready on http://localhost:8100"
+        return $serverProcess
+    }
+    else {
+        Write-ErrorMsg "Server failed to start within $maxAttempts seconds"
+        if (-not $serverProcess.HasExited) {
+            Stop-Process -Id $serverProcess.Id -Force -ErrorAction SilentlyContinue
+        }
+        return $null
+    }
+}
+
+function Stop-DevServer {
+    param($ServerProcess)
+
+    if ($null -ne $ServerProcess) {
+        Write-Info "Stopping development server..."
+
+        # Kill the PowerShell process and all its children
+        if (-not $ServerProcess.HasExited) {
+            Stop-Process -Id $ServerProcess.Id -Force -ErrorAction SilentlyContinue
+        }
+
+        # Also kill any remaining node processes on port 8100
+        Start-Sleep -Seconds 2
+        $processesToKill = Get-NetTCPConnection -LocalPort 8100 -ErrorAction SilentlyContinue |
+                          Select-Object -ExpandProperty OwningProcess -Unique
+
+        foreach ($pid in $processesToKill) {
+            Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+        }
+
+        Write-Success "Dev server stopped"
+    }
+}
+
 function Invoke-E2ETests {
     Write-Header "RUNNING E2E TESTS (Playwright)"
 
-    Write-Info "Executing: npm run test:e2e"
-    npm run test:e2e
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host ""
-        Write-ErrorMsg "E2E tests failed"
-        Write-Host ""
-        return $false
+    # Check if server is already running
+    $serverAlreadyRunning = $false
+    try {
+        $response = Invoke-WebRequest -Uri "http://localhost:8100" -TimeoutSec 2 -UseBasicParsing -ErrorAction SilentlyContinue
+        if ($response.StatusCode -eq 200) {
+            $serverAlreadyRunning = $true
+            Write-Info "Dev server already running on http://localhost:8100"
+        }
+    }
+    catch {
+        # Server not running, will start it
     }
 
-    Write-Host ""
-    Write-Success "E2E tests passed"
-    Write-Host ""
-    return $true
+    $serverProcess = $null
+
+    try {
+        # Start server if not already running
+        if (-not $serverAlreadyRunning) {
+            $serverProcess = Start-DevServer
+
+            if ($null -eq $serverProcess) {
+                Write-ErrorMsg "Cannot run E2E tests without dev server"
+                return $false
+            }
+
+            Write-Host ""
+        }
+
+        Write-Info "Executing: npm run test:e2e"
+        $e2eOutput = npm run test:e2e 2>&1
+        $e2eExitCode = $LASTEXITCODE
+        
+        Write-Output $e2eOutput
+
+        if ($e2eExitCode -ne 0) {
+            Write-Host ""
+            Write-ErrorMsg "E2E tests failed"
+            Write-Host ""
+            return $false
+        }
+
+        Write-Host ""
+        Write-Success "E2E tests passed"
+        Write-Host ""
+        return $true
+    }
+    finally {
+        # Only stop server if we started it
+        if (-not $serverAlreadyRunning -and $null -ne $serverProcess) {
+            Write-Host ""
+            Stop-DevServer -ServerProcess $serverProcess
+        }
+    }
 }
 
 function Show-TestPreview {

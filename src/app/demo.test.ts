@@ -1,6 +1,6 @@
 /**
  * Demo Unit Test for Jest
- * 
+ *
  * Simple test to demonstrate the test automation workflow.
  * This validates that Jest is properly configured and working.
  */

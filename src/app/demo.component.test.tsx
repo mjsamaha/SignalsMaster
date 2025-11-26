@@ -1,6 +1,6 @@
 /**
  * Demo Component Test
- * 
+ *
  * Simple test to demonstrate component testing workflow.
  */
 
