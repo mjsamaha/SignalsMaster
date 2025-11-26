@@ -139,6 +139,26 @@ If `useEmulators: true` in your environment file, data only goes to the local em
 - Ensure Java is installed (required for Firestore emulator)
 - Check `firebase.json` configuration
 
+## Custom Event Tracking
+
+### Logging Custom Analytics Events
+
+You can track custom events in Firebase Analytics using the following pattern:
+
+```typescript
+// In a service or component
+import { getAnalytics, logEvent } from '@angular/fire/analytics';
+
+// Log custom events
+logEvent(analytics, 'quiz_completed', {
+  mode: 'competitive',
+  score: 85,
+  username: 'player123'
+});
+```
+
+This allows you to track user interactions, quiz completions, and other custom metrics in your Firebase Analytics dashboard.
+
 ## Recent Fixes Applied
 
 ### 1. Added Leaderboard Collection Rules
