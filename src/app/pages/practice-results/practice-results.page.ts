@@ -1,3 +1,9 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon } from '@ionic/angular/standalone';
+import { CommonModule } from '@angular/common';
+import { PracticeSummary } from '../../core/services/quiz.service';
+
 /**
  * PracticeResultsPage displays the results of a practice quiz session.
  * Handles motivational messaging, time formatting, and navigation logic.
@@ -18,7 +24,7 @@
     IonIcon
   ]
 })
-export class PracticeResultsPage {
+export class PracticeResultsPage implements OnInit {
   /**
    * Stores the summary of the practice session for display.
    */
@@ -29,13 +35,13 @@ export class PracticeResultsPage {
   showAllQuestions = false;
 
   /**
-   * Injects router and initializes summary from navigation state.
+   * Injects router.
    */
-  constructor(private router: Router) {
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras?.state) {
-      this.summary = navigation.extras.state['summary'];
-    }
+  constructor(private readonly router: Router) {}
+
+  ngOnInit(): void {
+    // Use history.state instead of getCurrentNavigation (deprecated)
+    this.summary = history.state['summary'] ?? null;
 
     if (!this.summary) {
       // Redirect to home if no results available

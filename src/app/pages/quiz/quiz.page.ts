@@ -1,3 +1,11 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon, IonSpinner, IonButtons, IonModal } from '@ionic/angular/standalone';
+import { CommonModule } from '@angular/common';
+import { QuizService, Question, AnswerOption, QuizResults, QuizState, PracticeSession, PracticeSummary } from '../../core/services/quiz.service';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 /**
  * QuizPage manages the main quiz flow for both practice and competitive modes.
  * Handles question display, answer selection, feedback, timing, and results.
@@ -174,7 +182,7 @@ export class QuizPage implements OnInit, OnDestroy {
           }
         }, 250);
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('Failed to initialize practice session:', err);
       }
     });
@@ -222,7 +230,7 @@ export class QuizPage implements OnInit, OnDestroy {
           }
         }, 250);
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('Failed to initialize competitive session:', err);
       }
     });
@@ -432,7 +440,7 @@ export class QuizPage implements OnInit, OnDestroy {
         this.quizCompleted = false;
         this.quizResults = null;
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('Failed to restart practice session:', err);
       }
     });

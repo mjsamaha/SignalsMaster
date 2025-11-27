@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./progress-bar.component.scss'],
 })
 export class ProgressBarComponent {
+
   /** Progress value (0-100). */
   @Input() value: number = 0;
   /** Optional label to display above or beside the bar. */

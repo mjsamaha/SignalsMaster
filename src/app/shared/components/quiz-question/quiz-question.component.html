@@ -2,8 +2,8 @@
   <div *ngIf="question" class="space-y-6">
     <!-- Flag Image -->
     <div class="flex justify-center">
-      <img 
-        [src]="question.flag.imagePath" 
+      <img
+        [src]="question.flag.imagePath"
         [alt]="question.flag.name"
         class="max-w-xs w-full h-auto rounded-lg shadow-lg border-2 border-gray-200"
       />
@@ -11,16 +11,18 @@
 
     <!-- Answer Options -->
     <div class="space-y-3">
-      <div 
-        *ngFor="let option of question.options"
-        (click)="onAnswerClick(option)"
-        [class]="getButtonClasses(option)"
-        class="answer-button p-4 rounded-lg cursor-pointer transition-all duration-200 text-center font-medium"
-      >
-        <span>{{ option }}</span>
-        <span *ngIf="showResult && isCorrect(option)" class="ml-2 text-green-600">✓</span>
-        <span *ngIf="showResult && isSelected(option) && !isCorrect(option)" class="ml-2 text-red-600">✗</span>
-      </div>
+      <button
+  *ngFor="let option of question.options"
+  (click)="onAnswerClick(option.id)"
+  (keydown)="onKeyDown($event, option.id)"
+  [class]="getButtonClasses(option.id)"
+  class="answer-button p-4 rounded-lg cursor-pointer transition-all duration-200 text-center font-medium"
+  type="button"
+>
+  <span>{{ option.text }}</span>
+  <span *ngIf="showResult && isCorrect(option.id)" class="ml-2 text-green-600">✓</span>
+  <span *ngIf="showResult && isSelected(option.id) && !isCorrect(option.id)" class="ml-2 text-red-600">✗</span>
+</button>
     </div>
   </div>
 </div>

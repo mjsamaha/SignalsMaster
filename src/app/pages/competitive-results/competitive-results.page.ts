@@ -1,3 +1,9 @@
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon } from '@ionic/angular/standalone';
+import { CommonModule } from '@angular/common';
+import { CompetitiveResults } from '../../core/services/quiz.service';
+import { LeaderboardService } from '../../core/services/leaderboard.service';
 /**
  * CompetitiveResultsPage displays the results of a competitive quiz session.
  * Handles result display, submission, and navigation logic.
