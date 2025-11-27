@@ -283,8 +283,7 @@ $breakpoint-5xl: 1600px; // Max desktop
       display: flex !important;
       visibility: visible !important;
       opacity: 1 !important;
-      max-width: 1200px;
-      margin: 0 auto;
+      // Removed max-width and margin to allow tab bar to stretch edge-to-edge on desktop, addressing footer/tab stretch issue.
       width: 100%;
     }
 
