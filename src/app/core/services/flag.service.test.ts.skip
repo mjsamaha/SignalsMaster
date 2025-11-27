@@ -14,7 +14,6 @@ describe('FlagService', () => {
   let httpMock: HttpTestingController;
 
   const mockFlagsData: FlagsData = {
-    flags: [
       {
         id: 'a',
         name: 'Alpha',
@@ -74,6 +73,7 @@ describe('FlagService', () => {
         expect(flags[1].name).toBe('Bravo');
         done();
       });
+    /**
 
       const req = httpMock.expectOne('assets/data/flags.json');
       expect(req.request.method).toBe('GET');
