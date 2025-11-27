@@ -61,6 +61,23 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Ensure the app shell fills the viewport so Ionic's scroll surface
+   (ion-content -> .inner-scroll) can compute a non-zero height.
+   On some mobile browsers (iOS) missing 100% heights on the root
+   elements cause inner scroll to collapse to 0. This is a conservative
+   fix that ensures the app-level elements expand to the viewport. */
+html, body {
+  height: 100%;
+}
+
+app-root,
+ion-app,
+ion-router-outlet,
+ion-router-outlet > * {
+  height: 100%;
+  min-height: 100%;
+}
+
 body {
   background-color: var(--color-background-light);
   color: var(--color-naval-blue);
@@ -217,7 +234,14 @@ textarea:focus-visible {
 ion-content {
   --background: var(--color-background-light);
   --color: var(--color-naval-blue);
-  --padding-bottom: 100px; // Increased padding for taller tab bar
+  /* Increase bottom padding to ensure content isn't covered by tab bar/safe-area
+     on mobile webviews (iOS address bar can overlap). Tab bar is ~64px; use
+     slightly larger padding to provide a safe touch area. */
+  --padding-bottom: 130px; // increased to ensure bottom content is reachable
+  /* Ensure ion-content occupies the visual viewport height so the internal
+     scroll surface (.inner-scroll) can compute a proper non-zero height.
+     This relies on the runtime `--vh` CSS variable being set in `main.ts`. */
+  min-height: calc(var(--vh, 1vh) * 100);
   overscroll-behavior: contain; // Prevent iOS bounce effect and pull-to-refresh
   touch-action: pan-y; // Allow vertical scrolling only, prevent horizontal drag
   -webkit-overflow-scrolling: touch; // Smooth momentum scrolling on iOS
@@ -231,15 +255,9 @@ ion-tabs {
   z-index: var(--z-index-sticky);
   @include unified-footer;
 }
-
-ion-content {
-  --background: var(--color-background-light);
-  --color: var(--color-naval-blue);
-  --padding-bottom: 100px; // Increased padding for taller tab bar
-  overscroll-behavior: contain;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
-}
+/* Consolidated ion-content rules above — duplicate block removed to avoid
+   conflicting or duplicate CSS for the global scroll container. See the
+   earlier `ion-content` declaration for the canonical properties. */
 
 ion-tab-bar {
   min-height: 64px; // Increase tab bar height for better visibility

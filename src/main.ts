@@ -17,7 +17,34 @@ function initializePlatform(platformService: PlatformService) {
   return async () => {
     await platformService.ready();
     const platformClasses = platformService.getPlatformClasses();
-    document.body.classList.add(...platformClasses);
+    // Defensive: only add classes if PlatformService returned non-empty classes.
+    // This prevents calling classList.add() with no args and surfaces platform
+    // detection during bootstrap for debugging.
+    if (platformClasses && platformClasses.length > 0) {
+      document.body.classList.add(...platformClasses);
+    } else {
+      // Not fatal; helpful debug for environments where platform detection fails.
+      // Keep this console.debug for now; it can be removed once verified.
+      console.debug('PlatformService returned no classes at bootstrap:', platformClasses);
+    }
+    // Set runtime CSS variable --vh to address iOS/mobile viewport height issues
+    // This ensures `calc(var(--vh, 1vh) * 100)` computes the actual visual
+    // viewport height on mobile browsers where 100vh can be unreliable.
+    const setVh = () => {
+      try {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      } catch (e) {
+        // Defensive: ignore in non-browser environments
+      }
+    };
+
+    setVh();
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', setVh);
+    if ((window as any).visualViewport) {
+      (window as any).visualViewport.addEventListener('resize', setVh);
+    }
   };
 }
 

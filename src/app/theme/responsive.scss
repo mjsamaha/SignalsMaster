@@ -395,7 +395,11 @@ body.ios {
   // iOS scroll physics
   ion-content {
     --offset-bottom: auto !important;
-    --overflow: hidden;
+    /* NOTE: Previously set to `hidden` which disables scrolling on iOS webviews
+       (ion-content is the primary scroll container in Ionic). This caused
+       iOS browsers to be unable to scroll in key pages. Change to `auto`
+       to allow native scrolling while preserving other iOS-specific rules. */
+    --overflow: auto;
   }
 
   // iOS-specific safe area for footer/tabs

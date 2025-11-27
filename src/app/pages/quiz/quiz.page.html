@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding safe-area-padding">
+<ion-content [fullscreen]="true" class="ion-padding safe-area-padding">
   <div *ngIf="!quizCompleted; else resultsView">
     <!-- Compact metadata bar -->
     <div class="metadata-bar">
