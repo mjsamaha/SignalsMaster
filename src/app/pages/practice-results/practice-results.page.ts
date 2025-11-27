@@ -1,9 +1,7 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon } from '@ionic/angular/standalone';
-import { CommonModule } from '@angular/common';
-import { PracticeSummary } from '../../core/services/quiz.service';
-
+/**
+ * PracticeResultsPage displays the results of a practice quiz session.
+ * Handles motivational messaging, time formatting, and navigation logic.
+ */
 @Component({
   selector: 'app-practice-results',
   templateUrl: './practice-results.page.html',
@@ -21,9 +19,18 @@ import { PracticeSummary } from '../../core/services/quiz.service';
   ]
 })
 export class PracticeResultsPage {
+  /**
+   * Stores the summary of the practice session for display.
+   */
   summary: PracticeSummary | null = null;
+  /**
+   * Controls whether all questions are shown in the UI.
+   */
   showAllQuestions = false;
 
+  /**
+   * Injects router and initializes summary from navigation state.
+   */
   constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
@@ -36,6 +43,9 @@ export class PracticeResultsPage {
     }
   }
 
+  /**
+   * Returns a motivational message based on user accuracy.
+   */
   getMotivationalMessage(): string {
     if (!this.summary) return '';
 
@@ -51,12 +61,18 @@ export class PracticeResultsPage {
     }
   }
 
+  /**
+   * Formats seconds into mm:ss string for display.
+   */
   formatTime(seconds: number): string {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
 
+  /**
+   * Returns color string for accuracy badge based on score.
+   */
   getAccuracyColor(): string {
     if (!this.summary) return 'medium';
 

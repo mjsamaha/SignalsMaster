@@ -1,12 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon, IonSpinner, IonButtons, IonModal } from '@ionic/angular/standalone';
-import { CommonModule } from '@angular/common';
-import { QuizService, Question, AnswerOption, QuizResults, QuizState, PracticeSession, PracticeSummary } from '../../core/services/quiz.service';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
-
+/**
+ * QuizPage manages the main quiz flow for both practice and competitive modes.
+ * Handles question display, answer selection, feedback, timing, and results.
+ */
 @Component({
   selector: 'app-quiz',
   templateUrl: './quiz.page.html',
@@ -27,35 +22,95 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 ]
 })
 export class QuizPage implements OnInit, OnDestroy {
+  /**
+   * Quiz mode: 'practice' or 'competitive'.
+   */
   mode: 'practice' | 'competitive' = 'practice';
+  /**
+   * Number of questions in the quiz session.
+   */
   questionCount: number = 10;
-  username: string = ''; // For competitive mode
+  /**
+   * Username for competitive mode.
+   */
+  username: string = '';
 
+  /**
+   * Current question being displayed.
+   */
   currentQuestion: Question | null = null;
+  /**
+   * Selected answer ID for current question.
+   */
   selectedAnswerId: string | null = null;
+  /**
+   * Controls feedback visibility after answer selection.
+   */
   feedbackVisible = false;
+  /**
+   * Indicates if the selected answer was correct.
+   */
   feedbackCorrect = false;
+  /**
+   * Enables/disables the next button after answering.
+   */
   nextButtonEnabled = false;
+  /**
+   * Indicates if the quiz session is completed.
+   */
   quizCompleted = false;
+  /**
+   * Stores quiz results after completion.
+   */
   quizResults: QuizResults | null = null;
+  /**
+   * Controls image loading state for questions.
+   */
   imageLoading = true;
+  /**
+   * Stores quiz state for progress tracking.
+   */
   quizState: QuizState | null = null;
 
   // Practice mode properties
+  /**
+   * Practice session data for practice mode.
+   */
   practiceSession: PracticeSession | null = null;
 
   // Competitive mode properties (reuse for UI compatibility)
-  competitiveSession: PracticeSession | null = null; // Using PracticeSession interface for UI compatibility
+  /**
+   * Competitive session data (using PracticeSession interface for UI compatibility).
+   */
+  competitiveSession: PracticeSession | null = null;
 
+  /**
+   * Time spent on current question in seconds.
+   */
   currentQuestionTime: number = 0;
+  /**
+   * Reference to timer interval for question timing.
+   */
   timerInterval: any;
+  /**
+   * Timestamp when current question started.
+   */
   questionStartTime: number = 0;
 
   // UI state
+  /**
+   * Controls visibility of restart confirmation dialog.
+   */
   showRestartConfirm = false;
 
+  /**
+   * Subscriptions for observables to clean up on destroy.
+   */
   private subscriptions: Subscription[] = [];
 
+  /**
+   * Injects route and router for navigation and quiz service for data.
+   */
   constructor(
     private route: ActivatedRoute,
     private router: Router,

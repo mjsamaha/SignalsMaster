@@ -1,4 +1,7 @@
 {
+  "_comment": "This file contains the configuration and data for the SignalsMaster flag quiz. Each entry defines a flag's properties, meaning, and image path for use in quiz questions and app features.",
+  "setting1": "example-value1",
+  "setting2": "example-value2",
   "flags": [
     {
       "id": "letter-a",

@@ -1,9 +1,7 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonInput, IonItem, IonLabel, IonText } from '@ionic/angular/standalone';
-import { CommonModule } from '@angular/common';
-
+/**
+ * BestSignallerPage allows users to enter a username and start a competitive quiz.
+ * Handles username validation and navigation to the quiz.
+ */
 @Component({
   selector: 'app-best-signaller',
   templateUrl: './best-signaller.page.html',
@@ -12,12 +10,28 @@ import { CommonModule } from '@angular/common';
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonInput, IonItem, IonLabel, IonText, CommonModule, FormsModule]
 })
 export class BestSignallerPage {
+  /**
+   * Stores the entered username for competition.
+   */
   username: string = '';
+  /**
+   * Indicates if the username is valid for submission.
+   */
   isUsernameValid: boolean = false;
+  /**
+   * Message describing username validation errors.
+   */
   validationMessage: string = '';
 
+  /**
+   * Injects router for navigation.
+   */
   constructor(private router: Router) {}
 
+  /**
+   * Validates the username input for length and allowed characters.
+   * Updates validation state and message accordingly.
+   */
   validateUsername(): void {
     const trimmed = this.username.trim();
 
@@ -39,7 +53,7 @@ export class BestSignallerPage {
       return;
     }
 
-    // Check for valid characters: alphanumeric + spaces/hyphens/underscores
+    // Only allow alphanumeric, spaces, hyphens, and underscores
     const validPattern = /^[a-zA-Z0-9\s\-_]+$/;
     if (!validPattern.test(trimmed)) {
       this.isUsernameValid = false;
@@ -51,10 +65,16 @@ export class BestSignallerPage {
     this.validationMessage = '';
   }
 
+  /**
+   * Returns the current character count for the username field.
+   */
   getCharacterCount(): string {
     return `${this.username.length}/20`;
   }
 
+  /**
+   * Navigates to the competitive quiz if the username is valid.
+   */
   startCompetition(): void {
     if (this.isUsernameValid) {
       this.router.navigate(['/quiz', 'competitive', this.username.trim()]);

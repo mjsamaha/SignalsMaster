@@ -1,6 +1,6 @@
 /**
  * Unit Tests for PlatformService
- * 
+ *
  * Tests platform detection logic for iOS, Android, mobile, desktop, and hybrid platforms.
  * Example of simple pure logic testing with mocked dependencies.
  */
@@ -22,7 +22,6 @@ import { PlatformService } from './platform.service';describe('PlatformService',
 
     service = TestBed.inject(PlatformService);
     platformSpy = TestBed.inject(Platform) as jasmine.SpyObj<Platform>;
-  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -82,6 +81,7 @@ import { PlatformService } from './platform.service';describe('PlatformService',
 
       const classes = service.getPlatformClasses();
 
+  /**
       expect(classes).toContain('ios');
     });
 
