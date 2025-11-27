@@ -1,3 +1,9 @@
+import { Component } from '@angular/core';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonInput, IonItem, IonLabel, IonText } from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 /**
  * BestSignallerPage allows users to enter a username and start a competitive quiz.
  * Handles username validation and navigation to the quiz.

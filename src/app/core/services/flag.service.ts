@@ -20,9 +20,9 @@ export interface FlagsData {
   providedIn: 'root'
 })
 export class FlagService {
-  private flagsData$: Observable<Flag[]>;
+  private readonly flagsData$: Observable<Flag[]>;
 
-  constructor(private http: HttpClient) {
+  constructor(private readonly http: HttpClient) {
     this.flagsData$ = this.http.get<FlagsData>('assets/data/flags.json').pipe(
       map(data => data.flags),
       shareReplay(1)

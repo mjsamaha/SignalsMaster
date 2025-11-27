@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Flag, FlagService } from './flag.service';
 
 
@@ -169,8 +168,9 @@ export class QuizService {
   generateQuestion(): Observable<Question> {
     return new Observable(observer => {
       const state = this.quizState$.value;
+      // Defensive check: Ensure quiz state exists and is active before proceeding
       if (!state || !state.isActive) {
-        observer.error('No active quiz');
+        observer.error('No active quiz'); // Intent: Prevent runtime error if quiz is not active
         return;
       }
 
@@ -238,8 +238,9 @@ export class QuizService {
   // Check user's answer
   checkAnswer(selectedAnswerId: string): AnswerResult {
     const state = this.quizState$.value;
+    // Defensive check: Ensure quiz state and current question exist before proceeding
     if (!state || !state.currentQuestion) {
-      throw new Error('No active question');
+      throw new Error('No active question'); // Intent: Prevent runtime error if question is missing
     }
 
     const question = state.currentQuestion;
@@ -286,8 +287,9 @@ export class QuizService {
   // Complete quiz and calculate results
   completeQuiz(): QuizResults {
     const state = this.quizState$.value;
+    // Defensive check: Ensure quiz state exists before proceeding
     if (!state) {
-      throw new Error('No active quiz');
+      throw new Error('No active quiz'); // Intent: Prevent runtime error if quiz state is missing
     }
 
     const endTime = new Date();
@@ -583,8 +585,9 @@ export class QuizService {
   generateCompetitiveQuestion(): Observable<void> {
     return new Observable(observer => {
       const session = this.competitiveSession$.value;
+      // Defensive check: Ensure competitive session exists and is active before proceeding
       if (!session || !session.isActive) {
-        observer.error('No active competitive session');
+        observer.error('No active competitive session'); // Intent: Prevent runtime error if session is not active
         return;
       }
 
