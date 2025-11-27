@@ -1,18 +1,18 @@
 /**
  * End-to-End Tests for HomePage
  *
- * Tests complete user flows including navigation, button clicks, and visual rendering.
- * Example of Playwright E2E tests for SignalsMaster Ionic app.
+ * Validates user navigation, UI rendering, and button interactions for the main app entry.
+ * Playwright E2E tests for SignalsMaster Ionic app.
  */
 
 import { test, expect } from '@playwright/test';
 
 test.describe('HomePage', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to home page before each test
+    // Ensure home page loads before each test
     await page.goto('/tabs/home');
 
-    // Wait for page to fully load
+    // Wait for network to be idle for full page load
     await page.waitForLoadState('networkidle');
   });
 
@@ -24,40 +24,40 @@ test.describe('HomePage', () => {
   });
 
   test('should display navigation buttons', async ({ page }) => {
-    // Check for any navigation buttons on the page
+    // Verify navigation buttons are present
     const buttons = page.locator('ion-button');
     const buttonCount = await buttons.count();
 
-    // HomePage should have multiple navigation buttons
+    // HomePage should have multiple navigation buttons for main flows
     expect(buttonCount).toBeGreaterThan(0);
   });
 
   test.skip('should navigate to practice mode', async ({ page }) => {
-    // TODO: Re-enable once routing is confirmed working in test environment
+    // Skipped: Routing not confirmed in test environment
     const practiceButton = page.locator('ion-button:has-text("Practice Mode")');
 
     await practiceButton.click();
 
-    // Wait for navigation
+    // Wait for navigation to practice mode
     await page.waitForURL('**/practice-mode', { timeout: 5000 });
 
     expect(page.url()).toContain('/practice-mode');
   });
 
   test.skip('should navigate to best signaller', async ({ page }) => {
-    // TODO: Re-enable once routing is confirmed working in test environment
+    // Skipped: Routing not confirmed in test environment
     const bestSignallerButton = page.locator('ion-button:has-text("Best Signaller")');
 
     await bestSignallerButton.click();
 
-    // Wait for navigation
+    // Wait for navigation to best signaller
     await page.waitForURL('**/best-signaller', { timeout: 5000 });
 
     expect(page.url()).toContain('/best-signaller');
   });
 
   test.skip('should navigate to leaderboard', async ({ page }) => {
-    // TODO: Re-enable once routing is confirmed working in test environment
+    // Skipped: Routing not confirmed in test environment
     const leaderboardButton = page.locator('ion-button:has-text("Leaderboard")');
 
     await leaderboardButton.click();

@@ -1,10 +1,7 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon } from '@ionic/angular/standalone';
-import { CommonModule } from '@angular/common';
-import { CompetitiveResults } from '../../core/services/quiz.service';
-import { LeaderboardService } from '../../core/services/leaderboard.service';
-
+/**
+ * CompetitiveResultsPage displays the results of a competitive quiz session.
+ * Handles result display, submission, and navigation logic.
+ */
 @Component({
   selector: 'app-competitive-results',
   templateUrl: './competitive-results.page.html',
@@ -22,20 +19,47 @@ import { LeaderboardService } from '../../core/services/leaderboard.service';
 ]
 })
 export class CompetitiveResultsPage implements OnInit, AfterViewInit {
+  /**
+   * Stores the competitive quiz results for display and submission.
+   */
   results: CompetitiveResults | null = null;
+  /**
+   * Indicates if a submission is in progress.
+   */
   isSubmitting = false;
+  /**
+   * Indicates if results have been submitted.
+   */
   hasSubmitted = false;
+  /**
+   * Message describing submission status or errors.
+   */
   submissionMessage = '';
+  /**
+   * Indicates if submission was successful.
+   */
   submissionSuccess = false;
+  /**
+   * Controls whether all questions are shown in the UI.
+   */
   showAllQuestions = false;
+  /**
+   * Exposes Math for template calculations.
+   */
   Math = Math;
 
+  /**
+   * Injects route, router, and leaderboard service for navigation and data.
+   */
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private leaderboardService: LeaderboardService
   ) {}
 
+  /**
+   * Initializes results from router navigation state or redirects if missing.
+   */
   ngOnInit() {
     // Extract results from router navigation state
     const navigation = this.router.getCurrentNavigation();
@@ -47,10 +71,16 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Lifecycle hook for post-view logic (currently unused).
+   */
   ngAfterViewInit() {
     // Intentionally blank
   }
 
+  /**
+   * Returns color string for rating badge based on final score.
+   */
   getRatingColor(): string {
     if (!this.results) return 'medium';
     const rating = this.results.finalRating;
