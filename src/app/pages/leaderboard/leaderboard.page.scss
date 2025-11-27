@@ -69,7 +69,10 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 200px);
+    /* Use a safe viewport height calculation to avoid iOS Safari 100vh bugs.
+      `var(--vh)` can be set at runtime to the real viewport unit if desired.
+      Fallback to `1vh` keeps previous behavior in environments without JS. */
+    min-height: calc(var(--vh, 1vh) * 100 - 200px);
   padding: 48px 32px;
   background: #FFFFFF;
 }
@@ -235,7 +238,8 @@ h1 {
 // Responsive Design
 @media (max-width: 667px) {
   .leaderboard-empty {
-    min-height: calc(100vh - 150px);
+    /* Use safe viewport calculation to avoid truncated scroll on iOS */
+    min-height: calc(var(--vh, 1vh) * 100 - 150px);
     padding: 32px 20px;
   }
 
@@ -498,6 +502,7 @@ h1 {
 
 .leaderboard-card.current-user {
   position: relative;
+  z-index: 1;
   animation: fadeInScale 0.4s ease-out, pulseGlow 2s ease-in-out infinite;
 
   &::before {
@@ -506,7 +511,10 @@ h1 {
     inset: -2px;
     border-radius: 12px;
     background: linear-gradient(45deg, #F59E0B, #EF4444, #F59E0B);
-    z-index: -1;
+    /* Avoid negative z-index on iOS which can collapse scrolling contexts.
+       Place the pseudo-element behind the card by giving it a lower z-index
+       than the parent which now has `z-index: 1`. */
+    z-index: 0;
     opacity: 0.6;
     animation: rotateBorder 3s linear infinite;
   }
