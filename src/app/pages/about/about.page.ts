@@ -1,10 +1,9 @@
-
 import { Component } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonIcon } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { addIcons } from 'ionicons';
-import { chatbubblesOutline } from 'ionicons/icons';
+import { chatbubblesOutline, listOutline, mapOutline, megaphoneOutline } from 'ionicons/icons';
 import { APP_VERSION } from '../../config/app-version';
 
 /**
@@ -28,7 +27,7 @@ export class AboutPage {
    * Initializes AboutPage and sets up icons.
    */
   constructor() {
-    addIcons({ chatbubblesOutline });
+    addIcons({chatbubblesOutline,listOutline,mapOutline,megaphoneOutline});
   }
 
   /**
@@ -39,8 +38,8 @@ export class AboutPage {
       await Haptics.impact({ style: ImpactStyle.Light }); // Provide tactile feedback
     } catch (err) {
       // Haptics not available (web or unsupported device)
-    }
-    window.open('https://signalsmaster.sleekplan.app', '_blank', 'noopener,noreferrer');
+    } // added new feedback platform link
+    window.open('https://signalsmaster.userjot.com/', '_blank', 'noopener,noreferrer');
   }
 }
 

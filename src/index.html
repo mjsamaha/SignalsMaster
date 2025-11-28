@@ -22,18 +22,37 @@
 <body>
   <app-root></app-root>
 
-  <!-- Sleekplan Feedback Widget -->
-  <script type="text/javascript">
-    window.$sleek=[];
-    window.SLEEK_PRODUCT_ID=552078976;
-    (function(){
-      d=document;
-      s=d.createElement("script");
-      s.src="https://client.sleekplan.com/sdk/e.js";
-      s.async=1;
-      d.getElementsByTagName("head")[0].appendChild(s);
-    })();
-  </script>
+  <!-- Sleekplan Feedback Widget REMOVED -- added UserJot -- Integrated to new platform -->
+  <script>
+  window.$ujq = window.$ujq || [];
+  window.uj = window.uj || new Proxy({}, { get: (_, p) => (...a) => window.$ujq.push([p, ...a]) });
+  document.head.appendChild(Object.assign(document.createElement('script'), {
+    src: 'https://cdn.userjot.com/sdk/v2/uj.js',
+    type: 'module',
+    async: true
+  }));
+</script>
+<!-- UserJot Widget Configuration -->
+<script>
+  window.uj.init('cmije3z9s03v215mq1i03j5cw', {
+    widget: true,
+    position: 'right',
+    theme: 'auto'
+  });
+</script>
+<!-- User identification not needed for anonymous apps
+ still leaving it in place -->
+<!--
+<script>
+  window.uj.identify({
+    id: "USER_UNIQUE_ID",
+    email: "user@example.com",
+    firstName: "John",
+    lastName: "Doe",
+    avatar: "URL_TO_USER_AVATAR"
+  });
+</script>
+-->
 </body>
 
 </html>
