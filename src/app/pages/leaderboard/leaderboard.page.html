@@ -111,7 +111,13 @@
         <!-- Header Row: Badge + Username + Rating -->
         <div class="card-header">
           <div class="user-info">
-            <span class="badge">{{ getTierBadge(entry.rank) }}</span>
+            <span *ngIf="entry.rank !== 1" class="badge">{{ getTierBadge(entry.rank) }}</span>
+            <img *ngIf="entry.rank === 1"
+                 src="assets/feat/signals_master.gif"
+                 alt="Signals Master — top rank"
+                 class="badge-gif"
+                 loading="lazy"
+                 decoding="async" />
             <span class="username">{{ entry.username }}</span>
             <span *ngIf="isCurrentUser(entry.username)" class="you-badge">YOU</span>
           </div>
