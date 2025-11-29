@@ -53,6 +53,7 @@ export class LeaderboardPage implements OnInit, OnDestroy {
    * Tier 4: 📈 (Ranks #51-100 - Developing)
    * Tier 5: 📍 (Ranks #101+ - Participant)
    */
+  // change these icons to match better images
   getTierBadge(rank: number): string {
     if (rank === 1) return '🥇';
     if (rank >= 2 && rank <= 10) return '🥈';

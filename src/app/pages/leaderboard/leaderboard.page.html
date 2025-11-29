@@ -37,7 +37,7 @@
       <!-- Bottom Divider -->
       <div class="empty-state-divider"></div>
 
-      <!-- Tier Preview Section -->
+      <!-- Tier Preview Section (centered for empty state) -->
       <div class="tier-preview-container">
         <div class="tier-preview-title">RANK TIERS</div>
         <div class="tier-preview-subtitle">Rise through the fleet’s hierarchy</div>
@@ -65,6 +65,38 @@
               <div class="tier-name">Rising Star</div>
               <div class="tier-description">On track to join the fleet’s top-ranked signallers</div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tier Preview Section (visible when there are entries) -->
+    <div *ngIf="entries.length > 0" class="tier-preview-container">
+      <div class="tier-preview-title">RANK TIERS</div>
+      <div class="tier-preview-subtitle">Rise through the fleet’s hierarchy</div>
+
+      <div class="tier-list">
+        <div class="tier-item">
+          <div class="tier-badge">🥇</div>
+          <div class="tier-info">
+            <div class="tier-name">Signals Master</div>
+            <div class="tier-description">The highest-ranked signaller in the entire fleet</div>
+          </div>
+        </div>
+
+        <div class="tier-item">
+          <div class="tier-badge">🥈</div>
+          <div class="tier-info">
+            <div class="tier-name">Top 10 Signallers</div>
+            <div class="tier-description">Ranked among the fleet’s most reliable and high-performing signallers</div>
+          </div>
+        </div>
+
+        <div class="tier-item">
+          <div class="tier-badge">🌟</div>
+          <div class="tier-info">
+            <div class="tier-name">Rising Star</div>
+            <div class="tier-description">On track to join the fleet’s top-ranked signallers</div>
           </div>
         </div>
       </div>
