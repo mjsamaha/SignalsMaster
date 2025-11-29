@@ -78,4 +78,16 @@
       transition: none;
     }
   }
+
+  // Ensure the tab-bar container itself is full-bleed white; this prevents
+  // page-level backgrounds from showing along the left/right edges of the
+  // footer (e.g., the quiz page using a yellow background).
+  ion-tab-bar {
+    width: 100%;
+    left: 0;
+    right: 0;
+    /* Force the tab-bar background to white, including on host shadow root */
+    --background: var(--color-white);
+    background-color: var(--color-white);
+  }
 }

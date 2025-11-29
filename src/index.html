@@ -37,8 +37,225 @@
   window.uj.init('cmije3z9s03v215mq1i03j5cw', {
     widget: true,
     position: 'right',
-    theme: 'auto'
+    theme: 'dark',
+    trigger: 'custom' // hide the default floating button so we can use our header trigger
   });
+</script>
+<!-- UserJot widget offset helper: move widget above tabbar to avoid blocking footer tabs -->
+<script>
+  (function ensureUserJotWidgetOffset() {
+    const DEBUG = !!(window.location.search && window.location.search.includes('ujdebug=true'));
+
+    function getSafeAreaBottom() {
+      const doc = document.documentElement;
+      const tryVars = ['--ion-safe-area-bottom', '--safe-area-inset-bottom', '--safe-area-bottom'];
+      for (const v of tryVars) {
+        const val = getComputedStyle(doc).getPropertyValue(v);
+        if (val) {
+          const parsed = parseFloat(val.replace('px', ''));
+          if (!Number.isNaN(parsed)) return parsed;
+        }
+      }
+      try {
+        const envVal = window.getComputedStyle(document.documentElement).getPropertyValue('padding-bottom');
+        if (envVal) {
+          const parsed = parseFloat(envVal.replace('px', ''));
+          if (!Number.isNaN(parsed)) return parsed;
+        }
+      } catch (e) {}
+      return 0;
+    }
+
+    function getSafeAreaTop() {
+      const doc = document.documentElement;
+      const tryVars = ['--ion-safe-area-top', '--safe-area-inset-top', '--safe-area-top'];
+      for (const v of tryVars) {
+        const val = getComputedStyle(doc).getPropertyValue(v);
+        if (val) {
+          const parsed = parseFloat(val.replace('px', ''));
+          if (!Number.isNaN(parsed)) return parsed;
+        }
+      }
+      return 0;
+    }
+
+    function getTabBarHeight() {
+      const tab = document.querySelector('ion-tab-bar');
+      if (!tab) return 56;
+      const rect = tab.getBoundingClientRect();
+      return (rect && rect.height) ? Math.round(rect.height) : 56;
+    }
+
+    function setWidgetSpacing() {
+      if (DEBUG) console.debug('[UserJot] setWidgetSpacing triggered');
+      const container = document.querySelector('[data-userjot-widget-container]');
+      if (!container || !container.shadowRoot) return false;
+      const wrapper = container.shadowRoot.getElementById('widget-wrapper') || container.shadowRoot.querySelector('[data-userjot-widget]');
+      if (!wrapper) return false;
+
+      const header = document.querySelector('ion-header') || document.querySelector('header');
+      const extraMargin = 2; // px buffer below header border
+
+      if (header) {
+        const headerRect = header.getBoundingClientRect();
+        const top = Math.round(headerRect.bottom) + extraMargin;
+        wrapper.style.top = `${top}px`;
+        wrapper.style.bottom = 'auto';
+        wrapper.style.right = '0px';
+        wrapper.style.left = 'auto';
+        if (DEBUG) console.debug('[UserJot] widget positioned at top-right edge:', wrapper.style.top);
+      } else {
+        const tabBarHeight = getTabBarHeight();
+        const safeArea = getSafeAreaBottom();
+        wrapper.style.bottom = `${tabBarHeight + safeArea + 12}px`;
+        wrapper.style.top = 'auto';
+        wrapper.style.right = '0px';
+        wrapper.style.left = 'auto';
+        if (DEBUG) console.debug('[UserJot] widget positioned at bottom-right edge:', wrapper.style.bottom);
+      }
+      wrapper.style.pointerEvents = 'auto';
+      return true;
+    }
+
+    const attemptToObserve = () => {
+      const found = document.querySelector('[data-userjot-widget-container]');
+      if (found && found.shadowRoot) {
+        if (DEBUG) console.debug('[UserJot] widget container found, attempting spacing');
+        if (setWidgetSpacing()) {
+          const tab = document.querySelector('ion-tab-bar');
+          if (tab) {
+            new MutationObserver(() => setWidgetSpacing()).observe(tab, { attributes: true, childList: true, subtree: true });
+          }
+          try {
+            const rootObserver = new MutationObserver(() => setWidgetSpacing());
+            rootObserver.observe(found.shadowRoot, { attributes: true, childList: true, subtree: true });
+          } catch (e) {
+            if (DEBUG) console.warn('[UserJot] failed to observe shadow root', e);
+          }
+          window.addEventListener('resize', setWidgetSpacing, { passive: true });
+          window.addEventListener('orientationchange', setWidgetSpacing, { passive: true });
+          if (DEBUG) console.debug('[UserJot] listeners set for resize/orientation');
+          return true;
+        }
+      }
+      return false;
+    };
+
+    const bodyObserver = new MutationObserver((mutations, obs) => {
+      if (attemptToObserve()) obs.disconnect();
+    });
+    bodyObserver.observe(document.body, { childList: true, subtree: true });
+
+    setTimeout(() => {
+      if (!attemptToObserve()) {
+        let attempts = 0, maxAttempts = 15;
+        const iv = setInterval(() => {
+          attempts++;
+          if (attemptToObserve() || attempts >= maxAttempts) clearInterval(iv);
+        }, 300);
+      }
+    }, 300);
+  })();
+</script>
+
+<!-- Custom header trigger for UserJot: adds a header-aligned button that opens the widget -->
+<script>
+  (function createCustomUserJotTrigger() {
+    const DEBUG = !!(window.location.search && window.location.search.includes('ujdebug=true'));
+    function createButton() {
+      if (document.getElementById('uj-custom-trigger')) return;
+      const btn = document.createElement('button');
+      btn.id = 'uj-custom-trigger';
+      btn.setAttribute('aria-label', 'Give feedback');
+      // Minimal styles so it's visible and matches app header placement
+      const style = btn.style;
+      style.position = 'fixed';
+      style.zIndex = '999999998';
+      style.right = '0px';
+      style.background = '#000';
+      style.color = '#fff';
+      style.border = 'none';
+      style.padding = '10px 14px';
+      style.borderRadius = '9999px';
+      style.boxShadow = '0 6px 14px rgba(10,42,67,0.1)';
+      style.cursor = 'pointer';
+      style.display = 'flex';
+      style.alignItems = 'center';
+      style.gap = '8px';
+
+      // Inline content (icon + text). This is simple; you can swap for your own markup.
+      btn.innerHTML = `<span style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:9999px;background:transparent;color:#fff;font-weight:700;">!</span><span style="font-weight:600;font-size:14px;color:#fff;">Give feedback</span>`;
+      document.body.appendChild(btn);
+
+      // Attach click handler to use custom trigger to open the widget
+      btn.addEventListener('click', () => {
+        try {
+          if (window.uj && typeof window.uj.showWidget === 'function') {
+            window.uj.showWidget({ section: 'feedback' });
+            if (DEBUG) console.debug('[UserJot] showWidget called');
+          } else {
+            // If the SDK hasn't loaded yet, queue command on proxy or push to $ujq
+            if (window.$ujq) window.$ujq.push(['showWidget', { section: 'feedback' }]);
+            if (DEBUG) console.debug('[UserJot] queued showWidget call');
+          }
+        } catch (e) { if (DEBUG) console.error('[UserJot] showWidget failed', e); }
+      });
+
+      function placeButton() {
+        const safeAreaTop = getSafeAreaTop();
+        const offset = 2; // small margin below header border
+        const header = document.querySelector('ion-header') || document.querySelector('header');
+        if (header) {
+          try {
+            const rect = header.getBoundingClientRect();
+            const top = Math.round(rect.bottom) + offset;
+            style.top = `${top}px`;
+          } catch (e) {
+            style.top = `${safeAreaTop + 8}px`;
+          }
+        } else {
+          style.top = `${safeAreaTop + 8}px`;
+        }
+        // Place on edge
+        style.right = '0px';
+      }
+
+      function getSafeAreaTop() {
+        const doc = document.documentElement;
+        const tryVars = ['--ion-safe-area-top', '--safe-area-inset-top', '--safe-area-top'];
+        for (const v of tryVars) {
+          const val = getComputedStyle(doc).getPropertyValue(v);
+          if (val) {
+            const parsed = parseFloat(val.replace('px',''));
+            if (!Number.isNaN(parsed)) return parsed;
+          }
+        }
+        return 0;
+      }
+
+      // Reposition on load and on resize
+      placeButton();
+      window.addEventListener('resize', placeButton, { passive: true });
+      window.addEventListener('orientationchange', placeButton, { passive: true });
+
+      // Also reposition when header changes (Shadow DOM changes in Ionic)
+      const headerObserver = new MutationObserver(placeButton);
+      const headerNode = document.querySelector('ion-header') || document.querySelector('header');
+      if (headerNode) headerObserver.observe(headerNode, { attributes: true, childList: true, subtree: true });
+    }
+
+    function attemptCreate() {
+      // Create after DOM is interactive to keep from racing with frameworks
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', createButton);
+      } else {
+        createButton();
+      }
+    }
+
+    // Listen for SDK ready to ensure we can call showWidget(); but the button can be created early
+    attemptCreate();
+  })();
 </script>
 <!-- User identification not needed for anonymous apps
  still leaving it in place -->

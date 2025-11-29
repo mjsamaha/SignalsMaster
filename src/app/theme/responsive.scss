@@ -285,6 +285,13 @@ $breakpoint-5xl: 1600px; // Max desktop
       opacity: 1 !important;
       // Removed max-width and margin to allow tab bar to stretch edge-to-edge on desktop, addressing footer/tab stretch issue.
       width: 100%;
+      /* Use fixed positioning across viewports for predictable layout; avoid
+        sticky that can be constrained by parent containers. This ensures the
+        tab bar is visually flush to the bottom on desktop. */
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
 
     ion-tab-button {
