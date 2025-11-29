@@ -16,12 +16,12 @@ ion-header {
 ion-content {
   --background: var(--color-sky-50);
 }
-
+    /* header-scoped h1 earlier mistakenly inserted; removed stray block */
 // ============================================================================
 // CONTAINER
 // ============================================================================
 
-.about-container {
+.container {
   max-width: 1000px;
   margin: 0 auto;
   padding: var(--spacing-xl);
@@ -36,17 +36,20 @@ ion-content {
 }
 
 // ============================================================================
-// HEADING & TEXT
+    /* Removed stray block insertion for h2 */
 // ============================================================================
 
-h1 {
+/* Scope heading rules to the About container to avoid global override issues */
+.container h1 {
   font-size: var(--font-size-h1-desktop);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-gold-500);
+  /* Make headings pop more: heavier weight, slightly more spacing, subtle shadow */
+  font-weight: 800;
+  color: var(--color-naval-blue) !important;
   margin-bottom: var(--spacing-xl);
   text-align: center;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  text-shadow: 0 1px 0 rgba(10, 42, 67, 0.04);
 
   @media (max-width: 768px) {
     font-size: 28px;
@@ -57,17 +60,25 @@ h1 {
   }
 }
 
-h2 {
+.container h2 {
   font-size: var(--font-size-h2-mobile);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-gold-500);
+  /* Increase weight and small shadow for better emphasis without fancy effects */
+  font-weight: 800;
+  color: var(--color-naval-blue) !important;
   margin: var(--spacing-2xl) 0 var(--spacing-lg) 0;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.75px;
+  text-shadow: 0 1px 0 rgba(10, 42, 67, 0.035);
 
   @media (min-width: 1200px) {
     font-size: var(--font-size-h2-desktop);
   }
+}
+
+/* FAQ teaser (dark background) - ensure the heading remains white */
+.container .bg-gray-900 h2,
+.container .text-white h2 {
+  color: var(--color-white) !important;
 }
 
 // ============================================================================
@@ -185,17 +196,17 @@ h2 {
 
 // Desktop (1024px+)
 @media (min-width: 1024px) {
-  .about-container {
+  .container {
     max-width: 1200px;
     padding: var(--spacing-3xl) var(--spacing-4xl);
   }
 
-  h1 {
+  .container h1 {
     font-size: 42px;
     margin-bottom: var(--spacing-2xl);
   }
 
-  h2 {
+  .container h2 {
     font-size: 32px;
   }
 
@@ -227,16 +238,16 @@ h2 {
 
 // Large Desktop (1280px+)
 @media (min-width: 1280px) {
-  .about-container {
+  .container {
     max-width: 1280px;
     padding: var(--spacing-4xl) var(--spacing-5xl);
   }
 
-  h1 {
+  .container h1 {
     font-size: 48px;
   }
 
-  h2 {
+  .container h2 {
     font-size: 36px;
   }
 
@@ -251,7 +262,7 @@ h2 {
 
 // Mobile
 @media (max-width: 375px) {
-  .about-container {
+  .container {
     padding: var(--spacing-md);
   }
 
@@ -301,6 +312,13 @@ h2 {
       color: var(--color-gray-600);
     }
   }
+
+  /* Ensure top-level headings remain readable in dark mode */
+  .container h1,
+  .container h2 {
+    color: var(--color-white);
+    text-shadow: none; /* remove shadow in dark mode for clarity */
+  }
 }
 
 // ============================================================================
@@ -318,3 +336,4 @@ h2 {
     }
   }
 }
+
