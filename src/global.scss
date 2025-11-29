@@ -68,14 +68,25 @@ html {
    fix that ensures the app-level elements expand to the viewport. */
 html, body {
   height: 100%;
+  min-height: 100vh; // Use viewport units to prevent small rounding gaps on some screens
 }
 
 app-root,
 ion-app,
 ion-router-outlet,
 ion-router-outlet > * {
-  height: 100%;
-  min-height: 100%;
+  height: 100vh;
+  min-height: 100vh; // Ensure app-level elements fill the viewport.
+}
+
+/* Remove any accidental padding on the root app shell that could create
+   a visual gap underneath the tab bar. */
+app-root, ion-app, ion-router-outlet {
+  padding-bottom: 0 !important;
+}
+
+ion-tabs {
+  padding-bottom: 0 !important;
 }
 
 body {
@@ -234,10 +245,10 @@ textarea:focus-visible {
 ion-content {
   --background: var(--color-background-light);
   --color: var(--color-naval-blue);
-  /* Increase bottom padding to ensure content isn't covered by tab bar/safe-area
-     on mobile webviews (iOS address bar can overlap). Tab bar is ~64px; use
-     slightly larger padding to provide a safe touch area. */
-  --padding-bottom: 130px; // increased to ensure bottom content is reachable
+  /* Compute bottom padding and content offset so content scroll isn't covered
+    by the fixed tab bar while preventing a visible gap below the tabbar. */
+  --padding-bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom, 0px));
+  --offset-bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom, 0px));
   /* Ensure ion-content occupies the visual viewport height so the internal
      scroll surface (.inner-scroll) can compute a proper non-zero height.
      This relies on the runtime `--vh` CSS variable being set in `main.ts`. */
@@ -249,6 +260,31 @@ ion-content {
 
 ion-header {
   @include unified-header;
+
+  /* Ensure the header background covers any safe-area padding at the top of
+     the screen — some devices add padding to `ion-header`, which can reveal
+     the app background if the host doesn't fill that space. This explicit
+     background guarantees the header visually anchors to the viewport edge. */
+    background: var(--color-naval-blue) !important;
+  background-color: var(--color-naval-blue) !important;
+  /* Make sure the CSS custom property (used by Ionic components) is kept in
+     sync with the explicit background color. For older / specialized host
+     selectors the native `background` value will be used. */
+  --background: var(--color-naval-blue) !important;
+    margin: 0 !important;
+
+  /* If a translucent header is used, force toolbar to extend to the very top
+     so that the background still fills the safe-area inset rather than
+     showing the page background behind the header. */
+  &.translucent,
+  &[translucent],
+  &[data-translucent] {
+    ion-toolbar {
+      margin-top: 0 !important;
+      padding-top: env(safe-area-inset-top, 0) !important;
+      background: linear-gradient(var(--color-naval-blue), var(--color-naval-blue)) !important;
+    }
+  }
 }
 
 ion-tabs {
@@ -263,6 +299,27 @@ ion-tab-bar {
   min-height: 64px; // Increase tab bar height for better visibility
   height: 64px;
   font-size: 1.1rem;
+}
+
+/* Ensure the tab bar container is a full-bleed element with a white background
+   so that page-specific backgrounds (e.g., quiz yellow) do not bleed under
+   the footer near the viewport edges. This also enforces consistent coloring
+   across mobile and desktop. */
+ion-tabs ion-tab-bar,
+ion-tab-bar {
+  width: 100% !important;
+  --background: var(--color-white) !important;
+  background-color: var(--color-white) !important;
+  /* Anchor the tabbar to the viewport bottom to ensure it's flush across
+     pages and won't be pushed up by container padding. */
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: var(--z-index-sticky) !important;
+  padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
 }
 
 ion-button {

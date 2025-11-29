@@ -192,6 +192,8 @@
   --z-index-modal: 300;
   --z-index-overlay: 400;
   --z-index-toast: 500;
+  // Tab-bar default height used when calculating content padding.
+  --tab-bar-height: 64px;
 }
 
 // ============================================================================
