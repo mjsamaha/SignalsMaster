@@ -80,6 +80,7 @@ export class HomePage {
    */
   async navigateToFeedback(): Promise<void> {
     await this.triggerHaptic();
+    // added new feedback link
     window.open('https://signalsmaster.userjot.com/', '_blank', 'noopener,noreferrer');
   }
 
