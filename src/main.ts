@@ -48,7 +48,7 @@ function initializePlatform(platformService: PlatformService) {
       setTimeout(() => {
         const ionContent = document.querySelector('ion-content');
         const innerScroll = ionContent?.shadowRoot?.querySelector('.inner-scroll') as HTMLElement;
-        if (innerScroll) {
+        if (innerScroll && ionContent) {
           console.log('🔍 iOS Debug - .inner-scroll height:', innerScroll.clientHeight, 'px');
           console.log('🔍 iOS Debug - ion-content height:', ionContent.clientHeight, 'px');
           // Visual debug: red outline for 5 seconds
@@ -59,7 +59,7 @@ function initializePlatform(platformService: PlatformService) {
             innerScroll.style.zIndex = '';
           }, 5000);
         } else {
-          console.warn('🔍 iOS Debug - .inner-scroll element not found in shadow DOM');
+          console.warn('🔍 iOS Debug - .inner-scroll element not found in shadow DOM or ion-content is null');
         }
       }, 2000);
     }

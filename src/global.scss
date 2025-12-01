@@ -263,19 +263,19 @@ ion-content {
 }
 
 ion-header {
-  @include unified-header;
-
   /* Ensure the header background covers any safe-area padding at the top of
      the screen — some devices add padding to `ion-header`, which can reveal
      the app background if the host doesn't fill that space. This explicit
      background guarantees the header visually anchors to the viewport edge. */
-    background: var(--color-naval-blue) !important;
+  background: var(--color-naval-blue) !important;
   background-color: var(--color-naval-blue) !important;
   /* Make sure the CSS custom property (used by Ionic components) is kept in
      sync with the explicit background color. For older / specialized host
      selectors the native `background` value will be used. */
   --background: var(--color-naval-blue) !important;
-    margin: 0 !important;
+  margin: 0 !important;
+
+  @include unified-header;
 
   /* If a translucent header is used, force toolbar to extend to the very top
      so that the background still fills the safe-area inset rather than
