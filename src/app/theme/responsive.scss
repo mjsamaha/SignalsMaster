@@ -399,14 +399,16 @@ body.ios {
     font-size: 16px !important; // Prevents auto-zoom
   }
 
-  // iOS scroll physics
+  // iOS scroll physics - Fix for broken scrolling on iOS Safari/Firefox/Edge
   ion-content {
     --offset-bottom: auto !important;
-    /* NOTE: Previously set to `hidden` which disables scrolling on iOS webviews
-       (ion-content is the primary scroll container in Ionic). This caused
-       iOS browsers to be unable to scroll in key pages. Change to `auto`
-       to allow native scrolling while preserving other iOS-specific rules. */
-    --overflow: auto;
+    /* FIX: iOS scrolling completely broken - force scroll properties to work
+       on iOS WebKit browsers. Users cannot scroll in any part of the app on iOS.
+       These properties ensure natural touch scrolling behavior is restored. */
+    --overflow: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
   }
 
   // iOS-specific safe area for footer/tabs
