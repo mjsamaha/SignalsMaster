@@ -99,9 +99,9 @@ body {
   line-height: var(--line-height-normal);
   font-weight: var(--font-weight-normal);
   overflow-x: hidden; // Prevent horizontal scroll
-  /* FIX: Ensure body doesn't interfere with ion-content scroll on iOS WebKit.
-     Allow vertical overflow while containing horizontal bounce/pull-to-refresh. */
-  overflow-y: auto; // Explicit vertical scroll allowance for iOS WebKit
+  /* FIX: (Phase 2) Removed overflow-y: auto to prevent body from creating a
+     competing scroll container against ion-content. */
+  // overflow-y: auto;
   overscroll-behavior-x: none; // Prevent horizontal bounce/pull-to-refresh
   overscroll-behavior-y: contain; // Contain vertical overscroll within element
 }
@@ -259,7 +259,9 @@ ion-content {
   overscroll-behavior: contain; // Prevent iOS bounce effect and pull-to-refresh
   touch-action: pan-y; // Allow vertical scrolling only, prevent horizontal drag
   -webkit-overflow-scrolling: touch; // Smooth momentum scrolling on iOS
-  overflow-y: auto; // Ensure vertical scrolling is always enabled across all platforms
+  /* FIX: (Phase 2) Removed overflow-y: auto to prevent this global rule
+     from conflicting with Ionic's internal scroll management. */
+  // overflow-y: auto;
 }
 
 ion-header {
