@@ -42,6 +42,28 @@ function initializePlatform(platformService: PlatformService) {
     setVh();
     window.addEventListener('resize', setVh);
     window.addEventListener('orientationchange', setVh);
+
+    // TEMP DEBUG: iOS scroll inspection helper (remove after fix confirmed)
+    if (!environment.production && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      setTimeout(() => {
+        const ionContent = document.querySelector('ion-content');
+        const innerScroll = ionContent?.shadowRoot?.querySelector('.inner-scroll') as HTMLElement;
+        if (innerScroll) {
+          console.log('🔍 iOS Debug - .inner-scroll height:', innerScroll.clientHeight, 'px');
+          console.log('🔍 iOS Debug - ion-content height:', ionContent.clientHeight, 'px');
+          // Visual debug: red outline for 5 seconds
+          innerScroll.style.outline = '3px solid red';
+          innerScroll.style.zIndex = '9999';
+          setTimeout(() => {
+            innerScroll.style.outline = '';
+            innerScroll.style.zIndex = '';
+          }, 5000);
+        } else {
+          console.warn('🔍 iOS Debug - .inner-scroll element not found in shadow DOM');
+        }
+      }, 2000);
+    }
+
     if ((window as any).visualViewport) {
       (window as any).visualViewport.addEventListener('resize', setVh);
     }

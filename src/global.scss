@@ -99,6 +99,9 @@ body {
   line-height: var(--line-height-normal);
   font-weight: var(--font-weight-normal);
   overflow-x: hidden; // Prevent horizontal scroll
+  /* FIX: Ensure body doesn't interfere with ion-content scroll on iOS WebKit.
+     Allow vertical overflow while containing horizontal bounce/pull-to-refresh. */
+  overflow-y: auto; // Explicit vertical scroll allowance for iOS WebKit
   overscroll-behavior-x: none; // Prevent horizontal bounce/pull-to-refresh
   overscroll-behavior-y: contain; // Contain vertical overscroll within element
 }
