@@ -26,6 +26,10 @@ ion-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-xl);
+  /* FIX: Ensure container doesn't interfere with iOS scrolling behavior.
+     These properties allow touch events to pass through to Ionic's scroll engine. */
+  overflow-y: visible;
+  touch-action: pan-y;
 
   @media (max-width: 768px) {
     padding: var(--spacing-lg);
