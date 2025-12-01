@@ -7,7 +7,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="bg-gradient-to-b from-blue-50 to-white">
+<!-- FIX: Removed [fullscreen]="true" to prevent iOS scrolling conflicts. -->
+<ion-content class="bg-gradient-to-b from-blue-50 to-white">
   <div class="container mx-auto px-4 py-8 max-w-2xl space-y-8">
 
     <!-- Hero Section -->

@@ -4,7 +4,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="safe-area-padding">
+<!-- FIX: Removed [fullscreen]="true" to prevent iOS scrolling conflicts. -->
+<ion-content class="safe-area-padding">
   <div class="container">
     <!-- Hero Section -->
     <div class="text-center mb-12">
