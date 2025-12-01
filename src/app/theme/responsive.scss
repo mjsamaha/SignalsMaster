@@ -401,12 +401,13 @@ body.ios {
 
   // iOS scroll physics - Fix for broken scrolling on iOS Safari/Firefox/Edge
   ion-content {
-    --offset-bottom: auto !important;
-    /* FIX: iOS scrolling completely broken - force scroll properties to work
-       on iOS WebKit browsers. Users cannot scroll in any part of the app on iOS.
-       These properties ensure natural touch scrolling behavior is restored. */
-    --overflow: auto !important;
-    overflow-y: auto !important;
+    /* FIX: (Phase 2) Removed aggressive !important overrides that forced a
+       scroll container at the wrong level, conflicting with Ionic's
+       internal scroll management. Keeping touch-action and -webkit-overflow-scrolling
+       ensures smooth momentum-based scrolling is preserved on iOS. */
+    // --offset-bottom: auto !important;
+    // --overflow: auto !important;
+    // overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
     touch-action: pan-y !important;
   }
