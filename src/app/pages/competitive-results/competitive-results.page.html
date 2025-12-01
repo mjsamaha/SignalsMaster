@@ -4,7 +4,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="safe-area-padding">
+<!-- FIX: Removed [fullscreen]="true" to prevent iOS scrolling conflicts. -->
+<ion-content class="safe-area-padding">
   <!-- Status Message -->
   <div *ngIf="submissionMessage" class="status-message" [class.success]="submissionSuccess" [class.error]="!submissionSuccess">
     <ion-text>{{ submissionSuccess ? '✓ ' : '✗ ' }}{{ submissionMessage }}</ion-text>
