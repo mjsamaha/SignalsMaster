@@ -80,7 +80,7 @@ export class HomePage {
    */
   async navigateToFeedback(): Promise<void> {
     await this.triggerHaptic();
-    window.open('https://signalsmaster.sleekplan.app', '_blank', 'noopener,noreferrer');
+    window.open('https://signalsmaster.userjot.com/', '_blank', 'noopener,noreferrer');
   }
 
   private async triggerHaptic(): Promise<void> {
