@@ -37,6 +37,10 @@ ion-content {
   @media (max-width: 375px) {
     padding: var(--spacing-md);
   }
+
+  @media (max-width: 360px) {
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
 }
 
 // ============================================================================
@@ -51,7 +55,11 @@ ion-content {
     margin-bottom: var(--spacing-2xl);
 
     @media (max-width: 768px) {
-      margin-bottom: var(--spacing-xl);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    @media (max-width: 375px) {
+      margin-bottom: var(--spacing-md);
     }
   }
 
@@ -93,8 +101,24 @@ ion-content {
   flex-direction: column;
   gap: var(--spacing-xl);
 
+  @media (max-width: 768px) {
+    gap: var(--spacing-md);
+  }
+
+  @media (max-width: 375px) {
+    gap: 0.75rem; // 12px - more compact on small mobile
+  }
+
   &.mb-8 {
     margin-bottom: var(--spacing-2xl);
+
+    @media (max-width: 768px) {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    @media (max-width: 375px) {
+      margin-bottom: var(--spacing-lg);
+    }
   }
 }
 
@@ -108,6 +132,14 @@ ion-content {
   animation: fadeIn 0.4s ease-in-out;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+
+  @media (max-width: 375px) {
+    padding: var(--spacing-md);
+  }
 
   &:hover {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
@@ -129,6 +161,19 @@ ion-content {
       margin-right: var(--spacing-lg);
       font-size: 28px;
       flex-shrink: 0;
+
+      @media (max-width: 768px) {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+        margin-right: var(--spacing-md);
+      }
+
+      @media (max-width: 375px) {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
 
       // Practice mode icon - ocean blue
       &.practice {
@@ -169,6 +214,20 @@ ion-content {
     --padding-bottom: var(--spacing-md);
     --border-radius: var(--border-radius-md);
     --min-height: var(--touch-target-preferred);
+
+    @media (max-width: 768px) {
+      margin-top: var(--spacing-md);
+      --padding-top: var(--spacing-sm);
+      --padding-bottom: var(--spacing-sm);
+      --min-height: var(--touch-target-min); // 44px
+      font-size: 0.9375rem; // 15px
+    }
+
+    @media (max-width: 375px) {
+      font-size: var(--font-size-sm); // 14px
+      --padding-start: var(--spacing-md);
+      --padding-end: var(--spacing-md);
+    }
   }
 }
 
@@ -189,8 +248,14 @@ ion-content {
   box-shadow: 0 2px 8px rgba(10, 42, 67, 0.05);
 
   @media (max-width: 768px) {
-    padding: var(--spacing-xl) var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md);
     gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+  }
+
+  @media (max-width: 375px) {
+    padding: var(--spacing-md) var(--spacing-sm);
+    gap: var(--spacing-sm);
   }
 }
 
@@ -246,6 +311,15 @@ ion-content {
     font-size: 17px;
     width: 100%;
     max-width: 300px;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 15px;
+    padding: var(--spacing-xs) var(--spacing-md);
+  }
+
+  @media (max-width: 360px) {
+    font-size: 14px;
   }
 }
 
@@ -477,6 +551,16 @@ ion-content {
     font-size: 14px;
     padding: 12px 20px;
     gap: 10px;
+  }
+
+  @media (max-width: 360px) {
+    font-size: 13px;
+    padding: 11px 18px;
+    gap: 8px;
+
+    ion-icon {
+      font-size: 20px;
+    }
   }
 }
 
