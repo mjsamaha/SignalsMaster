@@ -32,139 +32,113 @@
       </p>
     </div>
 
-    <!-- Key Features -->
-    <div class="space-y-3">
-      <h2 class="text-2xl font-bold text-gray-900">✨ Key Features</h2>
+    <!-- Features & Guide Accordion -->
+    <ion-accordion-group class="bg-white rounded-xl shadow-md overflow-hidden">
 
-      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border-l-4 border-blue-500">
-        <h4 class="font-bold text-gray-900 mb-1">📚 Practice Mode</h4>
-        <p class="text-sm text-gray-700">Learn at your own pace with unlimited practice quizzes covering signal fundamentals.</p>
-      </div>
-
-      <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border-l-4 border-purple-500">
-        <h4 class="font-bold text-gray-900 mb-1">🏆 Competitive Mode</h4>
-        <p class="text-sm text-gray-700">Challenge yourself in Best Signaller mode and compete on the global leaderboard.</p>
-      </div>
-
-      <div class="bg-gradient-to-r from-green-50 to-teal-50 rounded-lg p-4 border-l-4 border-green-500">
-        <h4 class="font-bold text-gray-900 mb-1">📊 Real-Time Leaderboard</h4>
-        <p class="text-sm text-gray-700">Track your ranking, rating, and progress against competitors worldwide.</p>
-      </div>
-
-      <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-4 border-l-4 border-orange-500">
-        <h4 class="font-bold text-gray-900 mb-1">🎯 Instant Feedback</h4>
-        <p class="text-sm text-gray-700">Get instant feedback on your answers to improve your skills in real-time.</p>
-      </div>
-    </div>
-
-    <!-- How It Works -->
-    <div class="space-y-4">
-      <h2 class="text-2xl font-bold text-gray-900">🚀 How It Works</h2>
-
-      <div class="space-y-3">
-        <div class="flex gap-4">
-          <div class="flex-shrink-0">
-            <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500 text-white font-bold">1</div>
+      <!-- Key Features Accordion -->
+      <ion-accordion value="features">
+        <ion-item slot="header" class="border-l-4 border-blue-500">
+          <ion-label class="text-lg font-bold text-gray-900">
+            <span class="mr-2">✨</span> Key Features
+          </ion-label>
+        </ion-item>
+        <div slot="content" class="p-4 space-y-3 bg-gray-50">
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 border-l-4 border-blue-500">
+            <h4 class="font-bold text-gray-900 mb-1 text-sm">📚 Practice Mode</h4>
+            <p class="text-xs text-gray-700">Learn at your own pace with unlimited practice quizzes covering signal fundamentals.</p>
           </div>
-          <div>
-            <h4 class="font-semibold text-gray-900">Select Your Mode</h4>
-            <p class="text-sm text-gray-600">Select Practice to learn or Competitive to race the clock.</p>
+
+          <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-3 border-l-4 border-purple-500">
+            <h4 class="font-bold text-gray-900 mb-1 text-sm">🏆 Competitive Mode</h4>
+            <p class="text-xs text-gray-700">Challenge yourself in Best Signaller mode and compete on the global leaderboard.</p>
+          </div>
+
+          <div class="bg-gradient-to-r from-green-50 to-teal-50 rounded-lg p-3 border-l-4 border-green-500">
+            <h4 class="font-bold text-gray-900 mb-1 text-sm">📊 Real-Time Leaderboard</h4>
+            <p class="text-xs text-gray-700">Track your ranking, rating, and progress against competitors worldwide.</p>
+          </div>
+
+          <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-3 border-l-4 border-orange-500">
+            <h4 class="font-bold text-gray-900 mb-1 text-sm">🎯 Instant Feedback</h4>
+            <p class="text-xs text-gray-700">Get instant feedback on your answers to improve your skills in real-time.</p>
           </div>
         </div>
+      </ion-accordion>
 
-        <div class="flex gap-4">
-          <div class="flex-shrink-0">
-            <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500 text-white font-bold">2</div>
+      <!-- How It Works Accordion -->
+      <ion-accordion value="how-it-works">
+        <ion-item slot="header" class="border-l-4 border-green-500">
+          <ion-label class="text-lg font-bold text-gray-900">
+            <span class="mr-2">🚀</span> How It Works
+          </ion-label>
+        </ion-item>
+        <div slot="content" class="p-4 space-y-3 bg-gray-50">
+          <div class="flex gap-3">
+            <div class="flex-shrink-0">
+              <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-500 text-white font-bold text-sm">1</div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 text-sm">Select Your Mode</h4>
+              <p class="text-xs text-gray-600">Select Practice to learn or Competitive to race the clock.</p>
+            </div>
           </div>
-          <div>
-            <h4 class="font-semibold text-gray-900">Answer Questions</h4>
-            <p class="text-sm text-gray-600">Identify flags, symbols, and signals in interactive quizzes.</p>
+
+          <div class="flex gap-3">
+            <div class="flex-shrink-0">
+              <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-500 text-white font-bold text-sm">2</div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 text-sm">Answer Questions</h4>
+              <p class="text-xs text-gray-600">Identify flags, symbols, and signals in interactive quizzes.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <div class="flex-shrink-0">
+              <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-500 text-white font-bold text-sm">3</div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 text-sm">Submit & Review</h4>
+              <p class="text-xs text-gray-600">Check your score, accuracy, and time, and submit to the leaderboard if competitive.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <div class="flex-shrink-0">
+              <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-500 text-white font-bold text-sm">4</div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 text-sm">Compete & Improve</h4>
+              <p class="text-xs text-gray-600">Track progress, improve skills, and compete to become the Signals Master.</p>
+            </div>
           </div>
         </div>
+      </ion-accordion>
 
-        <div class="flex gap-4">
-          <div class="flex-shrink-0">
-            <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500 text-white font-bold">3</div>
-          </div>
-          <div>
-            <h4 class="font-semibold text-gray-900">Submit & Review</h4>
-            <p class="text-sm text-gray-600">Check your score, accuracy, and time, and submit to the leaderboard if competitive.</p>
-          </div>
-        </div>
-
-        <div class="flex gap-4">
-          <div class="flex-shrink-0">
-            <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500 text-white font-bold">4</div>
-          </div>
-          <div>
-            <h4 class="font-semibold text-gray-900">Compete & Improve</h4>
-            <p class="text-sm text-gray-600">Track progress, improve skills, and compete to become the Signals Master.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Stats/Impact -->
-    <div class="grid grid-cols-2 gap-4">
-      <div class="bg-blue-100 rounded-lg p-4 text-center">
-        <p class="text-3xl font-bold text-blue-900">50+</p>
-        <p class="text-sm text-blue-700">Quiz Questions</p>
-      </div>
-      <div class="bg-purple-100 rounded-lg p-4 text-center">
-        <p class="text-3xl font-bold text-purple-900">∞</p>
-        <p class="text-sm text-purple-700">Participants</p>
-      </div>
-      <div class="bg-green-100 rounded-lg p-4 text-center">
-        <p class="text-3xl font-bold text-green-900">24/7</p>
-        <p class="text-sm text-green-700">Accessible Anytime</p>
-      </div>
-      <div class="bg-orange-100 rounded-lg p-4 text-center">
-        <p class="text-3xl font-bold text-orange-900">🌍</p>
-        <p class="text-sm text-orange-700">Global Reach</p>
-      </div>
-    </div>
-
-    <!-- FAQ Teaser -->
-    <div class="bg-gray-900 text-white rounded-xl p-6 space-y-3">
-      <h2 class="text-xl font-bold">❓ Quick Questions?</h2>
-      <ul class="space-y-2 text-sm">
-        <li class="flex items-start gap-2">
-          <span class="text-blue-400 font-bold">→</span>
-          <span><strong>Free to use?</strong> Yes! All features are available to all users.</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="text-blue-400 font-bold">→</span>
-          <span><strong>How's the rating calculated?</strong> Based on accuracy, speed, and question difficulty.</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="text-blue-400 font-bold">→</span>
-          <span><strong>Can I practice offline?</strong> Practice mode is available anytime, anywhere.</span>
-        </li>
-      </ul>
-    </div>
+    </ion-accordion-group>
 
     <!-- Footer -->
-    <div class="text-center space-y-3 py-6 border-t border-gray-200">
+    <div class="text-center space-y-4 py-6 border-t border-gray-200">
       <p class="text-gray-600 text-sm">Built by mjsamaha | Matthew Samaha</p>
       <div class="flex flex-col items-center gap-3">
-        <div class="flex items-center gap-3 flex-wrap justify-center">
+        <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto sm:justify-center px-4 sm:px-0">
           <a href="https://github.com/mjsamaha/SignalsMaster" target="_blank" rel="noopener noreferrer"
-             class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors h-10 no-underline shadow-sm">
+             class="inline-flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-4 py-3 rounded-md text-sm font-medium transition-colors min-h-[44px] w-full sm:w-auto no-underline shadow-sm">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
             </svg>
             Explore on GitHub
           </a>
           <button (click)="navigateToFeedback()"
-                  class="inline-flex items-center gap-2 bg-[#F4D35E] hover:bg-[#f2ca45] text-[#0A2A43] px-4 py-2 rounded-md text-sm font-medium transition-colors h-10 shadow-sm">
+                  class="inline-flex items-center justify-center gap-2 bg-[#F4D35E] hover:bg-[#f2ca45] text-[#0A2A43] px-4 py-3 rounded-md text-sm font-medium transition-colors min-h-[44px] w-full sm:w-auto shadow-sm">
             <ion-icon name="chatbubbles-outline" class="text-base"></ion-icon>
             Send Feedback
           </button>
         </div>
-        <div class="flex items-center justify-center gap-4 flex-wrap mt-2 text-sm">
-          <a href="https://signalsmaster.userjot.com/" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline">Feedback Board</a>
-          <a href="https://signalsmaster.userjot.com/roadmap" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline">Roadmap</a>
-          <a href="https://signalsmaster.userjot.com/updates" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline">Updates</a>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-2 text-sm px-4">
+          <a href="https://signalsmaster.userjot.com/" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline min-h-[44px] flex items-center">Feedback Board</a>
+          <a href="https://signalsmaster.userjot.com/roadmap" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline min-h-[44px] flex items-center">Roadmap</a>
+          <a href="https://signalsmaster.userjot.com/updates" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline min-h-[44px] flex items-center">Updates</a>
         </div>
       </div>
       <p class="text-gray-500 text-xs">© 2025 Signals Master. All rights reserved.</p>
