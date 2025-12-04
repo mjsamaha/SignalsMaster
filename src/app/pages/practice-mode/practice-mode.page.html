@@ -5,58 +5,58 @@
 </ion-header>
 
 <!-- FIX: Removed [fullscreen]="true" to prevent iOS scrolling conflicts. -->
-<ion-content class="flex flex-col items-center justify-center p-4 safe-area-padding">
+<ion-content class="safe-area-padding">
   <div class="container mx-auto px-4 py-8 max-w-2xl">
-    <!-- Instructions -->
-    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">How to Practice</h2>
-      <ul class="space-y-3 text-gray-700">
-        <li class="flex items-start">
-          <span class="text-blue-600 mr-2">•</span>
-          <span>You'll see flag images one at a time</span>
-        </li>
-        <li class="flex items-start">
-          <span class="text-blue-600 mr-2">•</span>
-          <span>Select the correct name from multiple choice options</span>
-        </li>
-        <li class="flex items-start">
-          <span class="text-blue-600 mr-2">•</span>
-          <span>Get instant feedback on your answers</span>
-        </li>
-        <li class="flex items-start">
-          <span class="text-blue-600 mr-2">•</span>
-          <span>No time pressure - learn at your own pace</span>
-        </li>
-      </ul>
-    </div>
 
-    <!-- Question Count Selection -->
-    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-      <h3 class="text-xl font-bold text-gray-900 mb-4">Number of Questions</h3>
-      <ion-item>
-        <ion-label>Questions: {{ questionCount }}</ion-label>
-        <input
-          type="range"
-          min="5"
-          max="50"
-          step="5"
-          [(ngModel)]="questionCount"
-          class="w-full"
-        />
-      </ion-item>
-    </div>
+    <!-- Unified Practice Card - matches home page design pattern -->
+    <div class="bg-white rounded-xl shadow-lg p-8">
 
-    <!-- Start Button -->
-    <ion-button
-      expand="block"
-      size="large"
-      fill="solid"
-      color="primary"
-      (click)="startPractice()"
-      class="mt-6"
-    >
-      Start Practice Quiz
-    </ion-button>
+      <!-- Simple tagline instead of verbose instructions -->
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Practice Mode</h2>
+        <p class="text-gray-600">Learn at your own pace with instant feedback</p>
+      </div>
+
+      <!-- Controls section: side-by-side on desktop, stacked on mobile -->
+      <div class="flex flex-col md:flex-row md:items-end gap-6">
+
+        <!-- Question selector with prominent value display -->
+        <div class="flex-1">
+          <div class="mb-3">
+            <div class="flex items-baseline justify-between mb-2">
+              <span class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Questions</span>
+              <span class="text-3xl font-bold text-primary">{{ questionCount }}</span>
+            </div>
+            <input
+              type="range"
+              min="5"
+              max="50"
+              step="5"
+              [(ngModel)]="questionCount"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              aria-label="Select number of questions"
+            />
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span>5</span>
+              <span>50</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Start button: full width on mobile, auto on desktop -->
+        <div class="md:w-48">
+          <ion-button
+            expand="block"
+            size="large"
+            color="primary"
+            (click)="startPractice()"
+            class="font-semibold"
+          >
+            Start Practice
+          </ion-button>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>
 
