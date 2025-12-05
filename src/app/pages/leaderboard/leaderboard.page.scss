@@ -913,7 +913,7 @@ ion-refresher-content {
     padding: 12px;
     gap: 6px;
     min-height: 90px;
-    max-height: 100px;
+    // max-height removed - let content determine height naturally
   }
 
   .badge {
@@ -961,7 +961,7 @@ ion-refresher-content {
     padding: 10px;
     gap: 5px;
     min-height: 85px;
-    max-height: 95px;
+    // max-height removed - let content determine height naturally
   }
 
   .badge {
