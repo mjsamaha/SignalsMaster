@@ -13,6 +13,57 @@ ion-content {
 }
 
 // ============================================================================
+// HERO HEADER
+// ============================================================================
+
+.hero-header {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-sm) 0 var(--spacing-md);
+  animation: fadeInDown 0.6s ease-out;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e3a5f, #4a90e2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 var(--spacing-md) 0;
+    line-height: 1.2;
+    text-shadow: none;
+
+    @media (min-width: 768px) {
+      font-size: 42px;
+    }
+
+    @media (min-width: 1024px) {
+      font-size: 48px;
+    }
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-navy-500);
+    margin: 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    @media (min-width: 768px) {
+      font-size: 18px;
+    }
+
+    @media (min-width: 1024px) {
+      font-size: 20px;
+    }
+  }
+}
+
+// ============================================================================
 // CONTAINER
 // ============================================================================
 
@@ -45,6 +96,95 @@ h1 {
 
   @media (min-width: 768px) {
     font-size: var(--font-size-h1-desktop);
+  }
+}
+
+// ============================================================================
+// FORM CARD
+// ============================================================================
+
+.form-card {
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+}
+
+// ============================================================================
+// INPUT ACTION GROUP (HORIZONTAL LAYOUT)
+// ============================================================================
+
+.input-action-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  align-items: stretch;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .input-wrapper {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .start-button {
+    flex-shrink: 0;
+    min-width: 120px;
+    height: auto;
+    --padding-top: 18px;
+    --padding-bottom: 18px;
+    --padding-start: var(--spacing-xl);
+    --padding-end: var(--spacing-xl);
+    margin-top: 0;
+
+    @media (min-width: 640px) {
+      margin-top: 28px;
+      min-width: 140px;
+    }
+  }
+
+  ion-item {
+    --background: var(--color-white);
+    --border-color: var(--color-navy-300);
+    --border-width: 0 0 2px 0;
+    --padding-start: 0;
+    --padding-end: 0;
+    --inner-padding-end: 0;
+    --min-height: 70px;
+    border-radius: 0;
+    margin-bottom: var(--spacing-xs);
+
+    ion-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-navy-500);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    ion-input {
+      --padding-top: var(--spacing-sm);
+      --padding-bottom: var(--spacing-sm);
+      font-size: 16px;
+      min-height: 44px;
+      transition: all 0.2s ease;
+    }
+
+    &.ion-focused {
+      --border-color: var(--color-gold-500);
+      --border-width: 0 0 3px 0;
+
+      ion-label {
+        color: var(--color-gold-500);
+      }
+    }
   }
 }
 
@@ -150,29 +290,37 @@ h1 {
 // ============================================================================
 
 ion-button[color="warning"],
-.compete-button {
+.compete-button,
+.start-button {
   --background: linear-gradient(135deg, var(--color-gold-500), var(--color-gold-600));
   --color: var(--color-navy-500);
   --border-radius: var(--border-radius-md);
-  --padding-start: var(--spacing-lg);
-  --padding-end: var(--spacing-lg);
+  --padding-start: var(--spacing-xl);
+  --padding-end: var(--spacing-xl);
   --padding-top: var(--spacing-lg);
   --padding-bottom: var(--spacing-lg);
-  --min-height: var(--touch-target-preferred);
-  font-weight: var(--font-weight-bold);
+  --min-height: 48px;
+  font-weight: 700;
+  font-size: 16px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   transition: all var(--transition-fast);
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
 
   &:hover:not(:disabled) {
     --background: linear-gradient(135deg, var(--color-gold-600), var(--color-gold-500));
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.01);
+    transition: all 0.1s ease;
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(212, 175, 55, 0.5);
+    outline-offset: 2px;
   }
 
   &:disabled {
@@ -185,16 +333,24 @@ ion-button[color="warning"],
 // RESPONSIVE
 // ============================================================================
 
+// Ensure single-screen view on mobile (375px+)
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 0;
+  padding-bottom: var(--spacing-lg);
+
+  @media (max-width: 375px) {
+    padding-bottom: var(--spacing-md);
+  }
+}
+
 // Desktop (1024px+)
 @media (min-width: 1024px) {
   .best-signaller-container {
     max-width: 900px;
     padding: var(--spacing-3xl) var(--spacing-4xl);
-  }
-
-  h1 {
-    font-size: 36px;
-    margin-bottom: var(--spacing-2xl);
   }
 
   .form-group {
@@ -275,12 +431,67 @@ ion-button[color="warning"],
 }
 
 // ============================================================================
+// ANIMATIONS
+// ============================================================================
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Animate input/button container
+.input-action-group {
+  animation: slideInUp 0.6s ease-out 0.2s both;
+}
+
+// Add subtle pulse to button when enabled
+.start-button:not(:disabled) {
+  animation: subtlePulse 2s ease-in-out infinite;
+}
+
+@keyframes subtlePulse {
+  0%, 100% {
+    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  }
+}
+
+// ============================================================================
 // ACCESSIBILITY: PREFERS-REDUCED-MOTION
 // ============================================================================
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-header,
+  .input-action-group {
+    animation: none;
+  }
+
+  .start-button:not(:disabled) {
+    animation: none;
+  }
+
   ion-button[color="warning"],
-  .compete-button {
+  .compete-button,
+  .start-button {
     transition: none;
 
     &:hover:not(:disabled) {
@@ -290,6 +501,10 @@ ion-button[color="warning"],
     &:active:not(:disabled) {
       transform: none;
     }
+  }
+
+  ion-input {
+    transition: none;
   }
 }
 

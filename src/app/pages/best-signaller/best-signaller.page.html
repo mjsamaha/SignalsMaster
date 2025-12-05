@@ -6,62 +6,46 @@
 
 <!-- FIX: Removed [fullscreen]="true" to prevent iOS scrolling conflicts. -->
 <ion-content class="bg-gradient-to-b from-yellow-50 to-white">
-  <div class="container mx-auto px-4 py-8 max-w-2xl">
-    <!-- Competition Info -->
-    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">Competition Mode</h2>
-      <p class="text-gray-700 mb-4">
-        Rise through the fleet’s ranks by answering quickly and accurately. Every correct answer counts toward your global standing
-      </p>
-      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-        <p class="text-sm text-gray-700">
-          <strong>Scoring Info:</strong> Faster and more precise answers yield higher points. Aim for perfection to dominate the leaderboard!
-        </p>
-      </div>
+  <div class="container mx-auto px-4 pt-6 pb-6 max-w-2xl">
+    <!-- Hero Header -->
+    <div class="hero-header">
+      <h1>Rise through the Fleet's Ranks!</h1>
+      <p class="hero-subtitle">Answer Faster... Dominate the Fleet</p>
     </div>
 
-    <!-- Username Input -->
-    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-      <h3 class="text-xl font-bold text-gray-900 mb-4">Enter Your Username</h3>
-      <ion-item [class]="isUsernameValid ? 'valid-input' : validationMessage ? 'invalid-input' : ''">
-        <ion-label position="stacked">Username (3-20 characters)</ion-label>
-        <ion-input
-          [(ngModel)]="username"
-          (ngModelChange)="validateUsername()"
-          placeholder="Enter your username"
-          type="text"
-          maxlength="20"
-        ></ion-input>
-        <ion-text slot="helper" class="character-count">{{ getCharacterCount() }}</ion-text>
-      </ion-item>
+    <!-- Username Input & Start Button -->
+    <div class="bg-white rounded-xl shadow-lg p-6 form-card">
+      <div class="input-action-group">
+        <div class="input-wrapper">
+          <ion-item [class]="isUsernameValid ? 'valid-input' : validationMessage ? 'invalid-input' : ''">
+            <ion-label position="stacked">Username</ion-label>
+            <ion-input
+              [(ngModel)]="username"
+              (ngModelChange)="validateUsername()"
+              placeholder="Enter your username"
+              type="text"
+              maxlength="20"
+            ></ion-input>
+            <ion-text slot="helper" class="character-count">{{ getCharacterCount() }}</ion-text>
+          </ion-item>
 
-      <!-- Validation Message -->
-      <div *ngIf="validationMessage" class="validation-message error-message">
-        {{ validationMessage }}
-      </div>
+          <!-- Validation Message -->
+          <div *ngIf="validationMessage" class="validation-message error-message">
+            {{ validationMessage }}
+          </div>
+        </div>
 
-      <!-- Competition Challenge Info -->
-      <div *ngIf="isUsernameValid" class="mt-4 p-4 bg-green-50 border-l-4 border-green-400 rounded-r-lg">
-        <h4 class="font-semibold text-green-800 mb-2">Ready for the Challenge!</h4>
-        <ul class="text-sm text-green-700 space-y-1">
-          <li>• 50 signal flags to identify</li>
-          <li>• Timing and accuracy both count toward your rating</li>
-          <li>• Fast, accurate performance earns the highest ratings</li>
-        </ul>
+        <ion-button
+          size="large"
+          fill="solid"
+          color="warning"
+          (click)="startCompetition()"
+          [disabled]="!isUsernameValid"
+          class="start-button"
+        >
+          Start
+        </ion-button>
       </div>
     </div>
-
-    <!-- Start Button -->
-    <ion-button
-      expand="block"
-      size="large"
-      fill="solid"
-      color="warning"
-      (click)="startCompetition()"
-      [disabled]="!isUsernameValid"
-      class="mt-6"
-    >
-      Start 50-Question Competition
-    </ion-button>
   </div>
 </ion-content>
