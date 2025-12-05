@@ -352,15 +352,8 @@ h1 {
   min-height: 100px;
   // max-height removed to allow content to fit properly inside card
 
-  // Fade-in and scale animation
-  animation: fadeInScale 0.4s ease-out backwards;
-
-  // Stagger animation for each card
-  @for $i from 1 through 20 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.05}s;
-    }
-  }
+  // Fade-in and scale animation (removed stagger for batched loading)
+  animation: fadeInScale 0.3s ease-out backwards;
 
   &:hover {
     transform: translateY(-2px) scale(1.01);
@@ -647,6 +640,99 @@ h1 {
 .stat-divider {
   opacity: 0.5;
   font-weight: bold;
+}
+
+// ============================================================================
+// END OF LIST MESSAGE
+// ============================================================================
+
+.end-of-list-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  margin-top: 24px;
+  text-align: center;
+}
+
+.end-icon {
+  font-size: 48px;
+  line-height: 1;
+  margin-bottom: 16px;
+  animation: subtleBounce 2s ease-in-out infinite;
+}
+
+.end-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.end-subtext {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6B7280;
+  opacity: 0.8;
+}
+
+@keyframes subtleBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+// Responsive Design for End Message
+@media (max-width: 667px) {
+  .end-of-list-message {
+    padding: 32px 20px;
+    margin-top: 16px;
+  }
+
+  .end-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+
+  .end-text {
+    font-size: 16px;
+  }
+
+  .end-subtext {
+    font-size: 13px;
+  }
+}
+
+// ============================================================================
+// INFINITE SCROLL & REFRESHER STYLES
+// ============================================================================
+
+// Infinite Scroll Loading Indicator
+ion-infinite-scroll {
+  margin-top: 16px;
+}
+
+ion-infinite-scroll-content {
+  --color: #6B7280;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 24px 0;
+}
+
+// Pull-to-Refresh Styling
+ion-refresher {
+  z-index: 10;
+}
+
+ion-refresher-content {
+  --color: #3B82F6;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 // ============================================================================

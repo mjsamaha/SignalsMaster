@@ -6,6 +6,16 @@
 
 <!-- FIX: Removed [fullscreen]="true" to prevent iOS scrolling conflicts. -->
 <ion-content class="safe-area-padding">
+  <!-- Pull-to-Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Pull to refresh leaderboard"
+      refreshingSpinner="crescent"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
   <div class="container">
     <h1>Global Rankings</h1>
 
@@ -111,7 +121,7 @@
 
     <div *ngIf="entries.length > 0" class="leaderboard-grid">
       <!-- Unified Card Structure for All Ranks -->
-      <div *ngFor="let entry of entries"
+      <div *ngFor="let entry of entries; trackBy: trackByEntryId"
            class="leaderboard-card"
            [ngClass]="[getTierClass(entry.rank), getTopBorderClass(entry.rank), isCurrentUser(entry.username) ? 'current-user' : '']">
 
@@ -148,6 +158,24 @@
           <span class="stat-item">{{ formatTime(entry.totalTime) }}</span>
         </div>
       </div>
+    </div>
+
+    <!-- Infinite Scroll -->
+    <ion-infinite-scroll
+      threshold="100px"
+      (ionInfinite)="loadNextBatch($event)"
+      [disabled]="!hasMoreEntries">
+      <ion-infinite-scroll-content
+        loadingSpinner="crescent"
+        loadingText="Loading more rankings...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <!-- End of List Message -->
+    <div *ngIf="!hasMoreEntries && entries.length > 0" class="end-of-list-message">
+      <div class="end-icon">🏁</div>
+      <p class="end-text">You've reached the end of the fleet!</p>
+      <p class="end-subtext">{{ totalEntriesLoaded }} signallers ranked</p>
     </div>
   </div>
 </ion-content>

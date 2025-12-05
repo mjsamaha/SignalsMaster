@@ -8,7 +8,10 @@ import {
   onSnapshot,
   query,
   serverTimestamp,
-  QueryConstraint
+  QueryConstraint,
+  getDocs,
+  startAfter,
+  QueryDocumentSnapshot
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -26,6 +29,12 @@ export interface LeaderboardEntry {
   rank: number;
   tier: string;
   sessionId: string;
+}
+
+export interface PaginatedResult {
+  entries: LeaderboardEntry[];
+  lastDoc: QueryDocumentSnapshot | null;
+  hasMore: boolean;
 }
 
 export interface SubmissionResponse {
@@ -293,5 +302,134 @@ export class LeaderboardService {
     if (rank === 1) return 'Signals Master';
     if (rank <= 10) return 'Top Signaller';
     return '';
+  }
+
+  /**
+   * Get initial batch of leaderboard entries with pagination
+   * @param batchSize Number of entries to load (default: 20)
+   * @returns Observable with entries, last document, and hasMore flag
+   */
+  getLeaderboardInitial(batchSize: number = 20): Observable<PaginatedResult> {
+    console.log('[DEBUG] LeaderboardService.getLeaderboardInitial called with batchSize:', batchSize);
+
+    return new Observable<PaginatedResult>(observer => {
+      try {
+        const constraints: QueryConstraint[] = [
+          orderBy('rating', 'desc'),
+          orderBy('createdAt', 'asc'),
+          limit(batchSize)
+        ];
+
+        const q = query(collection(this.firestore, 'leaderboard'), ...constraints);
+
+        // Use getDocs for one-time fetch (not real-time)
+        this.ngZone.run(async () => {
+          try {
+            const snapshot = await getDocs(q);
+            console.log('[DEBUG] Initial batch loaded, docs count:', snapshot.docs.length);
+
+            const entries = this.mapSnapshotToEntries(snapshot.docs, 1);
+            const lastDoc = snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1] : null;
+            const hasMore = snapshot.docs.length === batchSize;
+
+            observer.next({ entries, lastDoc, hasMore });
+            observer.complete();
+          } catch (error) {
+            console.error('[DEBUG] Error loading initial batch:', error);
+            observer.error(error);
+          }
+        });
+      } catch (error) {
+        console.error('[DEBUG] Error setting up initial query:', error);
+        observer.error(error);
+      }
+
+      return () => {};
+    });
+  }
+
+  /**
+   * Get next batch of leaderboard entries with pagination
+   * @param lastVisible Last document from previous batch
+   * @param batchSize Number of entries to load
+   * @param startingRank Starting rank number for this batch
+   * @returns Observable with entries, last document, and hasMore flag
+   */
+  getLeaderboardPaginated(
+    lastVisible: QueryDocumentSnapshot,
+    batchSize: number = 20,
+    startingRank: number
+  ): Observable<PaginatedResult> {
+    console.log('[DEBUG] LeaderboardService.getLeaderboardPaginated called', {
+      batchSize,
+      startingRank,
+      hasLastDoc: !!lastVisible
+    });
+
+    return new Observable<PaginatedResult>(observer => {
+      try {
+        const constraints: QueryConstraint[] = [
+          orderBy('rating', 'desc'),
+          orderBy('createdAt', 'asc'),
+          startAfter(lastVisible),
+          limit(batchSize)
+        ];
+
+        const q = query(collection(this.firestore, 'leaderboard'), ...constraints);
+
+        this.ngZone.run(async () => {
+          try {
+            const snapshot = await getDocs(q);
+            console.log('[DEBUG] Next batch loaded, docs count:', snapshot.docs.length);
+
+            const entries = this.mapSnapshotToEntries(snapshot.docs, startingRank);
+            const lastDoc = snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1] : null;
+            const hasMore = snapshot.docs.length === batchSize;
+
+            observer.next({ entries, lastDoc, hasMore });
+            observer.complete();
+          } catch (error) {
+            console.error('[DEBUG] Error loading next batch:', error);
+            observer.error(error);
+          }
+        });
+      } catch (error) {
+        console.error('[DEBUG] Error setting up paginated query:', error);
+        observer.error(error);
+      }
+
+      return () => {};
+    });
+  }
+
+  /**
+   * Map Firestore document snapshots to LeaderboardEntry objects with ranks
+   * @param docs Array of QueryDocumentSnapshot
+   * @param startingRank Starting rank for this batch
+   * @returns Array of LeaderboardEntry with calculated ranks
+   */
+  private mapSnapshotToEntries(
+    docs: QueryDocumentSnapshot[],
+    startingRank: number
+  ): LeaderboardEntry[] {
+    return docs.map((doc, index) => {
+      const data = doc.data() as any;
+      const rank = startingRank + index;
+      const tier = this.getTierLabel(rank);
+
+      return {
+        id: doc.id,
+        username: data.username || 'Anonymous',
+        rating: data.rating || 0,
+        accuracy: data.accuracy || 0,
+        totalTime: data.totalTime || 0,
+        correctAnswers: data.correctAnswers || 0,
+        totalQuestions: data.totalQuestions || 0,
+        timestamp: data.createdAt?.toDate?.()?.getTime() || Date.now(),
+        rank,
+        tier,
+        sessionId: data.sessionId || ''
+      };
+    });
   }
 }
