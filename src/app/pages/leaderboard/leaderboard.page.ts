@@ -1,19 +1,25 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LeaderboardService, LeaderboardEntry } from '../../core/services/leaderboard.service';
+import { LeaderboardService, LeaderboardEntry, PaginatedResult } from '../../core/services/leaderboard.service';
+import { InfiniteScrollCustomEvent, RefresherCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.page.html',
   styleUrls: ['./leaderboard.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, CommonModule]
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher, IonRefresherContent, CommonModule]
 })
 export class LeaderboardPage implements OnInit, OnDestroy {
   entries: LeaderboardEntry[] = [];
+  isLoading: boolean = false;
+  hasMoreEntries: boolean = true;
+  lastDocument: any = null;
+  totalEntriesLoaded: number = 0;
+  private batchSize: number = 20;
   private leaderboardSubscription: Subscription | null = null;
   private currentUsername: string | null = null;
 
@@ -28,21 +34,127 @@ export class LeaderboardPage implements OnInit, OnDestroy {
     // Retrieve current user from localStorage (if exists from recent competitive session)
     this.currentUsername = localStorage.getItem('lastCompetitiveUsername');
 
-    this.leaderboardSubscription = this.leaderboardService.getLeaderboard().subscribe({
-      next: entries => {
-        console.log('[DEBUG] Leaderboard received entries:', entries.length, 'entries:', entries);
-        this.entries = entries;
-      },
-      error: error => {
-        console.error('[DEBUG] Failed to load leaderboard:', error);
-      }
-    });
+    // Set responsive batch size based on viewport
+    this.batchSize = this.getBatchSize();
+
+    // Load initial batch
+    this.loadInitialBatch();
   }
 
   ngOnDestroy(): void {
     if (this.leaderboardSubscription) {
       this.leaderboardSubscription.unsubscribe();
     }
+  }
+
+  /**
+   * Load initial batch of leaderboard entries
+   */
+  private loadInitialBatch(): void {
+    console.log('[DEBUG] Loading initial batch, size:', this.batchSize);
+    this.isLoading = true;
+
+    this.leaderboardSubscription = this.leaderboardService.getLeaderboardInitial(this.batchSize).subscribe({
+      next: (result: PaginatedResult) => {
+        console.log('[DEBUG] Initial batch loaded:', result.entries.length, 'entries');
+        this.entries = result.entries;
+        this.lastDocument = result.lastDoc;
+        this.hasMoreEntries = result.hasMore;
+        this.totalEntriesLoaded = result.entries.length;
+        this.isLoading = false;
+      },
+      error: error => {
+        console.error('[DEBUG] Failed to load initial batch:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  /**
+   * Load next batch of entries when user scrolls to bottom
+   * @param event Infinite scroll event from ion-infinite-scroll
+   */
+  loadNextBatch(event: InfiniteScrollCustomEvent): void {
+    console.log('[DEBUG] Loading next batch, starting rank:', this.totalEntriesLoaded + 1);
+
+    if (!this.lastDocument || !this.hasMoreEntries) {
+      event.target.complete();
+      return;
+    }
+
+    const startingRank = this.totalEntriesLoaded + 1;
+
+    this.leaderboardService.getLeaderboardPaginated(this.lastDocument, this.batchSize, startingRank).subscribe({
+      next: (result: PaginatedResult) => {
+        console.log('[DEBUG] Next batch loaded:', result.entries.length, 'entries');
+        this.entries = [...this.entries, ...result.entries];
+        this.lastDocument = result.lastDoc;
+        this.hasMoreEntries = result.hasMore;
+        this.totalEntriesLoaded += result.entries.length;
+        event.target.complete();
+      },
+      error: error => {
+        console.error('[DEBUG] Failed to load next batch:', error);
+        event.target.complete();
+      }
+    });
+  }
+
+  /**
+   * Handle pull-to-refresh gesture
+   * @param event Refresher event from ion-refresher
+   */
+  handleRefresh(event: RefresherCustomEvent): void {
+    console.log('[DEBUG] Refreshing leaderboard');
+
+    // Reset state
+    this.entries = [];
+    this.lastDocument = null;
+    this.hasMoreEntries = true;
+    this.totalEntriesLoaded = 0;
+
+    // Unsubscribe from previous subscription
+    if (this.leaderboardSubscription) {
+      this.leaderboardSubscription.unsubscribe();
+    }
+
+    // Reload initial batch
+    this.leaderboardSubscription = this.leaderboardService.getLeaderboardInitial(this.batchSize).subscribe({
+      next: (result: PaginatedResult) => {
+        console.log('[DEBUG] Refresh complete:', result.entries.length, 'entries');
+        this.entries = result.entries;
+        this.lastDocument = result.lastDoc;
+        this.hasMoreEntries = result.hasMore;
+        this.totalEntriesLoaded = result.entries.length;
+        event.target.complete();
+      },
+      error: error => {
+        console.error('[DEBUG] Failed to refresh:', error);
+        event.target.complete();
+      }
+    });
+  }
+
+  /**
+   * Get responsive batch size based on viewport width
+   * @returns Batch size optimized for current device
+   */
+  private getBatchSize(): number {
+    const width = window.innerWidth;
+    if (width >= 1440) return 50;      // Ultra-wide desktop
+    if (width >= 1024) return 30;      // Desktop/tablet landscape
+    if (width >= 768) return 25;       // Tablet portrait
+    return 20;                          // Mobile
+  }
+
+  /**
+   * TrackBy function for ngFor optimization
+   * @param index Index of item
+   * @param entry Leaderboard entry
+   * @returns Unique identifier for entry
+   */
+  trackByEntryId(index: number, entry: LeaderboardEntry): string {
+    return entry.id;
   }
 
   /**
