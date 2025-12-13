@@ -46,6 +46,38 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // Users collection - authentication and profile management
+    match /users/{userId} {
+      // Public read access (needed for admin dashboard in Phase 4)
+      allow read: if true;
+
+      // Allow user creation with validation
+      allow create: if request.resource.data.keys().hasAll([
+                      'user_id', 'rank', 'first_name', 'last_name',
+                      'device_id', 'created_date', 'last_login'
+                    ])
+                    && request.resource.data.user_id == userId
+                    && request.resource.data.rank is string
+                    && request.resource.data.rank.size() >= 2
+                    && request.resource.data.rank.size() <= 10
+                    && request.resource.data.first_name is string
+                    && request.resource.data.first_name.size() >= 1
+                    && request.resource.data.first_name.size() <= 50
+                    && request.resource.data.last_name is string
+                    && request.resource.data.last_name.size() >= 1
+                    && request.resource.data.last_name.size() <= 50
+                    && request.resource.data.device_id is string
+                    && request.resource.data.device_id.size() >= 10;
+
+      // Allow updating specific fields only
+      allow update: if request.resource.data.diff(resource.data)
+                      .affectedKeys()
+                      .hasOnly(['last_login', 'first_name', 'last_name', 'rank']);
+
+      // No deletes allowed (data retention policy)
+      allow delete: if false;
+    }
+
     // Default deny all other collections
     match /{document=**} {
       allow read, write: if false;
