@@ -53,17 +53,18 @@ service cloud.firestore {
 
     // Users collection - authentication and profile management
     match /users/{userId} {
-      // Public read access (needed for admin dashboard in Phase 4)
-      allow read: if true;
+      // Allow reading individual user documents by ID
+      allow get: if true;
 
-      // Fix: Allow limited queries by device_id for auth initialization
+      // Fix: Allow device_id queries for auth initialization (Option 2: Secure)
       // Prevents "Missing or insufficient permissions" error in getUserByDeviceId()
-      // Security: Restricts to single-result queries on device_id field only
-      allow list: if request.query.limit <= 1
-                  && request.query.where.size() == 1;
+      // Security: Limits queries to 1 result, preventing bulk data access
+      // This supports device-based authentication without Firebase Auth
+      allow list: if request.query.limit == 1;
 
-      // Allow user creation with validation
+      // Allow user creation with strict validation
       // Supported ranks: OC, AC, LC, MC, PO2, PO1, CPO2, CPO1, CIV, UnitO, NCMR
+      // Security: Ensures user_id field matches the document ID to prevent spoofing
       allow create: if request.resource.data.keys().hasAll([
                       'user_id', 'rank', 'first_name', 'last_name',
                       'device_id', 'created_date', 'last_login'

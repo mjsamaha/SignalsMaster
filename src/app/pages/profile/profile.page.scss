@@ -63,6 +63,13 @@
     --padding-start: 0;
     --inner-padding-end: 0;
     margin-bottom: 0.5rem;
+    // Fix: Apply border to ion-item wrapper instead of ion-input
+    // This prevents Shadow DOM from blocking the native input's interactive area
+    --border-width: 1px;
+    --border-style: solid;
+    --border-color: var(--ion-color-light);
+    --border-radius: 8px;
+    margin-top: 0.5rem;
 
     &.ion-invalid {
       --border-color: var(--ion-color-danger);
@@ -76,11 +83,10 @@
   }
 
   ion-input {
+    // Fix: Only apply padding via CSS custom properties, not direct border
+    // Direct border on ion-input can block clicks/touches on the native input
     --padding-start: 0.75rem;
     --padding-end: 0.75rem;
-    border: 1px solid var(--ion-color-light);
-    border-radius: 8px;
-    margin-top: 0.5rem;
   }
 
   .error-message {
@@ -178,6 +184,17 @@
     color: var(--ion-color-medium);
     margin: 0;
   }
+}
+
+// Fix: Ensure text input is always enabled (prevents user-select: none inheritance)
+// This is critical for iOS and desktop to allow typing in form fields
+input,
+textarea,
+ion-input,
+ion-textarea {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  pointer-events: auto !important;
 }
 
 // Responsive adjustments
