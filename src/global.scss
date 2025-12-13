@@ -428,3 +428,26 @@ ion-modal {
   white-space: nowrap;
   border-width: 0;
 }
+
+// ============================================================================
+// CRITICAL FIX: Form Input Accessibility (Issue #225)
+// ============================================================================
+// Fix for iOS and desktop input blocking caused by Shadow DOM CSS conflicts
+// This ensures text inputs remain interactive regardless of parent styling
+// Reference: https://github.com/ionic-team/ionic-framework/issues/shadow-dom
+input,
+textarea,
+ion-input,
+ion-textarea {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  pointer-events: auto !important;
+}
+
+// Ensure native input elements within Shadow DOM are accessible
+ion-input::part(native),
+ion-textarea::part(native) {
+  pointer-events: auto !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
