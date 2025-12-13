@@ -11,9 +11,8 @@ import { IonicModule, AlertController } from '@ionic/angular';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { UserService } from '../../core/services/user.service';
-import { User, Rank, getAllRanks, formatUserDisplayName } from '../../core/models/user.model';
+import { User, Rank, RankDisplayNames, getAllRanks, formatUserDisplayName } from '../../core/models/user.model';
 import { UserBadgeComponent } from '../../shared/components/user-badge/user-badge.component';
-import { RankSelectorComponent } from '../../shared/components/rank-selector/rank-selector.component';
 
 @Component({
   selector: 'app-profile',
@@ -24,8 +23,7 @@ import { RankSelectorComponent } from '../../shared/components/rank-selector/ran
     CommonModule,
     IonicModule,
     ReactiveFormsModule,
-    UserBadgeComponent,
-    RankSelectorComponent
+    UserBadgeComponent
   ]
 })
 export class ProfilePage implements OnInit, OnDestroy {
@@ -290,5 +288,13 @@ export class ProfilePage implements OnInit, OnDestroy {
   hasError(controlName: string): boolean {
     const control = this.profileForm.get(controlName);
     return !!(control && control.invalid && control.touched);
+  }
+
+  /**
+   * Get display name for rank enum value
+   * Used by ion-select to show user-friendly rank names
+   */
+  getRankDisplayName(rank: Rank): string {
+    return RankDisplayNames[rank];
   }
 }

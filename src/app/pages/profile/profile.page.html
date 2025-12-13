@@ -55,7 +55,16 @@
         <!-- Rank -->
         <ion-item [class.ion-invalid]="hasError('rank')" lines="full">
           <ion-label position="stacked">Rank *</ion-label>
-          <app-rank-selector formControlName="rank"></app-rank-selector>
+          <ion-select
+            formControlName="rank"
+            interface="action-sheet"
+            placeholder="Select your rank"
+            [interfaceOptions]="{header: 'Select Your Rank', cssClass: 'rank-select-action-sheet'}"
+          >
+            <ion-select-option *ngFor="let rank of availableRanks" [value]="rank">
+              {{ getRankDisplayName(rank) }}
+            </ion-select-option>
+          </ion-select>
         </ion-item>
         <div class="error-message" *ngIf="hasError('rank')">
           {{ getErrorMessage('rank') }}

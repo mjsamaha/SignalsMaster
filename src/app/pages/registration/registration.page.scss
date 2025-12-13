@@ -59,6 +59,30 @@
     --padding-end: 0.75rem;
   }
 
+  // Native ion-select styling to match form design
+  ion-select {
+    --padding-start: 0.75rem;
+    --padding-end: 0.75rem;
+    width: 100%;
+    min-height: 44px;
+
+    &::part(placeholder) {
+      color: var(--ion-color-medium);
+      font-size: 1rem;
+    }
+
+    &::part(text) {
+      color: var(--ion-color-dark);
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    &::part(icon) {
+      color: var(--ion-color-medium);
+      font-size: 1.25rem;
+    }
+  }
+
   .error-message {
     font-size: 0.875rem;
     color: var(--ion-color-danger);
