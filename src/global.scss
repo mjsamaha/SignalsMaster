@@ -451,3 +451,38 @@ ion-textarea::part(native) {
   -webkit-user-select: text !important;
   user-select: text !important;
 }
+
+// ============================================================================
+// RANK SELECTION ACTION SHEET STYLING
+// ============================================================================
+// Global styling for rank selector action sheets (registration & profile pages)
+// Provides consistent, polished mobile UX for rank selection
+.rank-select-action-sheet {
+  .action-sheet-group {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .action-sheet-title {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: var(--ion-color-dark);
+    padding: 1rem;
+  }
+
+  .action-sheet-button {
+    font-size: 1rem;
+    text-align: left;
+
+    &.action-sheet-selected {
+      font-weight: 600;
+      color: var(--ion-color-primary);
+
+      &::after {
+        content: '✓';
+        margin-left: 0.5rem;
+        font-weight: bold;
+      }
+    }
+  }
+}

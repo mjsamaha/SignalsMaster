@@ -10,8 +10,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, ActivatedRoute } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
-import { Rank, getAllRanks } from '../../core/models/user.model';
-import { RankSelectorComponent } from '../../shared/components/rank-selector/rank-selector.component';
+import { Rank, RankDisplayNames, getAllRanks } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-registration',
@@ -21,8 +20,7 @@ import { RankSelectorComponent } from '../../shared/components/rank-selector/ran
   imports: [
     CommonModule,
     IonicModule,
-    ReactiveFormsModule,
-    RankSelectorComponent
+    ReactiveFormsModule
   ]
 })
 export class RegistrationPage implements OnInit {
@@ -178,4 +176,10 @@ export class RegistrationPage implements OnInit {
     const control = this.registrationForm.get(controlName);
     return !!(control && control.invalid && control.touched);
   }
-}
+  /**
+   * Get display name for rank enum value
+   * Used by ion-select to show user-friendly rank names
+   */
+  getRankDisplayName(rank: Rank): string {
+    return RankDisplayNames[rank];
+  }}
