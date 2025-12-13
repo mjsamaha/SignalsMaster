@@ -20,13 +20,14 @@
 
     <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">
       <!-- Rank Selection -->
-      <ion-item [class.ion-invalid]="hasError('rank')" lines="full">
+      <ion-item [class.ion-invalid]="hasError('rank')" lines="full" style="min-height: 56px;">
         <ion-label position="stacked">Rank *</ion-label>
         <ion-select
           formControlName="rank"
           interface="action-sheet"
           placeholder="Select your rank"
           [interfaceOptions]="{header: 'Select Your Rank', cssClass: 'rank-select-action-sheet'}"
+          style="min-height: 44px; width: 100%; display: block;"
         >
           <ion-select-option *ngFor="let rank of availableRanks" [value]="rank">
             {{ getRankDisplayName(rank) }}
@@ -38,7 +39,7 @@
       </div>
 
       <!-- First Name -->
-      <ion-item [class.ion-invalid]="hasError('firstName')" lines="full">
+      <ion-item [class.ion-invalid]="hasError('firstName')" lines="full" style="min-height: 56px;">
         <ion-label position="stacked">First Name *</ion-label>
         <ion-input
           formControlName="firstName"
@@ -46,6 +47,7 @@
           placeholder="Enter your first name"
           [clearInput]="true"
           autocomplete="given-name"
+          style="min-height: 44px; width: 100%; display: block;"
         ></ion-input>
       </ion-item>
       <div class="error-message" *ngIf="hasError('firstName')">
@@ -53,7 +55,7 @@
       </div>
 
       <!-- Last Name -->
-      <ion-item [class.ion-invalid]="hasError('lastName')" lines="full">
+      <ion-item [class.ion-invalid]="hasError('lastName')" lines="full" style="min-height: 56px;">
         <ion-label position="stacked">Last Name *</ion-label>
         <ion-input
           formControlName="lastName"
@@ -61,6 +63,7 @@
           placeholder="Enter your last name"
           [clearInput]="true"
           autocomplete="family-name"
+          style="min-height: 44px; width: 100%; display: block;"
         ></ion-input>
       </ion-item>
       <div class="error-message" *ngIf="hasError('lastName')">
@@ -93,10 +96,11 @@
       </div>
     </form>
   </div>
+
   <!-- TEMPORARY DEBUG BUTTON - Remove after confirming fix works -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="danger" size="small" (click)="debugFocusFix()">
-      <ion-icon name="bug"></ion-icon>
+      <ion-icon name="bug-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
