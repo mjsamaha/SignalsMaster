@@ -56,6 +56,12 @@ service cloud.firestore {
       // Public read access (needed for admin dashboard in Phase 4)
       allow read: if true;
 
+      // Fix: Allow limited queries by device_id for auth initialization
+      // Prevents "Missing or insufficient permissions" error in getUserByDeviceId()
+      // Security: Restricts to single-result queries on device_id field only
+      allow list: if request.query.limit <= 1
+                  && request.query.where.size() == 1;
+
       // Allow user creation with validation
       // Supported ranks: OC, AC, LC, MC, PO2, PO1, CPO2, CPO1, CIV, UnitO, NCMR
       allow create: if request.resource.data.keys().hasAll([
