@@ -13,39 +13,21 @@
       <p class="hero-subtitle">Answer Faster... Dominate the Fleet</p>
     </div>
 
-    <!-- Username Input & Start Button -->
+    <!-- Start Button -->
     <div class="bg-white rounded-xl shadow-lg p-6 form-card">
-      <div class="input-action-group">
-        <div class="input-wrapper">
-          <ion-item [class]="isUsernameValid ? 'valid-input' : validationMessage ? 'invalid-input' : ''">
-            <ion-label position="stacked">Username</ion-label>
-            <ion-input
-              [(ngModel)]="username"
-              (ngModelChange)="validateUsername()"
-              placeholder="Enter your username"
-              type="text"
-              maxlength="20"
-            ></ion-input>
-            <ion-text slot="helper" class="character-count">{{ getCharacterCount() }}</ion-text>
-          </ion-item>
-
-          <!-- Validation Message -->
-          <div *ngIf="validationMessage" class="validation-message error-message">
-            {{ validationMessage }}
-          </div>
-        </div>
-
-        <ion-button
-          size="large"
-          fill="solid"
-          color="warning"
-          (click)="startCompetition()"
-          [disabled]="!isUsernameValid"
-          class="start-button"
-        >
-          Start
-        </ion-button>
-      </div>
+      <ion-button
+        expand="block"
+        size="large"
+        fill="solid"
+        color="warning"
+        (click)="startCompetition()"
+        class="start-button"
+      >
+        Start Competition
+      </ion-button>
+      <p class="text-center text-gray-600 mt-4">
+        50 questions • Best time wins • Climb the leaderboard
+      </p>
     </div>
   </div>
 </ion-content>

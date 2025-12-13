@@ -1,0 +1,187 @@
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .badge-avatar {
+    position: relative;
+    flex-shrink: 0;
+
+    .avatar-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+      ion-icon {
+        color: white;
+      }
+    }
+
+    .admin-badge {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      border-radius: 50%;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .badge-info {
+    flex: 1;
+    min-width: 0;
+
+    .rank {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ion-color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.125rem;
+    }
+
+    .name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ion-color-dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .device-id {
+      font-size: 0.7rem;
+      font-family: monospace;
+      color: var(--ion-color-medium);
+      margin-top: 0.125rem;
+    }
+  }
+
+  // Small size
+  &.size-small {
+    gap: 0.5rem;
+
+    .badge-avatar {
+      .avatar-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+
+        ion-icon {
+          font-size: 1rem;
+        }
+      }
+
+      .admin-badge {
+        padding: 0.15rem;
+
+        ion-icon {
+          font-size: 0.6rem;
+        }
+      }
+    }
+
+    .badge-info {
+      .rank {
+        font-size: 0.65rem;
+      }
+
+      .name {
+        font-size: 0.875rem;
+      }
+
+      .device-id {
+        font-size: 0.65rem;
+      }
+    }
+  }
+
+  // Medium size (default)
+  &.size-medium {
+    .badge-avatar {
+      .avatar-circle {
+        width: 48px;
+        height: 48px;
+        font-size: 1.125rem;
+
+        ion-icon {
+          font-size: 1.5rem;
+        }
+      }
+
+      .admin-badge {
+        ion-icon {
+          font-size: 0.75rem;
+        }
+      }
+    }
+
+    .badge-info {
+      .rank {
+        font-size: 0.75rem;
+      }
+
+      .name {
+        font-size: 1rem;
+      }
+
+      .device-id {
+        font-size: 0.7rem;
+      }
+    }
+  }
+
+  // Large size
+  &.size-large {
+    gap: 1.25rem;
+
+    .badge-avatar {
+      .avatar-circle {
+        width: 72px;
+        height: 72px;
+        font-size: 1.75rem;
+
+        ion-icon {
+          font-size: 2.25rem;
+        }
+      }
+
+      .admin-badge {
+        bottom: 0;
+        right: 0;
+        padding: 0.35rem;
+
+        ion-icon {
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .badge-info {
+      .rank {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .name {
+        font-size: 1.25rem;
+      }
+
+      .device-id {
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+}

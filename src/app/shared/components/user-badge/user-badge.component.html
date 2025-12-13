@@ -1,0 +1,35 @@
+<div class="user-badge" [class]="'size-' + size" *ngIf="user">
+  <div class="badge-avatar">
+    <div class="avatar-circle">
+      {{ getInitials() }}
+    </div>
+    <ion-badge
+      *ngIf="showAdminBadge && isAdmin()"
+      class="admin-badge"
+      color="primary"
+    >
+      <ion-icon name="shield-checkmark-outline"></ion-icon>
+    </ion-badge>
+  </div>
+
+  <div class="badge-info">
+    <div class="rank">{{ getRankDisplay() }}</div>
+    <div class="name">{{ getDisplayName() }}</div>
+    <div class="device-id" *ngIf="showDeviceId">
+      {{ getTruncatedDeviceId() }}...
+    </div>
+  </div>
+</div>
+
+<div class="user-badge" [class]="'size-' + size" *ngIf="!user">
+  <div class="badge-avatar">
+    <div class="avatar-circle">
+      <ion-icon name="person-outline"></ion-icon>
+    </div>
+  </div>
+
+  <div class="badge-info">
+    <div class="rank">—</div>
+    <div class="name">Not logged in</div>
+  </div>
+</div>

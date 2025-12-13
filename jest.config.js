@@ -2,8 +2,8 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   roots: ['<rootDir>/src'],
-  testMatch: ['**/*.test.ts', '**/*.test.tsx'],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+  testMatch: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'mjs'],
 
   // Force sequential execution to reduce resource usage
   maxWorkers: 1,
