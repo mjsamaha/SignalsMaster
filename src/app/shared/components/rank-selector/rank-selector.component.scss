@@ -1,6 +1,14 @@
 .rank-selector {
   width: 100%;
   cursor: pointer;
+  // Fix: Remove focus outline since tabindex="-1" prevents focus (production build setFocus fix)
+  // This prevents Ionic from trying to restore focus to this element after modal dismissal
+  outline: none;
+
+  // Ensure element behaves like a button for accessibility
+  &[role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
 
   .selector-display {
     display: flex;
