@@ -114,6 +114,8 @@
         wrapper.style.left = 'auto';
         if (DEBUG) console.debug('[UserJot] widget positioned at bottom-right edge:', wrapper.style.bottom);
       }
+      // Fix: Set z-index to match trigger button and allow clicks through to underlying content
+      wrapper.style.zIndex = '9999';
       wrapper.style.pointerEvents = 'auto';
       return true;
     }
@@ -171,7 +173,9 @@
       // Minimal styles so it's visible and matches app header placement
       const style = btn.style;
       style.position = 'fixed';
-      style.zIndex = '999999998';
+      // Fix: Reduced z-index to prevent blocking form inputs (was 999999998)
+      // Still appears above most content but allows inputs to receive focus
+      style.zIndex = '9999';
       style.right = '0px';
       style.background = '#000';
       style.color = '#fff';

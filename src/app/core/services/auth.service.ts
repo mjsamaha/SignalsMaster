@@ -85,7 +85,16 @@ export class AuthService {
         // Step 4: No user ID in storage, check if device is registered
         console.log('[AuthService] No stored user, checking device registration');
         const deviceId = await this.storage.getOrCreateDeviceId();
-        const existingUser = await this.userService.getUserByDeviceId(deviceId);
+
+        // Fix: Defensive error handling for getUserByDeviceId query
+        // If query fails (permissions, network, etc), treat as new device
+        let existingUser = null;
+        try {
+          existingUser = await this.userService.getUserByDeviceId(deviceId);
+        } catch (queryError: any) {
+          console.warn('[AuthService] Could not query device registration:', queryError.message);
+          // Continue with existingUser = null (new device flow)
+        }
 
         if (existingUser) {
           // Device was registered before, restore session
@@ -141,8 +150,16 @@ export class AuthService {
       data.device_id = deviceId;
       console.log('[AuthService] Device ID for registration:', deviceId);
 
-      // Check if device already has a user
-      const existingUser = await this.userService.getUserByDeviceId(deviceId);
+      // Fix: Check if device already has a user (with defensive error handling)
+      // If query fails, proceed with registration rather than blocking user
+      let existingUser = null;
+      try {
+        existingUser = await this.userService.getUserByDeviceId(deviceId);
+      } catch (queryError: any) {
+        console.warn('[AuthService] Could not check for existing device registration:', queryError.message);
+        // Continue with registration attempt
+      }
+
       if (existingUser) {
         console.log('[AuthService] Device already registered, restoring existing user');
         await this.storage.setCurrentUser(existingUser);
