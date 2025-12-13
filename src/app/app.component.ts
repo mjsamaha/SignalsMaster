@@ -3,6 +3,16 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { App } from '@capacitor/app';
 import { AuthService } from './core/services/auth.service';
+import { addIcons } from 'ionicons';
+import {
+  home, play, trophy, list, informationCircle,
+  chatbubblesOutline, personCircleOutline,
+  listOutline, mapOutline, megaphoneOutline,
+  chevronDownOutline, informationCircleOutline,
+  personAddOutline, closeOutline, checkmarkCircle,
+  createOutline, checkmarkCircleOutline, alertCircleOutline,
+  calendarOutline, timeOutline, shieldCheckmarkOutline, logOutOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +22,21 @@ import { AuthService } from './core/services/auth.service';
 export class AppComponent implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
+
+  constructor() {
+    // Fix: Centralized icon registration (Issue #227)
+    // Registers all app icons once at startup to prevent "Could not load icon" warnings
+    // This ensures icons are available before any component tries to use them
+    addIcons({
+      home, play, trophy, list, informationCircle,
+      chatbubblesOutline, personCircleOutline,
+      listOutline, mapOutline, megaphoneOutline,
+      chevronDownOutline, informationCircleOutline,
+      personAddOutline, closeOutline, checkmarkCircle,
+      createOutline, checkmarkCircleOutline, alertCircleOutline,
+      calendarOutline, timeOutline, shieldCheckmarkOutline, logOutOutline
+    });
+  }
 
   ngOnInit() {
     this.setupAppStateListeners();

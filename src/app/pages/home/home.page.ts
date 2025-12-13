@@ -4,8 +4,6 @@ import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonButtons } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
-import { addIcons } from 'ionicons';
-import { chatbubblesOutline, personCircleOutline } from 'ionicons/icons';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
@@ -15,6 +13,7 @@ import { UserBadgeComponent } from '../../shared/components/user-badge/user-badg
  * HomePage serves as the main entry point for the app.
  * Provides navigation to practice, competitive, leaderboard, and feedback features.
  * Displays user authentication status and profile access.
+ * Icons are registered centrally in app.component.ts (Issue #227 fix)
  */
 @Component({
   selector: 'app-home',
@@ -30,13 +29,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   currentUser: User | null = null;
   isAuthenticated = false;
-
-  /**
-   * Sets up icons.
-   */
-  constructor() {
-    addIcons({ chatbubblesOutline, personCircleOutline });
-  }
 
   ngOnInit() {
     console.log('[HomePage] Initializing home page');

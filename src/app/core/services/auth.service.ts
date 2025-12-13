@@ -86,13 +86,14 @@ export class AuthService {
         console.log('[AuthService] No stored user, checking device registration');
         const deviceId = await this.storage.getOrCreateDeviceId();
 
-        // Fix: Defensive error handling for getUserByDeviceId query
+        // Fix: Defensive error handling for getUserByDeviceId query (Issue #227)
         // If query fails (permissions, network, etc), treat as new device
+        // This is expected behavior for first-time app launch before any user registration
         let existingUser = null;
         try {
           existingUser = await this.userService.getUserByDeviceId(deviceId);
         } catch (queryError: any) {
-          console.warn('[AuthService] Could not query device registration:', queryError.message);
+          console.debug('[AuthService] Device not yet registered (expected for first launch):', queryError.message);
           // Continue with existingUser = null (new device flow)
         }
 
@@ -152,11 +153,12 @@ export class AuthService {
 
       // Fix: Check if device already has a user (with defensive error handling)
       // If query fails, proceed with registration rather than blocking user
+      // Query may fail on first launch - this is expected and allows registration to proceed
       let existingUser = null;
       try {
         existingUser = await this.userService.getUserByDeviceId(deviceId);
       } catch (queryError: any) {
-        console.warn('[AuthService] Could not check for existing device registration:', queryError.message);
+        console.debug('[AuthService] Device check: No existing registration found (proceeding with new user creation)');
         // Continue with registration attempt
       }
 

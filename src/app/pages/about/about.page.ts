@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonIcon, IonAccordionGroup, IonAccordion, IonItem, IonLabel } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
-import { addIcons } from 'ionicons';
-import { chatbubblesOutline, listOutline, mapOutline, megaphoneOutline } from 'ionicons/icons';
 import { APP_VERSION } from '../../config/app-version';
 
 /**
  * AboutPage displays app information and feedback options.
  * Provides access to version info and external feedback link.
+ * Icons are registered centrally in app.component.ts (Issue #227 fix)
  */
 @Component({
   selector: 'app-about',
@@ -22,13 +21,6 @@ export class AboutPage {
    * Current app version for display.
    */
   appVersion = APP_VERSION;
-
-  /**
-   * Initializes AboutPage and sets up icons.
-   */
-  constructor() {
-    addIcons({chatbubblesOutline,listOutline,mapOutline,megaphoneOutline});
-  }
 
   /**
    * Opens feedback form in a new tab and triggers haptic feedback if available.
