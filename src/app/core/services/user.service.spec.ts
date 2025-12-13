@@ -150,6 +150,108 @@ describe('UserService', () => {
       expect(result.last_name).toBe('Doe');
     });
 
+    it('should create user with CIV rank', async () => {
+      const civData: UserRegistrationData = {
+        rank: 'CIV',
+        first_name: 'Jane',
+        last_name: 'Smith',
+        device_id: 'device-uuid-67890',
+      };
+
+      const mockDocRef = { id: 'test-civ-user' } as any;
+      const mockDocSnap = {
+        exists: () => true,
+        id: 'test-civ-user',
+        data: () => ({
+          rank: 'CIV',
+          first_name: 'Jane',
+          last_name: 'Smith',
+          device_id: 'device-uuid-67890',
+          created_date: mockTimestamp,
+          last_login: mockTimestamp,
+          user_id: 'test-civ-user',
+        }),
+      } as any;
+
+      (addDoc as jest.Mock).mockResolvedValue(mockDocRef);
+      (updateDoc as jest.Mock).mockResolvedValue(undefined);
+      (getDoc as jest.Mock).mockResolvedValue(mockDocSnap);
+
+      const result = await service.createUser(civData);
+
+      expect(result.rank).toBe('CIV');
+      expect(result.first_name).toBe('Jane');
+      expect(result.last_name).toBe('Smith');
+    });
+
+    it('should create user with UnitO rank', async () => {
+      const unitOData: UserRegistrationData = {
+        rank: 'UnitO',
+        first_name: 'Michael',
+        last_name: 'Johnson',
+        device_id: 'device-uuid-11111',
+      };
+
+      const mockDocRef = { id: 'test-unito-user' } as any;
+      const mockDocSnap = {
+        exists: () => true,
+        id: 'test-unito-user',
+        data: () => ({
+          rank: 'UnitO',
+          first_name: 'Michael',
+          last_name: 'Johnson',
+          device_id: 'device-uuid-11111',
+          created_date: mockTimestamp,
+          last_login: mockTimestamp,
+          user_id: 'test-unito-user',
+        }),
+      } as any;
+
+      (addDoc as jest.Mock).mockResolvedValue(mockDocRef);
+      (updateDoc as jest.Mock).mockResolvedValue(undefined);
+      (getDoc as jest.Mock).mockResolvedValue(mockDocSnap);
+
+      const result = await service.createUser(unitOData);
+
+      expect(result.rank).toBe('UnitO');
+      expect(result.first_name).toBe('Michael');
+      expect(result.last_name).toBe('Johnson');
+    });
+
+    it('should create user with NCMR rank', async () => {
+      const ncmrData: UserRegistrationData = {
+        rank: 'NCMR',
+        first_name: 'Sarah',
+        last_name: 'Williams',
+        device_id: 'device-uuid-22222',
+      };
+
+      const mockDocRef = { id: 'test-ncmr-user' } as any;
+      const mockDocSnap = {
+        exists: () => true,
+        id: 'test-ncmr-user',
+        data: () => ({
+          rank: 'NCMR',
+          first_name: 'Sarah',
+          last_name: 'Williams',
+          device_id: 'device-uuid-22222',
+          created_date: mockTimestamp,
+          last_login: mockTimestamp,
+          user_id: 'test-ncmr-user',
+        }),
+      } as any;
+
+      (addDoc as jest.Mock).mockResolvedValue(mockDocRef);
+      (updateDoc as jest.Mock).mockResolvedValue(undefined);
+      (getDoc as jest.Mock).mockResolvedValue(mockDocSnap);
+
+      const result = await service.createUser(ncmrData);
+
+      expect(result.rank).toBe('NCMR');
+      expect(result.first_name).toBe('Sarah');
+      expect(result.last_name).toBe('Williams');
+    });
+
     it('should throw error for invalid data', async () => {
       const invalidData: UserRegistrationData = {
         rank: '',
@@ -466,6 +568,30 @@ describe('UserService', () => {
 
       expect(result.valid).toBe(false);
       expect(result.errors).toContain('Invalid rank value');
+    });
+
+    it('should validate CIV rank', () => {
+      const civData = { ...mockRegistrationData, rank: 'CIV' };
+      const result = service.validateUserData(civData);
+
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
+
+    it('should validate UnitO rank', () => {
+      const unitOData = { ...mockRegistrationData, rank: 'UnitO' };
+      const result = service.validateUserData(unitOData);
+
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
+
+    it('should validate NCMR rank', () => {
+      const ncmrData = { ...mockRegistrationData, rank: 'NCMR' };
+      const result = service.validateUserData(ncmrData);
+
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
     });
 
     it('should catch missing first name', () => {

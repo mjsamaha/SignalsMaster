@@ -57,6 +57,7 @@ service cloud.firestore {
       allow read: if true;
 
       // Allow user creation with validation
+      // Supported ranks: OC, AC, LC, MC, PO2, PO1, CPO2, CPO1, CIV, UnitO, NCMR
       allow create: if request.resource.data.keys().hasAll([
                       'user_id', 'rank', 'first_name', 'last_name',
                       'device_id', 'created_date', 'last_login'

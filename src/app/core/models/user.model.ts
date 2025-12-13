@@ -19,6 +19,10 @@ export enum Rank {
   PO1 = 'PO1',           // Petty Officer First Class
   CPO2 = 'CPO2',           // Chief Petty Officer Second Class
   CPO1 = 'CPO1',         // Chief Petty Officer First Class
+  // Staff Ranks (for testing and production support)
+  CIV = 'CIV',           // Civilian Staff
+  UnitO = 'UnitO',       // Officer Staff
+  NCM = 'NCM',         // Non-Commissioned Member (Reserves)
 }
 
 /**
@@ -33,6 +37,9 @@ export const RankDisplayNames: Record<Rank, string> = {
   [Rank.PO1]: 'Petty Officer First Class (PO1)',
   [Rank.CPO2]: 'Chief Petty Officer Second Class (CPO2)',
   [Rank.CPO1]: 'Chief Petty Officer First Class (CPO1)',
+  [Rank.CIV]: 'Civilian Staff (CIV)',
+  [Rank.UnitO]: 'Officer Staff (UnitO)',
+  [Rank.NCM]: 'Non-Commissioned Member (NCM)',
 };
 
 /**
