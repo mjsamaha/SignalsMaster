@@ -49,7 +49,24 @@ import './zone-flags';
  */
 import 'zone.js';  // Included with Angular CLI.
 
-
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// Defensive setFocus polyfill for Ionic compatibility
+// Fix for setFocus error: Provides safe fallback when Ionic's internal focus management
+// attempts to call setFocus() on HTMLDivElement or other elements that don't support it
+// See: Ionic setFocus method is only available on ion-input, ion-textarea, etc.
+if (!(HTMLElement.prototype as any).setFocus) {
+  (HTMLElement.prototype as any).setFocus = function() {
+    // Only attempt focus if element supports the native focus method
+    if (typeof this.focus === 'function') {
+      try {
+        this.focus();
+      } catch (error) {
+        // Silently ignore focus errors in production
+        console.debug('Focus attempt failed:', error);
+      }
+    }
+  };
+}
