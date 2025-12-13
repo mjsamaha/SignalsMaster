@@ -61,9 +61,13 @@ export class UserService {
         throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
       }
 
+      // Generate user ID first
+      const userId = doc(collection(this.firestore, this.usersCollection)).id;
+
       // Prepare user document with server timestamps
       const now = serverTimestamp();
       const userDoc = {
+        user_id: userId,
         rank: data.rank.trim(),
         first_name: data.first_name.trim(),
         last_name: data.last_name.trim(),
@@ -76,14 +80,11 @@ export class UserService {
 
       // Create document in Firestore (wrapped in ngZone for change detection)
       const docRef = await this.ngZone.run(async () => {
-        const collectionRef = collection(this.firestore, this.usersCollection);
-        const ref = await addDoc(collectionRef, userDoc);
+        const ref = doc(this.firestore, this.usersCollection, userId);
+        await setDoc(ref, userDoc);
         console.log('[UserService] Document created with ID:', ref.id);
         return ref;
       });
-
-      // Add user_id to document
-      await updateDoc(docRef, { user_id: docRef.id });
 
       // Fetch the created document to get server-generated timestamps
       const createdDoc = await getDoc(docRef);
@@ -362,9 +363,8 @@ export class UserService {
       errors.push('Last name must be between 1 and 50 characters');
     }
 
-    if (!data.device_id) {
-      errors.push('Device ID is required');
-    } else if (data.device_id.length < 10) {
+    // device_id is optional - will be auto-generated if not provided
+    if (data.device_id && data.device_id.length < 10) {
       errors.push('Device ID must be at least 10 characters');
     }
 
