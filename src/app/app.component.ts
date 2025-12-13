@@ -12,7 +12,8 @@ import {
   chevronDownOutline, informationCircleOutline,
   personAddOutline, closeOutline, checkmarkCircle,
   createOutline, checkmarkCircleOutline, alertCircleOutline,
-  calendarOutline, timeOutline, shieldCheckmarkOutline, logOutOutline
+  calendarOutline, timeOutline, shieldCheckmarkOutline, logOutOutline,
+  bug, bugOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -35,7 +36,8 @@ export class AppComponent implements OnInit {
       chevronDownOutline, informationCircleOutline,
       personAddOutline, closeOutline, checkmarkCircle,
       createOutline, checkmarkCircleOutline, alertCircleOutline,
-      calendarOutline, timeOutline, shieldCheckmarkOutline, logOutOutline
+      calendarOutline, timeOutline, shieldCheckmarkOutline, logOutOutline,
+      bug, bugOutline
     });
   }
 

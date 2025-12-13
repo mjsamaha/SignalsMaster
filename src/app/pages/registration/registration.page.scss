@@ -32,14 +32,17 @@
   ion-item {
     --padding-start: 0;
     --inner-padding-end: 0;
+    --padding-end: 0;
     margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
     --border-width: 1px;
     --border-style: solid;
     --border-color: var(--ion-color-light);
     --border-radius: 8px;
-    margin-top: 0.5rem;
-    // CRITICAL FIX: Ensure ion-item doesn't block pointer events
-    --pointer-events: auto;
+    // CRITICAL: Ensure minimum height for clickability
+    --min-height: 56px;
+    // CRITICAL: Background must be visible
+    --background: var(--ion-color-light-tint, #f9f9f9);
 
     &.ion-invalid {
       --border-color: var(--ion-color-danger);
@@ -50,43 +53,68 @@
     font-weight: 500;
     color: var(--ion-color-dark);
     margin-bottom: 0.5rem;
-    // CRITICAL FIX: Ensure label doesn't block input clicks
+    // CRITICAL: Don't let label block input
     pointer-events: none;
+    position: relative;
+    z-index: 1;
   }
 
+  // CRITICAL FIX FOR PRODUCTION: Force ion-input to be visible and interactive
   ion-input {
-    --padding-start: 0.75rem;
-    --padding-end: 0.75rem;
-    // CRITICAL FIX: Force input to be interactive
-    pointer-events: auto !important;
+    --padding-start: 0.75rem !important;
+    --padding-end: 0.75rem !important;
+    --padding-top: 0.5rem !important;
+    --padding-bottom: 0.5rem !important;
+    // CRITICAL: Minimum height
+    min-height: 44px;
+    // CRITICAL: Must be visible
+    display: block !important;
+    width: 100% !important;
 
+    // Target the native input inside Shadow DOM
     &::part(native) {
-      pointer-events: auto !important;
+      background: transparent !important;
+      color: var(--ion-color-dark) !important;
+      font-size: 1rem !important;
+      min-height: 44px !important;
+      padding: 0.5rem 0.75rem !important;
     }
   }
 
+  // CRITICAL FIX FOR PRODUCTION: Force ion-select to be visible and interactive
   ion-select {
-    --padding-start: 0.75rem;
-    --padding-end: 0.75rem;
+    --padding-start: 0.75rem !important;
+    --padding-end: 0.75rem !important;
+    --padding-top: 0.5rem !important;
+    --padding-bottom: 0.5rem !important;
     width: 100%;
     min-height: 44px;
-    // CRITICAL FIX: Ensure select is clickable
-    pointer-events: auto !important;
+    // CRITICAL: Must be visible
+    display: block !important;
 
+    // Target Shadow DOM parts
     &::part(placeholder) {
-      color: var(--ion-color-medium);
-      font-size: 1rem;
+      color: var(--ion-color-medium) !important;
+      font-size: 1rem !important;
+      opacity: 0.6 !important;
     }
 
     &::part(text) {
-      color: var(--ion-color-dark);
-      font-weight: 500;
-      font-size: 1rem;
+      color: var(--ion-color-dark) !important;
+      font-weight: 500 !important;
+      font-size: 1rem !important;
     }
 
     &::part(icon) {
-      color: var(--ion-color-medium);
-      font-size: 1.25rem;
+      color: var(--ion-color-medium) !important;
+      font-size: 1.25rem !important;
+      opacity: 1 !important;
+    }
+
+    // CRITICAL: Container must be visible
+    &::part(container) {
+      display: flex !important;
+      min-height: 44px !important;
     }
   }
 
@@ -149,8 +177,8 @@
   }
 }
 
-// CRITICAL FIX: Global override for ALL form inputs
-// This ensures native inputs inside Shadow DOM are always interactive
+// CRITICAL GLOBAL FIX: Ensure all inputs are always interactive
+// This is ESSENTIAL for production builds
 input,
 textarea,
 ion-input,
@@ -160,28 +188,44 @@ ion-select {
   user-select: text !important;
   pointer-events: auto !important;
   -webkit-touch-callout: default !important;
+  // CRITICAL: Must be visible
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-// CRITICAL FIX: Target Shadow DOM parts directly
+// CRITICAL: Target Shadow DOM native inputs directly
 ion-input::part(native),
 ion-textarea::part(native) {
   pointer-events: auto !important;
   -webkit-user-select: text !important;
   user-select: text !important;
+  // CRITICAL: Must be visible and have proper dimensions
+  display: block !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: transparent !important;
 }
 
-// CRITICAL FIX: Ensure ion-select button is clickable
+// CRITICAL: Ensure ion-select button is visible and clickable
 ion-select::part(container) {
   pointer-events: auto !important;
+  display: flex !important;
+  width: 100% !important;
+  min-height: 44px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-// CRITICAL FIX: Override any Ionic CSS that might disable inputs
-.registration-form {
-  * {
-    &[aria-hidden="true"] {
-      display: none !important;
-    }
-  }
+// CRITICAL: Fix for production - ensure native elements are rendered
+.native-input,
+.native-textarea {
+  display: block !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 // Responsive adjustments
