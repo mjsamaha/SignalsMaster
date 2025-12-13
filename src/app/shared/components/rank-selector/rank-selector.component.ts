@@ -48,24 +48,32 @@ export class RankSelectorComponent implements ControlValueAccessor {
   async openRankModal() {
     if (this.disabled) return;
 
-    const modal = await this.modalController.create({
-      component: RankSelectionModal,
-      componentProps: {
-        selectedRank: this.value,
-        availableRanks: this.availableRanks
-      },
-      cssClass: 'rank-modal',
-      backdropDismiss: true,
-      showBackdrop: true
-    });
+    // Fix: Add error boundary for modal operations (Issue #227)
+    // Prevents Ionic framework setFocus errors from breaking the form
+    // Error occurs in production build during modal dismissal - this ensures graceful degradation
+    try {
+      const modal = await this.modalController.create({
+        component: RankSelectionModal,
+        componentProps: {
+          selectedRank: this.value,
+          availableRanks: this.availableRanks
+        },
+        cssClass: 'rank-modal',
+        backdropDismiss: true,
+        showBackdrop: true
+      });
 
-    await modal.present();
+      await modal.present();
 
-    const { data } = await modal.onWillDismiss();
-    if (data?.rank) {
-      this.writeValue(data.rank);
-      this.onChange(data.rank);
-      this.onTouched();
+      const { data } = await modal.onWillDismiss();
+      if (data?.rank) {
+        this.writeValue(data.rank);
+        this.onChange(data.rank);
+        this.onTouched();
+      }
+    } catch (error) {
+      console.error('[RankSelector] Modal error caught (graceful degradation):', error);
+      // Continue gracefully - don't break form functionality
     }
   }
 
