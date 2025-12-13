@@ -1,12 +1,32 @@
 <ion-header [translucent]="true" class="safe-area-horizontal">
   <ion-toolbar>
     <ion-title>SignalsMaster</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isAuthenticated" (click)="navigateToProfile()">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <!-- FIX: Removed [fullscreen]="true" to prevent iOS scrolling conflicts. -->
 <ion-content class="safe-area-padding">
   <div class="container">
+    <!-- User Authentication Section -->
+    <div class="auth-section" *ngIf="!isAuthenticated">
+      <div class="auth-card">
+        <h3>Welcome to SignalsMaster</h3>
+        <p>Create your profile to track progress and compete on the leaderboard</p>
+        <ion-button expand="block" fill="solid" (click)="navigateToRegistration()">
+          Create Profile
+        </ion-button>
+      </div>
+    </div>
+
+    <div class="user-welcome" *ngIf="isAuthenticated && currentUser">
+      <app-user-badge [user]="currentUser" size="medium"></app-user-badge>
+    </div>
+
     <!-- Hero Section -->
     <div class="text-center mb-12">
       <h2>Signals Master</h2>

@@ -1,29 +1,75 @@
 
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonButtons } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { addIcons } from 'ionicons';
-import { chatbubblesOutline } from 'ionicons/icons';
+import { chatbubblesOutline, personCircleOutline } from 'ionicons/icons';
+import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models/user.model';
+import { UserBadgeComponent } from '../../shared/components/user-badge/user-badge.component';
 
 /**
  * HomePage serves as the main entry point for the app.
  * Provides navigation to practice, competitive, leaderboard, and feedback features.
+ * Displays user authentication status and profile access.
  */
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, CommonModule]
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonButtons, CommonModule, UserBadgeComponent]
 })
-export class HomePage {
+export class HomePage implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private destroy$ = new Subject<void>();
+
+  currentUser: User | null = null;
+  isAuthenticated = false;
+
   /**
-   * Injects router for navigation and sets up icons.
+   * Sets up icons.
    */
-  constructor(private router: Router) {
-    addIcons({ chatbubblesOutline });
+  constructor() {
+    addIcons({ chatbubblesOutline, personCircleOutline });
+  }
+
+  ngOnInit() {
+    console.log('[HomePage] Initializing home page');
+
+    // Subscribe to authentication state
+    this.authService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        this.currentUser = user;
+        this.isAuthenticated = user !== null;
+        console.log('[HomePage] User state updated:', user?.user_id || 'not authenticated');
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Navigate to profile page
+   */
+  async navigateToProfile(): Promise<void> {
+    await this.triggerHaptic();
+    this.router.navigate(['/profile']);
+  }
+
+  /**
+   * Navigate to registration page
+   */
+  async navigateToRegistration(): Promise<void> {
+    await this.triggerHaptic();
+    this.router.navigate(['/registration']);
   }
 
   /**

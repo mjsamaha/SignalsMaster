@@ -1,6 +1,6 @@
 <ion-header class="safe-area-horizontal">
   <ion-toolbar>
-    <ion-title>{{ mode === 'competitive' && username ? username + ' - Competition' : 'Quiz' }}</ion-title>
+    <ion-title>{{ mode === 'competitive' && currentUser ? currentUser.first_name + ' - Competition' : 'Quiz' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button *ngIf="mode === 'practice'" (click)="restartQuiz()" fill="clear">
         <ion-icon name="refresh" slot="icon-only"></ion-icon>

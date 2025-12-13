@@ -16,10 +16,12 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CompetitiveResults } from './quiz.service';
+import { User, formatUserDisplayName } from '../models/user.model';
 
 export interface LeaderboardEntry {
   id: string;
-  username: string;
+  user_id: string;
+  username: string; // Display name for UI (formatted from user data)
   rating: number;
   accuracy: number;
   totalTime: number;
@@ -55,61 +57,59 @@ export class LeaderboardService {
 
   /**
    * Submit competitive results to Firestore
+   * @param user The authenticated user submitting the score
+   * @param results The competitive quiz results
    */
-  async submitScore(results: CompetitiveResults): Promise<SubmissionResponse> {
-    console.log('[DEBUG] LeaderboardService.submitScore called with:', results);
-    console.log('[DEBUG] submitScore - Results check:', {
-      hasResults: !!results,
-      username: results?.username,
-      finalRating: results?.finalRating,
-      sessionId: results?.sessionId
+  async submitScore(user: User, results: CompetitiveResults): Promise<SubmissionResponse> {
+    console.log('[LeaderboardService] submitScore called', {
+      userId: user.user_id,
+      finalRating: results.finalRating,
+      sessionId: results.sessionId
     });
 
     try {
-      // Validate results
+      // Validate user and results
+      if (!user || !user.user_id) {
+        console.error('[LeaderboardService] Invalid user data');
+        return { success: false, message: 'User authentication required' };
+      }
+
       if (!this.validateResults(results)) {
-        console.log('[DEBUG] Validation failed for results:', results);
+        console.error('[LeaderboardService] Validation failed for results');
         return { success: false, message: 'Invalid submission data' };
       }
 
-      console.log('[DEBUG] Validation passed, preparing document data');
+      console.log('[LeaderboardService] Validation passed, preparing document data');
 
       // Prepare document data - MUST MATCH FIRESTORE RULES SCHEMA
       const docData = {
-        username: results.username.trim(), // Ensure string, trim whitespace
-        rating: Math.round(results.finalRating), // Ensure number
-        accuracy: Math.round(results.accuracy), // Ensure number
-        totalTime: Math.round(results.totalTime), // Ensure number (seconds)
-        correctAnswers: results.correctAnswers, // number
-        totalQuestions: results.totalQuestions, // number (should be 50)
-        sessionId: results.sessionId, // string
-        createdAt: serverTimestamp() // Firestore server timestamp
+        user_id: user.user_id,
+        username: formatUserDisplayName(user), // Display name for UI
+        rating: Math.round(results.finalRating),
+        accuracy: Math.round(results.accuracy),
+        totalTime: Math.round(results.totalTime),
+        correctAnswers: results.correctAnswers,
+        totalQuestions: results.totalQuestions,
+        sessionId: results.sessionId,
+        createdAt: serverTimestamp()
       };
 
-      console.log('[DEBUG] Prepared document data:', {
+      console.log('[LeaderboardService] Prepared document data:', {
+        user_id: docData.user_id,
         username: docData.username,
         rating: docData.rating,
-        accuracy: docData.accuracy,
-        totalTime: docData.totalTime,
-        correctAnswers: docData.correctAnswers,
-        totalQuestions: docData.totalQuestions,
-        sessionId: docData.sessionId,
-        createdAt: '[serverTimestamp]'
+        sessionId: docData.sessionId
       });
 
-      console.log('[DEBUG] About to call addDoc with ngZone.run...');
+      console.log('[LeaderboardService] Submitting to Firestore...');
 
       // Wrap Firestore operation in ngZone for proper Angular change detection
       const docRef = await this.ngZone.run(async () => {
-        console.log('[DEBUG] Inside ngZone.run, calling addDoc...');
         const ref = await addDoc(collection(this.firestore, 'leaderboard'), docData);
-        console.log('[DEBUG] addDoc returned, docRef:', ref);
         return ref;
       });
 
-      console.log('[DEBUG] Document added successfully, ID:', docRef.id);
-      console.log('[DEBUG] Full document ref:', docRef.path);
-      console.log('[DEBUG] Document write completed, returning success response');
+      console.log('[LeaderboardService] Document added successfully, ID:', docRef.id);
 
       return {
         success: true,
@@ -152,10 +152,9 @@ export class LeaderboardService {
    * Get real-time leaderboard from Firestore
    */
   getLeaderboard(): Observable<LeaderboardEntry[]> {
-    console.log('[DEBUG] LeaderboardService.getLeaderboard called');
+    console.log('[LeaderboardService] getLeaderboard called');
 
     return new Observable<LeaderboardEntry[]>(observer => {
-      console.log('[DEBUG] Creating leaderboard query');
 
       try {
         // Build query constraints
@@ -165,21 +164,13 @@ export class LeaderboardService {
           limit(100)                    // Limit to 100 documents
         ];
 
-        console.log('[DEBUG] Firestore instance check:', {
-          firestoreExists: !!this.firestore,
-          type: typeof this.firestore
-        });
-
         const q = query(collection(this.firestore, 'leaderboard'), ...constraints);
-
-        console.log('[DEBUG] Query created, setting up listener');
-        console.log('[DEBUG] Calling onSnapshot');
 
         // onSnapshot runs in the correct injection context when called here
         const unsubscribe = onSnapshot(
           q,
           (snapshot) => {
-            console.log('[DEBUG] onSnapshot fired, docs count:', snapshot.docs.length);
+            console.log('[LeaderboardService] Fetched', snapshot.docs.length, 'entries');
 
             try {
               const entries: LeaderboardEntry[] = snapshot.docs.map((doc, index) => {
@@ -189,6 +180,7 @@ export class LeaderboardService {
 
                 return {
                   id: doc.id,
+                  user_id: data.user_id || '',
                   username: data.username || 'Anonymous',
                   rating: data.rating || 0,
                   accuracy: data.accuracy || 0,
@@ -201,9 +193,6 @@ export class LeaderboardService {
                   sessionId: data.sessionId || ''
                 };
               });
-
-              console.log('[DEBUG] Processed entries:', entries.length,
-                entries.length > 0 ? entries[0] : 'no entries');
 
               // Emit data back to Angular zone for change detection
               this.ngZone.run(() => observer.next(entries));
@@ -236,8 +225,8 @@ export class LeaderboardService {
    * Validate competitive results before submission
    */
   private validateResults(results: CompetitiveResults): boolean {
-    console.log('[DEBUG] Validating results:', {
-      username: results?.username,
+    console.log('[LeaderboardService] Validating results:', {
+      userId: results?.userId,
       finalRating: results?.finalRating,
       accuracy: results?.accuracy,
       totalTime: results?.totalTime,
@@ -245,17 +234,15 @@ export class LeaderboardService {
     });
 
     if (!results) {
-      console.log('[DEBUG] Validation: results is null/undefined');
+      console.error('[LeaderboardService] Validation: results is null/undefined');
       return false;
     }
 
-    // Username validation
-    const usernameValid = results.username && typeof results.username === 'string' &&
-                          results.username.length >= 3 && results.username.length <= 20;
-    console.log('[DEBUG] Validation: username =', results.username,
-                '(length:', results.username?.length || 0, 'valid:', usernameValid + ')');
-    if (!usernameValid) {
-      console.log('[DEBUG] Validation failed: invalid username');
+    // UserId validation
+    const userIdValid = results.userId && typeof results.userId === 'string' &&
+                        results.userId.length > 0;
+    if (!userIdValid) {
+      console.error('[LeaderboardService] Validation failed: invalid userId');
       return false;
     }
 
@@ -277,21 +264,19 @@ export class LeaderboardService {
 
     // Time validation
     const timeValid = typeof results.totalTime === 'number' && results.totalTime > 0;
-    console.log('[DEBUG] Validation: totalTime =', results.totalTime, '(valid:', timeValid + ')');
     if (!timeValid) {
-      console.log('[DEBUG] Validation failed: invalid totalTime');
+      console.error('[LeaderboardService] Validation failed: invalid totalTime');
       return false;
     }
 
     // Session ID validation
     const sessionIdValid = results.sessionId && typeof results.sessionId === 'string' && results.sessionId.length > 0;
-    console.log('[DEBUG] Validation: sessionId exists =', sessionIdValid);
     if (!sessionIdValid) {
-      console.log('[DEBUG] Validation failed: invalid sessionId');
+      console.error('[LeaderboardService] Validation failed: invalid sessionId');
       return false;
     }
 
-    console.log('[DEBUG] Validation passed for all fields');
+    console.log('[LeaderboardService] Validation passed for all fields');
     return true;
   }
 
@@ -419,6 +404,7 @@ export class LeaderboardService {
 
       return {
         id: doc.id,
+        user_id: data.user_id || '',
         username: data.username || 'Anonymous',
         rating: data.rating || 0,
         accuracy: data.accuracy || 0,

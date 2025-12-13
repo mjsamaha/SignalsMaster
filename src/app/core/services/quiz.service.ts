@@ -91,7 +91,7 @@ export interface PracticeSummary {
 export interface CompetitiveSession {
   sessionId: string;
   mode: 'competitive';
-  username: string;
+  userId: string;
   startTime: Date;
   endTime: Date | null;
   currentQuestionIndex: number;
@@ -101,8 +101,8 @@ export interface CompetitiveSession {
 }
 
 export interface CompetitiveResults {
-  username: string;
-  totalQuestions: 50;
+  userId: string;
+  totalQuestions: number;
   correctAnswers: number;
   accuracy: number;
   totalTime: number;
@@ -554,7 +554,7 @@ export class QuizService {
   }
 
   // Competitive Session Methods
-  initializeCompetitiveSession(username: string): Observable<void> {
+  initializeCompetitiveSession(userId: string): Observable<void> {
     return new Observable(observer => {
       this.flagService.getAllFlags().subscribe(flags => {
         this.allFlags = flags;
@@ -563,7 +563,7 @@ export class QuizService {
         const session: CompetitiveSession = {
           sessionId: `competitive-${Date.now()}`,
           mode: 'competitive',
-          username,
+          userId,
           startTime: new Date(),
           endTime: null,
           currentQuestionIndex: 0,
@@ -748,7 +748,7 @@ export class QuizService {
       exists: !!session,
       endTimeSet: !!session?.endTime,
       currentQuestionIndex: session?.currentQuestionIndex,
-      username: session?.username,
+      userId: session?.userId,
       sessionId: session?.sessionId
     });
 
@@ -764,7 +764,7 @@ export class QuizService {
     const rating = this.calculateCompetitiveRating(accuracy, totalTime);
 
     const result: CompetitiveResults = {
-      username: session.username,
+      userId: session.userId,
       totalQuestions: 50,
       correctAnswers: session.currentScore,
       accuracy,
@@ -780,7 +780,7 @@ export class QuizService {
     };
 
     console.log('[DEBUG] getCompetitiveResults returning:', {
-      username: result.username,
+      userId: result.userId,
       finalRating: result.finalRating,
       accuracy: result.accuracy,
       totalTime: result.totalTime,

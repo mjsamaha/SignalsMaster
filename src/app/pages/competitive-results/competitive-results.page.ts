@@ -4,6 +4,8 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIco
 import { CommonModule } from '@angular/common';
 import { CompetitiveResults } from '../../core/services/quiz.service';
 import { LeaderboardService } from '../../core/services/leaderboard.service';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models/user.model';
 /**
  * CompetitiveResultsPage displays the results of a competitive quiz session.
  * Handles result display, submission, and navigation logic.
@@ -55,18 +57,33 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
   Math = Math;
 
   /**
-   * Injects route, router, and leaderboard service for navigation and data.
+   * Authenticated user for score submission.
+   */
+  currentUser: User | null = null;
+
+  /**
+   * Injects route, router, leaderboard service, and auth service.
    */
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private leaderboardService: LeaderboardService
+    private leaderboardService: LeaderboardService,
+    private authService: AuthService
   ) {}
 
   /**
-   * Initializes results from router navigation state or redirects if missing.
+   * Initializes results from router navigation state and gets authenticated user.
+   * Redirects if results or user are missing.
    */
   ngOnInit() {
+    // Get authenticated user
+    this.currentUser = this.authService.getCurrentUser();
+    if (!this.currentUser) {
+      console.error('[CompetitiveResultsPage] No authenticated user');
+      this.router.navigate(['/registration']);
+      return;
+    }
+
     // Extract results from router navigation state
     const navigation = this.router.getCurrentNavigation();
 
@@ -185,7 +202,10 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
   }
 
   async submitScore(): Promise<void> {
-    if (!this.results || this.isSubmitting) {
+    if (!this.results || this.isSubmitting || !this.currentUser) {
+      if (!this.currentUser) {
+        console.error('[CompetitiveResultsPage] Cannot submit score without authenticated user');
+      }
       return;
     }
 
@@ -193,7 +213,7 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
     this.submissionMessage = '';
 
     try {
-      const response = await this.leaderboardService.submitScore(this.results);
+      const response = await this.leaderboardService.submitScore(this.currentUser, this.results);
       this.isSubmitting = false;
 
       if (response.success) {
@@ -217,6 +237,10 @@ export class CompetitiveResultsPage implements OnInit, AfterViewInit {
 
   viewLeaderboard(): void {
     this.router.navigate(['/tabs/leaderboard']);
+  }
+
+  goToLeaderboard(): void {
+    this.viewLeaderboard();
   }
 
   goHome(): void {

@@ -12,6 +12,7 @@ import { environment } from './environments/environment';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { PlatformService } from './app/core/services/platform.service';
+import { AuthService } from './app/core/services/auth.service';
 
 function initializePlatform(platformService: PlatformService) {
   return async () => {
@@ -93,6 +94,14 @@ bootstrapApplication(AppComponent, {
       provide: APP_INITIALIZER,
       useFactory: initializePlatform,
       deps: [PlatformService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (authService: AuthService) => {
+        return () => authService.initializeAuth();
+      },
+      deps: [AuthService],
       multi: true
     }
   ],

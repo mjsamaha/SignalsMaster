@@ -1,0 +1,87 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Create Your Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Create Your Profile</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="registration-container">
+    <div class="welcome-section">
+      <ion-icon name="person-add-outline" class="welcome-icon"></ion-icon>
+      <h2>Welcome to SignalsMaster</h2>
+      <p>Create your profile to get started with training and assessments</p>
+    </div>
+
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">
+      <!-- Rank Selection -->
+      <ion-item [class.ion-invalid]="hasError('rank')" lines="full">
+        <ion-label position="stacked">Rank *</ion-label>
+        <app-rank-selector formControlName="rank"></app-rank-selector>
+      </ion-item>
+      <div class="error-message" *ngIf="hasError('rank')">
+        {{ getErrorMessage('rank') }}
+      </div>
+
+      <!-- First Name -->
+      <ion-item [class.ion-invalid]="hasError('firstName')" lines="full">
+        <ion-label position="stacked">First Name *</ion-label>
+        <ion-input
+          formControlName="firstName"
+          type="text"
+          placeholder="Enter your first name"
+          [clearInput]="true"
+          autocomplete="given-name"
+        ></ion-input>
+      </ion-item>
+      <div class="error-message" *ngIf="hasError('firstName')">
+        {{ getErrorMessage('firstName') }}
+      </div>
+
+      <!-- Last Name -->
+      <ion-item [class.ion-invalid]="hasError('lastName')" lines="full">
+        <ion-label position="stacked">Last Name *</ion-label>
+        <ion-input
+          formControlName="lastName"
+          type="text"
+          placeholder="Enter your last name"
+          [clearInput]="true"
+          autocomplete="family-name"
+        ></ion-input>
+      </ion-item>
+      <div class="error-message" *ngIf="hasError('lastName')">
+        {{ getErrorMessage('lastName') }}
+      </div>
+
+      <!-- Error Message -->
+      <ion-card *ngIf="errorMessage" class="error-card" color="danger">
+        <ion-card-content>
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          {{ errorMessage }}
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Submit Button -->
+      <ion-button
+        expand="block"
+        type="submit"
+        [disabled]="isLoading || registrationForm.invalid"
+        class="submit-button"
+      >
+        <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+        <span *ngIf="!isLoading">Create Profile</span>
+      </ion-button>
+
+      <!-- Info Note -->
+      <div class="info-note">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <p>Your profile will be saved to this device. All fields are required.</p>
+      </div>
+    </form>
+  </div>
+</ion-content>

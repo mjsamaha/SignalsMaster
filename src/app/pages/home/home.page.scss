@@ -44,6 +44,96 @@ ion-content {
 }
 
 // ============================================================================
+// AUTHENTICATION SECTION
+// ============================================================================
+
+.auth-section {
+  margin-bottom: var(--spacing-2xl);
+
+  .auth-card {
+    background: linear-gradient(135deg, var(--color-navy-500) 0%, var(--color-navy-600) 100%);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-2xl);
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 16px rgba(10, 42, 67, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-md);
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      font-size: 1rem;
+      opacity: 0.95;
+      margin-bottom: var(--spacing-lg);
+      line-height: var(--line-height-relaxed);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    ion-button {
+      --background: white;
+      --color: var(--color-navy-500);
+      --border-radius: var(--border-radius-md);
+      font-weight: var(--font-weight-semibold);
+      height: 52px;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+      text-transform: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all var(--transition-base);
+
+      &:hover {
+        --background: var(--color-gold-500);
+        --color: var(--color-navy-500);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding: var(--spacing-xl);
+
+      h3 {
+        font-size: 1.25rem;
+      }
+
+      p {
+        font-size: 0.9375rem;
+      }
+
+      ion-button {
+        height: 48px;
+        font-size: 0.9375rem;
+      }
+    }
+
+    @media (max-width: 375px) {
+      padding: var(--spacing-lg);
+    }
+  }
+}
+
+.user-welcome {
+  background: var(--ion-color-light);
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+}
+
+// ============================================================================
 // HERO SECTION
 // ============================================================================
 

@@ -1,0 +1,6 @@
+<div class="rank-selector" (click)="openRankModal()">
+  <div class="selector-display" [class.disabled]="disabled" [class.has-value]="value">
+    <span class="display-text">{{ getDisplayText() }}</span>
+    <ion-icon name="chevron-down-outline" class="chevron-icon"></ion-icon>
+  </div>
+</div>

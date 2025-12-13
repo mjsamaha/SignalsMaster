@@ -6,6 +6,8 @@ import { QuizService, Question, AnswerOption, QuizResults, QuizState, PracticeSe
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models/user.model';
 /**
  * QuizPage manages the main quiz flow for both practice and competitive modes.
  * Handles question display, answer selection, feedback, timing, and results.
@@ -39,9 +41,9 @@ export class QuizPage implements OnInit, OnDestroy {
    */
   questionCount: number = 10;
   /**
-   * Username for competitive mode.
+   * Authenticated user for competitive mode.
    */
-  username: string = '';
+  currentUser: User | null = null;
 
   /**
    * Current question being displayed.
@@ -117,30 +119,36 @@ export class QuizPage implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   /**
-   * Injects route and router for navigation and quiz service for data.
+   * Injects route, router, quiz service, and auth service.
    */
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private quizService: QuizService
+    private quizService: QuizService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    // Get route parameters - handle new format: /quiz/competitive/username
+    // Get route parameters - handle format: /quiz/:mode
     const urlSegments = this.route.snapshot.url;
     const firstSegment = urlSegments[0]?.path;
 
-    if (firstSegment === 'competitive' && urlSegments.length > 1) {
-      // Competitive mode: /quiz/competitive/username
+    if (firstSegment === 'competitive') {
       this.mode = 'competitive';
-      this.username = urlSegments[1]?.path || '';
       this.questionCount = 50; // Fixed for competitive mode
+
+      // Get authenticated user for competitive mode
+      this.currentUser = this.authService.getCurrentUser();
+      if (!this.currentUser) {
+        console.error('[QuizPage] No authenticated user for competitive mode');
+        this.router.navigate(['/registration']);
+        return;
+      }
     } else {
       // Practice mode: check query params for compatibility
       const params = this.route.snapshot.queryParams;
       this.mode = params['mode'] || 'practice';
       this.questionCount = parseInt(params['count'], 10) || 10;
-      this.username = params['username'] || ''; // For backward compatibility
     }
 
     if (this.mode === 'practice') {
@@ -189,15 +197,14 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   private initializeCompetitiveMode() {
-    // Validate username
-    if (!this.username || this.username.trim().length === 0) {
-      console.error('No username provided for competitive mode');
-      this.router.navigate(['/best-signaller']);
+    // Validate user is authenticated
+    if (!this.currentUser) {
+      console.error('[QuizPage] No authenticated user for competitive mode');
+      this.router.navigate(['/registration']);
       return;
     }
 
-    // Store username in localStorage for leaderboard current user highlighting
-    localStorage.setItem('lastCompetitiveUsername', this.username);
+    console.log('[QuizPage] Initializing competitive session for user:', this.currentUser.user_id);
 
     // Subscribe to current question
     const questionSub = this.quizService.getCurrentQuestion().subscribe(question => {
@@ -219,8 +226,8 @@ export class QuizPage implements OnInit, OnDestroy {
     });
     this.subscriptions.push(questionSub);
 
-    // Initialize competitive session
-    this.quizService.initializeCompetitiveSession(this.username).subscribe({
+    // Initialize competitive session with userId
+    this.quizService.initializeCompetitiveSession(this.currentUser.user_id).subscribe({
       next: () => {
         // Timer updates every 250ms (optimized for battery life)
         this.timerInterval = setInterval(() => {

@@ -65,12 +65,13 @@ export interface UserProfile {
 /**
  * User registration data submitted from registration form.
  * Does not include timestamps (generated server-side).
+ * device_id is optional - will be auto-generated if not provided.
  */
 export interface UserRegistrationData {
   rank: string;
   first_name: string;
   last_name: string;
-  device_id: string;
+  device_id?: string;
 }
 
 /**
