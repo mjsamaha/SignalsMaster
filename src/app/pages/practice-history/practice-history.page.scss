@@ -1,0 +1,413 @@
+// ============================================================================
+// PRACTICE HISTORY PAGE - PROGRESS TRACKING UI
+// ============================================================================
+// Features:
+// - Statistics summary card
+// - Performance tier-based card colors (Excellent/Good/Fair/Poor)
+// - Rank badges with each history entry
+// - Sort controls (Recent/Accuracy/Score)
+// - Infinite scroll pagination
+// - Empty state for first-time users
+// ============================================================================
+
+@use '../../theme/mixins' as *;
+
+ion-header {
+  @include unified-header;
+}
+
+ion-content {
+  --background: var(--color-sky-50);
+}
+
+// ============================================================================
+// CONTAINER & LAYOUT
+// ============================================================================
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+  padding-bottom: var(--spacing-xl);
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
+  }
+}
+
+// ============================================================================
+// STATISTICS SUMMARY CARD
+// ============================================================================
+
+.stats-card {
+  background: linear-gradient(135deg, var(--color-navy-500) 0%, var(--color-navy-600) 100%);
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.4s ease-in-out;
+
+  .stats-title {
+    font-size: 20px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+
+    @media (max-width: 667px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-sm);
+    }
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+
+    .stat-value {
+      display: block;
+      font-size: 24px;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-white);
+      margin-bottom: var(--spacing-xs);
+
+      @media (max-width: 667px) {
+        font-size: 20px;
+      }
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 12px;
+      font-weight: var(--font-weight-medium);
+      color: rgba(255, 255, 255, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+// ============================================================================
+// SORT CONTROLS
+// ============================================================================
+
+.sort-controls {
+  margin-bottom: var(--spacing-lg);
+
+  ion-segment {
+    --background: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    ion-segment-button {
+      --indicator-color: var(--color-navy-500);
+      --color: var(--color-gray-600);
+      --color-checked: var(--color-white);
+      font-size: 14px;
+      font-weight: var(--font-weight-semibold);
+      text-transform: none;
+      min-height: 40px;
+    }
+  }
+}
+
+// ============================================================================
+// EMPTY STATE
+// ============================================================================
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: var(--spacing-2xl);
+  text-align: center;
+
+  .empty-icon {
+    font-size: 72px;
+    margin-bottom: var(--spacing-lg);
+    animation: bounce 2s infinite;
+  }
+
+  .empty-headline {
+    font-size: 24px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-navy-500);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .empty-subheading {
+    font-size: 16px;
+    color: var(--color-gray-600);
+    line-height: 1.6;
+    max-width: 400px;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .btn-start-quiz {
+    --background: var(--color-navy-500);
+    --color: var(--color-white);
+    --padding-start: 32px;
+    --padding-end: 32px;
+    --border-radius: 8px;
+    font-size: 16px;
+    font-weight: var(--font-weight-bold);
+    height: 48px;
+    text-transform: none;
+
+    .btn-icon {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      --background: var(--color-navy-600);
+    }
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+// ============================================================================
+// HISTORY GRID - COMPACT CARDS WITH TIER COLORS
+// ============================================================================
+
+.history-grid {
+  display: grid;
+  gap: var(--spacing-md);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.history-card {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  border-left: 4px solid transparent;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  // Performance tier colors (border-left accent)
+  &[data-tier="excellent"] {
+    border-left-color: var(--color-excellent);
+
+    .performance-label {
+      background: linear-gradient(135deg, var(--color-excellent) 0%, var(--color-excellent-light) 100%);
+    }
+  }
+
+  &[data-tier="good"] {
+    border-left-color: var(--color-good);
+
+    .performance-label {
+      background: linear-gradient(135deg, var(--color-good) 0%, var(--color-good-light) 100%);
+    }
+  }
+
+  &[data-tier="fair"] {
+    border-left-color: var(--color-fair);
+
+    .performance-label {
+      background: linear-gradient(135deg, var(--color-fair) 0%, var(--color-fair-light) 100%);
+    }
+  }
+
+  &[data-tier="poor"] {
+    border-left-color: var(--color-poor);
+
+    .performance-label {
+      background: linear-gradient(135deg, var(--color-poor) 0%, var(--color-poor-light) 100%);
+    }
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+
+    .date-info {
+      .date-text {
+        font-size: 14px;
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-gray-700);
+      }
+    }
+
+    .rank-badge {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+
+      .rank-stars {
+        font-size: 14px;
+      }
+
+      .rank-label {
+        font-size: 12px;
+        font-weight: var(--font-weight-bold);
+        color: var(--color-navy-500);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+
+  .performance-label {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .score-section {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+
+    .score-main {
+      font-size: 36px;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-navy-500);
+      line-height: 1;
+
+      .score-divider {
+        margin: 0 4px;
+        color: var(--color-gray-400);
+      }
+
+      .score-total {
+        color: var(--color-gray-500);
+      }
+    }
+
+    .score-subtitle {
+      font-size: 12px;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: var(--spacing-xs);
+    }
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-gray-200);
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      .stat-icon {
+        font-size: 14px;
+      }
+
+      .stat-text {
+        font-size: 13px;
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-gray-700);
+      }
+    }
+
+    .stat-divider {
+      color: var(--color-gray-400);
+      font-size: 12px;
+    }
+  }
+}
+
+// ============================================================================
+// END OF LIST MESSAGE
+// ============================================================================
+
+.end-of-list-message {
+  text-align: center;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+
+  .end-icon {
+    font-size: 48px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .end-text {
+    font-size: 16px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-navy-500);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .end-subtext {
+    font-size: 14px;
+    color: var(--color-gray-600);
+  }
+}
+
+// ============================================================================
+// LOADING STATE
+// ============================================================================
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: var(--spacing-md);
+
+  ion-spinner {
+    --color: var(--color-navy-500);
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--color-gray-600);
+  }
+}
+
+// ============================================================================
+// ANIMATIONS
+// ============================================================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

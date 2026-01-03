@@ -12,9 +12,19 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  query,
+  where,
+  orderBy,
+  limit,
+  QueryConstraint,
+  getDocs,
+  startAfter,
+  QueryDocumentSnapshot,
 } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import {
+  PracticeResult,
   PracticeResultSubmission,
   validatePracticeResultSubmission,
   practiceSummaryToSubmission,
@@ -27,6 +37,25 @@ export interface PracticeSubmissionResponse {
   success: boolean;
   message: string;
   resultId?: string; // Firestore document ID if successful
+}
+
+/**
+ * Paginated result structure for history queries.
+ * Used for infinite scroll implementation.
+ */
+export interface PracticePaginatedResult {
+  results: PracticeResult[];
+  lastDoc: QueryDocumentSnapshot | null;
+  hasMore: boolean;
+}
+
+/**
+ * Options for querying practice history.
+ */
+export interface PracticeHistoryOptions {
+  limit?: number;
+  sortBy?: 'completed_at' | 'accuracy' | 'score';
+  sortOrder?: 'desc' | 'asc';
 }
 
 @Injectable({
@@ -175,5 +204,182 @@ export class PracticeResultsService {
         message: 'Failed to save practice results. Please try again.'
       };
     }
+  }
+
+  /**
+   * Get initial batch of practice history for a user with pagination.
+   * Follows LeaderboardService pattern for consistent pagination implementation.
+   *
+   * @param userId The user's unique identifier
+   * @param options Query options (limit, sort field, sort order)
+   * @returns Observable with practice results, last document, and hasMore flag
+   */
+  getPracticeHistoryInitial(
+    userId: string,
+    options: PracticeHistoryOptions = {}
+  ): Observable<PracticePaginatedResult> {
+    const {
+      limit: limitCount = 20,
+      sortBy = 'completed_at',
+      sortOrder = 'desc'
+    } = options;
+
+    console.log('[PracticeResultsService] getPracticeHistoryInitial called', {
+      userId,
+      limit: limitCount,
+      sortBy,
+      sortOrder
+    });
+
+    return new Observable<PracticePaginatedResult>(observer => {
+      try {
+        // Validate userId
+        if (!userId || typeof userId !== 'string' || userId.length === 0) {
+          console.error('[PracticeResultsService] Invalid userId:', userId);
+          observer.error(new Error('Invalid user ID'));
+          return () => {};
+        }
+
+        // Build query constraints
+        const constraints: QueryConstraint[] = [
+          where('user_id', '==', userId),
+          orderBy(sortBy, sortOrder),
+          limit(limitCount)
+        ];
+
+        const q = query(
+          collection(this.firestore, this.collectionName),
+          ...constraints
+        );
+
+        // Use getDocs for one-time fetch (not real-time)
+        this.ngZone.run(async () => {
+          try {
+            const snapshot = await getDocs(q);
+            console.log('[PracticeResultsService] Initial batch loaded:', snapshot.docs.length, 'results');
+
+            const results = this.mapSnapshotToResults(snapshot.docs);
+            const lastDoc = snapshot.docs.length > 0
+              ? snapshot.docs[snapshot.docs.length - 1]
+              : null;
+            const hasMore = snapshot.docs.length === limitCount;
+
+            observer.next({ results, lastDoc, hasMore });
+            observer.complete();
+          } catch (error) {
+            console.error('[PracticeResultsService] Error loading initial batch:', error);
+            observer.error(error);
+          }
+        });
+      } catch (error) {
+        console.error('[PracticeResultsService] Error setting up initial query:', error);
+        observer.error(error);
+      }
+
+      return () => {};
+    });
+  }
+
+  /**
+   * Get next batch of practice history with pagination.
+   * Uses startAfter cursor for efficient pagination.
+   *
+   * @param userId The user's unique identifier
+   * @param lastVisible Last document from previous batch
+   * @param options Query options (limit, sort field, sort order)
+   * @returns Observable with practice results, last document, and hasMore flag
+   */
+  getPracticeHistoryPaginated(
+    userId: string,
+    lastVisible: QueryDocumentSnapshot,
+    options: PracticeHistoryOptions = {}
+  ): Observable<PracticePaginatedResult> {
+    const {
+      limit: limitCount = 20,
+      sortBy = 'completed_at',
+      sortOrder = 'desc'
+    } = options;
+
+    console.log('[PracticeResultsService] getPracticeHistoryPaginated called', {
+      userId,
+      limit: limitCount,
+      sortBy,
+      sortOrder
+    });
+
+    return new Observable<PracticePaginatedResult>(observer => {
+      try {
+        // Validate inputs
+        if (!userId || !lastVisible) {
+          console.error('[PracticeResultsService] Invalid pagination parameters');
+          observer.error(new Error('Invalid pagination parameters'));
+          return () => {};
+        }
+
+        // Build query constraints with startAfter cursor
+        const constraints: QueryConstraint[] = [
+          where('user_id', '==', userId),
+          orderBy(sortBy, sortOrder),
+          startAfter(lastVisible),
+          limit(limitCount)
+        ];
+
+        const q = query(
+          collection(this.firestore, this.collectionName),
+          ...constraints
+        );
+
+        this.ngZone.run(async () => {
+          try {
+            const snapshot = await getDocs(q);
+            console.log('[PracticeResultsService] Next batch loaded:', snapshot.docs.length, 'results');
+
+            const results = this.mapSnapshotToResults(snapshot.docs);
+            const lastDoc = snapshot.docs.length > 0
+              ? snapshot.docs[snapshot.docs.length - 1]
+              : null;
+            const hasMore = snapshot.docs.length === limitCount;
+
+            observer.next({ results, lastDoc, hasMore });
+            observer.complete();
+          } catch (error) {
+            console.error('[PracticeResultsService] Error loading next batch:', error);
+            observer.error(error);
+          }
+        });
+      } catch (error) {
+        console.error('[PracticeResultsService] Error setting up paginated query:', error);
+        observer.error(error);
+      }
+
+      return () => {};
+    });
+  }
+
+  /**
+   * Map Firestore snapshot documents to PracticeResult objects.
+   * Helper method for consistent data transformation.
+   *
+   * @param docs Array of Firestore query document snapshots
+   * @returns Array of typed PracticeResult objects
+   */
+  private mapSnapshotToResults(docs: QueryDocumentSnapshot[]): PracticeResult[] {
+    return docs.map(doc => {
+      const data = doc.data() as any;
+
+      return {
+        result_id: doc.id,
+        user_id: data.user_id || '',
+        rank: data.rank || 'SEAMAN',
+        score: data.score || 0,
+        total_questions: data.total_questions || 0,
+        accuracy: data.accuracy || 0,
+        total_time: data.total_time || 0,
+        average_time: data.average_time || 0,
+        session_id: data.session_id || '',
+        completed_at: data.completed_at,
+        created_at: data.created_at
+      };
+    });
   }
 }

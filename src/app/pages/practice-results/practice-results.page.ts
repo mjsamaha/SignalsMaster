@@ -227,6 +227,10 @@ export class PracticeResultsPage implements OnInit {
     this.router.navigate(['/tabs/practice-mode']);
   }
 
+  viewHistory(): void {
+    this.router.navigate(['/practice-history']);
+  }
+
   goHome(): void {
     this.router.navigate(['/tabs/home']);
   }
