@@ -21,7 +21,6 @@ import {
   startAfter,
   QueryDocumentSnapshot,
 } from '@angular/fire/firestore';
-import { Auth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import {
@@ -64,13 +63,11 @@ export interface PracticeHistoryOptions {
 })
 export class PracticeResultsService {
   private readonly firestore = inject(Firestore);
-  private readonly auth = inject(Auth);
   private readonly ngZone = inject(NgZone);
   private readonly collectionName = 'practice_results';
 
   constructor() {
     console.log('[PracticeResultsService] Initialized with Firestore:', !!this.firestore);
-    console.log('[PracticeResultsService] Auth instance:', !!this.auth);
   }
 
   /**
@@ -100,34 +97,9 @@ export class PracticeResultsService {
     });
 
     try {
-      // Check Firebase Auth state FIRST
-      const currentAuthUser = this.auth.currentUser;
-      console.log('[PracticeResultsService] Firebase Auth state:', {
-        authUser: currentAuthUser ? currentAuthUser.uid : 'NULL',
-        userIdFromParam: user.user_id,
-        match: currentAuthUser?.uid === user.user_id
-      });
-
-      if (!currentAuthUser) {
-        console.error('[PracticeResultsService] Firebase Auth user is NULL');
-        return {
-          success: false,
-          message: 'Authentication error - please log in again'
-        };
-      }
-
-      if (currentAuthUser.uid !== user.user_id) {
-        console.error('[PracticeResultsService] Auth UID mismatch!', {
-          authUid: currentAuthUser.uid,
-          paramUserId: user.user_id
-        });
-        return {
-          success: false,
-          message: 'Authentication mismatch - please log in again'
-        };
-      }
-
-      // Validate user
+      // Validate user parameter (auth handled by AuthService at page level)
+      // Note: Firestore security rules will enforce auth validation server-side
+      // by checking request.auth.uid matches user_id in document
       if (!user || !user.user_id) {
         console.error('[PracticeResultsService] Invalid user data');
         return {
@@ -174,10 +146,7 @@ export class PracticeResultsService {
       // Log COMPLETE document data for debugging
       console.log('[PracticeResultsService] Prepared COMPLETE document data:', docData);
       console.log('[PracticeResultsService] Document keys:', Object.keys(docData));
-      console.log('[PracticeResultsService] Auth status:', {
-        hasAuth: !!this.firestore.app.options,
-        firestoreConfigured: !!this.firestore
-      });
+      console.log('[PracticeResultsService] Firestore configured:', !!this.firestore);
 
       console.log('[PracticeResultsService] Submitting to Firestore...');
 
