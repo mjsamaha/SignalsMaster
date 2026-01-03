@@ -27,3 +27,12 @@ export {
   AuthError,
   AuthConfig,
 } from './auth.model';
+
+// Practice Result models
+export {
+  PracticeResult,
+  PracticeResultSubmission,
+  PracticeResultValidation,
+  validatePracticeResultSubmission,
+  practiceSummaryToSubmission,
+} from './practice-result.model';

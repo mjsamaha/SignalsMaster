@@ -3,10 +3,13 @@ import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonText, IonIcon } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { PracticeSummary } from '../../core/services/quiz.service';
+import { PracticeResultsService } from '../../core/services/practice-results.service';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models/user.model';
 
 /**
  * PracticeResultsPage displays the results of a practice quiz session.
- * Handles motivational messaging, time formatting, and navigation logic.
+ * MVP Phase 2: Handles result display, auto-submission to Firestore, and navigation logic.
  */
 @Component({
   selector: 'app-practice-results',
@@ -33,20 +36,57 @@ export class PracticeResultsPage implements OnInit {
    * Controls whether all questions are shown in the UI.
    */
   showAllQuestions = false;
+  /**
+   * Authenticated user for results submission.
+   */
+  currentUser: User | null = null;
+  /**
+   * Indicates if a submission is in progress.
+   */
+  isSubmitting = false;
+  /**
+   * Indicates if results have been submitted.
+   */
+  hasSubmitted = false;
+  /**
+   * Message describing submission status or errors.
+   */
+  submissionMessage = '';
+  /**
+   * Indicates if submission was successful.
+   */
+  submissionSuccess = false;
 
   /**
-   * Injects router.
+   * Injects router, practice results service, and auth service.
    */
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly practiceResultsService: PracticeResultsService,
+    private readonly authService: AuthService
+  ) {}
 
   ngOnInit(): void {
+    // Get authenticated user
+    this.currentUser = this.authService.getCurrentUser();
+    if (!this.currentUser) {
+      console.error('[PracticeResultsPage] No authenticated user');
+      this.router.navigate(['/registration']);
+      return;
+    }
+
     // Use history.state instead of getCurrentNavigation (deprecated)
     this.summary = history.state['summary'] ?? null;
 
     if (!this.summary) {
       // Redirect to home if no results available
+      console.log('[PracticeResultsPage] No summary data in navigation state');
       this.router.navigate(['/tabs/home']);
+      return;
     }
+
+    // Auto-submit results on page load (MVP Phase 2)
+    this.submitResults();
   }
 
   /**
@@ -118,6 +158,69 @@ export class PracticeResultsPage implements OnInit {
 
   toggleShowAllQuestions(): void {
     this.showAllQuestions = !this.showAllQuestions;
+  }
+
+  /**
+   * Submit practice results to Firestore.
+   * Auto-called on page load. Can be manually retried on error.
+   */
+  async submitResults(): Promise<void> {
+    if (!this.summary || !this.currentUser) {
+      console.error('[PracticeResultsPage] Cannot submit without summary or user');
+      return;
+    }
+
+    // Prevent duplicate submissions
+    if (this.isSubmitting || this.hasSubmitted) {
+      console.log('[PracticeResultsPage] Submission already in progress or completed');
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.submissionMessage = '';
+
+    console.log('[PracticeResultsPage] Submitting practice results...', {
+      userId: this.currentUser.user_id,
+      sessionId: this.summary.sessionId,
+      score: this.summary.correctAnswers
+    });
+
+    try {
+      const response = await this.practiceResultsService.submitPracticeResult(
+        this.currentUser,
+        this.summary
+      );
+
+      this.isSubmitting = false;
+
+      if (response.success) {
+        this.hasSubmitted = true;
+        this.submissionSuccess = true;
+        this.submissionMessage = 'Practice results saved successfully!';
+        console.log('[PracticeResultsPage] Results submitted successfully:', response.resultId);
+      } else {
+        this.submissionSuccess = false;
+        this.submissionMessage = response.message || 'Failed to save results';
+        console.error('[PracticeResultsPage] Submission failed:', response.message);
+      }
+    } catch (error: any) {
+      this.isSubmitting = false;
+      this.submissionSuccess = false;
+      this.submissionMessage = 'Network error. Please try again.';
+      console.error('[PracticeResultsPage] Submission error:', error);
+    }
+  }
+
+  /**
+   * Retry submission after an error.
+   * Resets submission state and attempts to submit again.
+   */
+  retrySubmission(): void {
+    console.log('[PracticeResultsPage] Retrying submission...');
+    this.hasSubmitted = false;
+    this.isSubmitting = false;
+    this.submissionMessage = '';
+    this.submitResults();
   }
 
   tryAgain(): void {

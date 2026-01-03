@@ -6,6 +6,25 @@
 
 <!-- FIX: Removed [fullscreen]="true" to prevent iOS scrolling conflicts. -->
 <ion-content>
+  <!-- Status Message Banner -->
+  <div *ngIf="submissionMessage" class="status-message" [class.success]="submissionSuccess" [class.error]="!submissionSuccess">
+    <ion-text>{{ submissionSuccess ? '✓ ' : '✗ ' }}{{ submissionMessage }}</ion-text>
+    <!-- Retry Button on Error -->
+    <ion-button
+      *ngIf="!submissionSuccess && !isSubmitting"
+      size="small"
+      fill="clear"
+      (click)="retrySubmission()"
+      class="retry-btn">
+      Retry
+    </ion-button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isSubmitting" class="loading-overlay">
+    <ion-text class="loading-text">Saving results...</ion-text>
+  </div>
+
   <div class="results-container" *ngIf="summary">
     <!-- Hero Score Card with Performance Gradient -->
     <div class="hero-card" [attr.data-tier]="getPerformanceTier()">
