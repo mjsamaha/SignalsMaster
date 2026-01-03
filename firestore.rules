@@ -62,12 +62,14 @@ service cloud.firestore {
       // Allow creation with strict validation
       // Schema: user_id, rank, score, total_questions, accuracy, total_time,
       //         average_time, session_id, completed_at, created_at
+      // Note: completed_at and created_at use serverTimestamp() and are not
+      //       included in keys().hasAll() validation due to sentinel value handling
       allow create: if request.auth != null
                     && request.resource.data.user_id == request.auth.uid
                     && request.resource.data.keys().hasAll([
                         'user_id', 'rank', 'score', 'total_questions',
                         'accuracy', 'total_time', 'average_time',
-                        'session_id', 'completed_at', 'created_at'
+                        'session_id'
                       ])
                     && request.resource.data.user_id is string
                     && request.resource.data.user_id.size() >= 10
@@ -86,7 +88,9 @@ service cloud.firestore {
                     && request.resource.data.average_time is number
                     && request.resource.data.average_time >= 0
                     && request.resource.data.session_id is string
-                    && request.resource.data.session_id.size() >= 10;
+                    && request.resource.data.session_id.size() >= 10
+                    && request.resource.data.completed_at is timestamp
+                    && request.resource.data.created_at is timestamp;
 
       // Immutable - no updates or deletes (preserve practice history)
       allow update, delete: if false;
