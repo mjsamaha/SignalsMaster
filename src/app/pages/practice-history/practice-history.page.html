@@ -1,0 +1,146 @@
+<ion-header [translucent]="true" class="safe-area-horizontal">
+  <ion-toolbar>
+    <ion-title>Practice History</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="safe-area-padding">
+  <!-- Pull-to-Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Pull to refresh history"
+      refreshingSpinner="crescent"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="container">
+    <!-- Statistics Summary Card -->
+    <div *ngIf="results.length > 0" class="stats-card">
+      <h2 class="stats-title">Your Progress</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value">{{ totalSessions }}</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ averageAccuracy.toFixed(1) }}%</div>
+          <div class="stat-label">Avg Accuracy</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ bestScore }}</div>
+          <div class="stat-label">Best Score</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ bestAccuracy.toFixed(1) }}%</div>
+          <div class="stat-label">Peak Accuracy</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sort Controls -->
+    <div *ngIf="results.length > 0" class="sort-controls">
+      <ion-segment [value]="currentSortBy" (ionChange)="onSortChange($event)">
+        <ion-segment-button value="completed_at">
+          <ion-label>Recent</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="accuracy">
+          <ion-label>Accuracy</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="score">
+          <ion-label>Score</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="results.length === 0 && !isLoading" class="empty-state">
+      <div class="empty-icon">📚</div>
+      <h2 class="empty-headline">No Practice History Yet</h2>
+      <p class="empty-subheading">
+        Start your first practice quiz to track your progress and see your results here!
+      </p>
+      <ion-button class="btn-start-quiz" (click)="startNewQuiz()">
+        <span class="btn-icon">▶</span>
+        Start First Quiz
+      </ion-button>
+    </div>
+
+    <!-- History Grid -->
+    <div *ngIf="results.length > 0" class="history-grid">
+      <div *ngFor="let result of results; trackBy: trackByResultId"
+           class="history-card"
+           [attr.data-tier]="getPerformanceTier(result.accuracy)">
+
+        <!-- Header: Date + Rank Badge -->
+        <div class="card-header">
+          <div class="date-info">
+            <span class="date-text">{{ formatDate(result.completed_at) }}</span>
+          </div>
+          <div class="rank-badge">
+            <span class="rank-stars">{{ getRankBadge(result.rank) }}</span>
+            <span class="rank-label">{{ result.rank }}</span>
+          </div>
+        </div>
+
+        <!-- Performance Tier Label -->
+        <div class="performance-label">
+          {{ getPerformanceTierLabel(result.accuracy) }}
+        </div>
+
+        <!-- Score Display -->
+        <div class="score-section">
+          <div class="score-main">
+            <span class="score-value">{{ result.score }}</span>
+            <span class="score-divider">/</span>
+            <span class="score-total">{{ result.total_questions }}</span>
+          </div>
+          <div class="score-subtitle">Correct Answers</div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat">
+            <span class="stat-icon">🎯</span>
+            <span class="stat-text">{{ result.accuracy.toFixed(1) }}%</span>
+          </div>
+          <span class="stat-divider">•</span>
+          <div class="stat">
+            <span class="stat-icon">⏱️</span>
+            <span class="stat-text">{{ formatTime(result.total_time) }}</span>
+          </div>
+          <span class="stat-divider">•</span>
+          <div class="stat">
+            <span class="stat-icon">⚡</span>
+            <span class="stat-text">{{ result.average_time.toFixed(1) }}s/q</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infinite Scroll -->
+    <ion-infinite-scroll
+      threshold="100px"
+      (ionInfinite)="loadNextBatch($event)"
+      [disabled]="!hasMoreResults">
+      <ion-infinite-scroll-content
+        loadingSpinner="crescent"
+        loadingText="Loading more history...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <!-- End of List Message -->
+    <div *ngIf="!hasMoreResults && results.length > 0" class="end-of-list-message">
+      <div class="end-icon">🏁</div>
+      <p class="end-text">You've reviewed all your practice sessions!</p>
+      <p class="end-subtext">{{ totalResultsLoaded }} sessions completed</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading && results.length === 0" class="loading-state">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading your practice history...</p>
+    </div>
+  </div>
+</ion-content>

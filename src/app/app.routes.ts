@@ -34,6 +34,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/practice-results/practice-results.page').then(m => m.PracticeResultsPage),
   },
   {
+    path: 'practice-history',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/practice-history/practice-history.page').then(m => m.PracticeHistoryPage),
+  },
+  {
     path: 'competitive-results',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/competitive-results/competitive-results.page').then(m => m.CompetitiveResultsPage),
