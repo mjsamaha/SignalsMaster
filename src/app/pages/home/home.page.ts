@@ -1,7 +1,6 @@
-
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonButtons } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonButtons, IonCard, IonCardContent } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Subject, takeUntil } from 'rxjs';
@@ -20,7 +19,7 @@ import { UserBadgeComponent } from '../../shared/components/user-badge/user-badg
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonButtons, CommonModule, UserBadgeComponent]
+  imports: [IonCardContent, IonCard, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonButtons, CommonModule, UserBadgeComponent]
 })
 export class HomePage implements OnInit, OnDestroy {
   private router = inject(Router);
