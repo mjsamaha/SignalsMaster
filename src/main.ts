@@ -7,6 +7,8 @@ import { APP_INITIALIZER } from '@angular/core';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
+// Fix Issue #249: Add Firebase Auth to populate request.auth for Firestore security rules
+import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import { environment } from './environments/environment';
 
 import { routes } from './app/app.routes';
@@ -89,6 +91,20 @@ bootstrapApplication(AppComponent, {
         );
       }
       return firestore;
+    }),
+    // Fix Issue #249: Enable Firebase Auth to populate request.auth in Firestore rules
+    // Anonymous auth maintains device-based UX while providing server-side security
+    provideAuth(() => {
+      const auth = getAuth();
+      // Connect to emulators in test environment
+      if (environment.useEmulators && environment.emulators?.auth) {
+        connectAuthEmulator(
+          auth,
+          `http://${environment.emulators.auth.host}:${environment.emulators.auth.port}`,
+          { disableWarnings: true }
+        );
+      }
+      return auth;
     }),
     {
       provide: APP_INITIALIZER,
