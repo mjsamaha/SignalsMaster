@@ -48,10 +48,12 @@ export class UserService {
 
   /**
    * Create a new user in Firestore.
+   * Fix Issue #249: Now accepts Firebase UID to ensure request.auth.uid matches user_id
    * @param data User registration data
+   * @param firebaseUid Firebase Auth UID from anonymous sign-in
    * @returns Created user object with timestamps
    */
-  async createUser(data: UserRegistrationData): Promise<User> {
+  async createUser(data: UserRegistrationData, firebaseUid: string): Promise<User> {
     console.log('[UserService] Creating user:', data);
 
     try {
@@ -61,13 +63,14 @@ export class UserService {
         throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
       }
 
-      // Generate user ID first
-      const userId = doc(collection(this.firestore, this.usersCollection)).id;
+      // Fix Issue #249: Use Firebase Auth UID instead of generating custom ID
+      // This ensures Firestore rule 'request.auth.uid == user_id' validation passes
+      console.log('[UserService] Using Firebase UID for user document:', firebaseUid);
 
       // Prepare user document with server timestamps
       const now = serverTimestamp();
       const userDoc = {
-        user_id: userId,
+        user_id: firebaseUid,
         rank: data.rank.trim(),
         first_name: data.first_name.trim(),
         last_name: data.last_name.trim(),
@@ -79,10 +82,11 @@ export class UserService {
       console.log('[UserService] Prepared user document:', userDoc);
 
       // Create document in Firestore (wrapped in ngZone for change detection)
+      // Fix Issue #249: Document ID matches Firebase Auth UID for security rule validation
       const docRef = await this.ngZone.run(async () => {
-        const ref = doc(this.firestore, this.usersCollection, userId);
+        const ref = doc(this.firestore, this.usersCollection, firebaseUid);
         await setDoc(ref, userDoc);
-        console.log('[UserService] Document created with ID:', ref.id);
+        console.log('[UserService] Document created with Firebase UID:', ref.id);
         return ref;
       });
 
@@ -306,6 +310,35 @@ export class UserService {
 
       // Don't throw error for last_login updates to avoid blocking app startup
       console.warn('[UserService] Continuing despite last_login update failure');
+    }
+  }
+
+  /**
+   * Mark user document as migrated to Firebase Auth.
+   * Fix Issue #249: Adds migration metadata to legacy user documents
+   * @param oldUserId Legacy custom user_id
+   * @param newFirebaseUid New Firebase Auth UID
+   */
+  async markUserAsMigrated(oldUserId: string, newFirebaseUid: string): Promise<void> {
+    console.log('[UserService] Marking user as migrated:', oldUserId, '→', newFirebaseUid);
+
+    try {
+      const docRef = doc(this.firestore, this.usersCollection, oldUserId);
+
+      await this.ngZone.run(async () => {
+        await updateDoc(docRef, {
+          migrated_to_firebase_uid: newFirebaseUid,
+          migrated_at: serverTimestamp(),
+          is_legacy: true
+        });
+      });
+
+      console.log('[UserService] User marked as migrated successfully');
+
+    } catch (error: any) {
+      console.error('[UserService] Error marking user as migrated:', error);
+      // Non-fatal error - throw to let caller handle
+      throw new Error(`Failed to mark user as migrated: ${error.message}`);
     }
   }
 
