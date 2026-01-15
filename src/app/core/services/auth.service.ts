@@ -35,6 +35,8 @@ export class AuthService {
   private loadingSubject = new BehaviorSubject<boolean>(true);
   private initializedSubject = new BehaviorSubject<boolean>(false);
   private errorSubject = new BehaviorSubject<string | null>(null);
+  // Fix Issue #251: Track Firebase Auth availability for defensive error handling
+  private firebaseAuthAvailableSubject = new BehaviorSubject<boolean>(true);
 
   // Public observables for reactive state
   public currentUser$: Observable<User | null> = this.userSubject.asObservable();
@@ -44,6 +46,8 @@ export class AuthService {
   public isAuthenticated$: Observable<boolean> = this.currentUser$.pipe(
     map(user => user !== null)
   );
+  // Fix Issue #251: Observable for Firebase Auth availability status
+  public isFirebaseAuthAvailable$: Observable<boolean> = this.firebaseAuthAvailableSubject.asObservable();
 
   constructor() {
     console.log('[AuthService] Initialized');
@@ -57,6 +61,33 @@ export class AuthService {
         console.log('[AuthService] Firebase Auth state: signed out');
       }
     });
+  }
+
+  /**
+   * Centralized Firebase Auth error handler.
+   * Fix Issue #251: Provides detailed error logging and sets auth availability flag.
+   * @param context Description of where the error occurred
+   * @param error The Firebase Auth error
+   */
+  private handleFirebaseAuthError(context: string, error: any): void {
+    const errorCode = error?.code || 'unknown';
+    const errorMessage = error?.message || 'Unknown error';
+
+    console.error(`[AuthService] Firebase Auth failed in ${context}:`, {
+      code: errorCode,
+      message: errorMessage,
+      timestamp: new Date().toISOString()
+    });
+
+    // Fix Issue #251: Detect 403/blocked API errors specifically
+    if (errorCode.includes('auth/requests-to-this-api') ||
+        errorCode.includes('identitytoolkit') ||
+        errorCode === 'auth/operation-not-allowed') {
+      console.error('[AuthService] ⚠️ Firebase Anonymous Auth is DISABLED or BLOCKED in Firebase Console');
+      console.error('[AuthService] ⚠️ Please enable Anonymous Authentication:');
+      console.error('[AuthService] ⚠️ Firebase Console → Authentication → Sign-in method → Anonymous');
+      this.firebaseAuthAvailableSubject.next(false);
+    }
   }
 
   /**
@@ -96,7 +127,9 @@ export class AuthService {
                 return;
               }
             } catch (migrationError: any) {
-              console.error('[AuthService] Migration failed:', migrationError);
+              // Fix Issue #251: Handle migration failure with detailed error
+              this.handleFirebaseAuthError('migration', migrationError);
+              console.warn('[AuthService] Migration failed, continuing with legacy user');
               // Fall through to normal flow
             }
           }
@@ -108,7 +141,9 @@ export class AuthService {
             await signInAnonymously(this.firebaseAuth);
             console.log('[AuthService] Firebase Auth session established for existing user');
           } catch (authError: any) {
-            console.error('[AuthService] Firebase Auth sign-in failed:', authError);
+            // Fix Issue #251: Enhanced error handling with user feedback
+            this.handleFirebaseAuthError('existing user sign-in', authError);
+            console.warn('[AuthService] ⚠️ Continuing in offline mode - Firestore operations will be limited');
             // Continue anyway - user data is still valid locally
           }
 
@@ -152,7 +187,9 @@ export class AuthService {
             await signInAnonymously(this.firebaseAuth);
             console.log('[AuthService] Firebase Auth session established for device user');
           } catch (authError: any) {
-            console.error('[AuthService] Firebase Auth sign-in failed:', authError);
+            // Fix Issue #251: Enhanced error handling with user feedback
+            this.handleFirebaseAuthError('device user sign-in', authError);
+            console.warn('[AuthService] ⚠️ Continuing in offline mode - Firestore operations will be limited');
             // Continue anyway - user data is still valid locally
           }
 
@@ -234,9 +271,21 @@ export class AuthService {
       // Fix Issue #249: Sign in anonymously BEFORE creating Firestore user
       // This ensures request.auth is populated for subsequent Firestore operations
       console.log('[AuthService] Signing in anonymously to populate Firebase Auth token');
-      const authResult = await signInAnonymously(this.firebaseAuth);
-      const firebaseUid = authResult.user.uid;
-      console.log('[AuthService] Firebase Auth UID:', firebaseUid);
+      let firebaseUid: string;
+      try {
+        const authResult = await signInAnonymously(this.firebaseAuth);
+        firebaseUid = authResult.user.uid;
+        console.log('[AuthService] Firebase UID:', firebaseUid);
+      } catch (authError: any) {
+        // Fix Issue #251: Handle auth failure during registration
+        this.handleFirebaseAuthError('new user registration', authError);
+        this.setLoading(false);
+        return {
+          success: false,
+          error: 'Firebase Authentication is currently unavailable. Please check Firebase Console settings.',
+          requiresRegistration: true,
+        };
+      }
 
       // Create user in Firestore with Firebase UID
       console.log('[AuthService] Creating user in Firestore with Firebase UID');
@@ -310,7 +359,9 @@ export class AuthService {
         await signInAnonymously(this.firebaseAuth);
         console.log('[AuthService] Firebase Auth session established');
       } catch (authError: any) {
-        console.error('[AuthService] Firebase Auth sign-in failed:', authError);
+        // Fix Issue #251: Enhanced error handling with user feedback
+        this.handleFirebaseAuthError('auto-login', authError);
+        console.warn('[AuthService] ⚠️ Continuing in offline mode - Firestore operations will be limited');
         // Continue anyway - user data is still valid locally
       }
 
@@ -415,7 +466,9 @@ export class AuthService {
           await signInAnonymously(this.firebaseAuth);
           console.log('[AuthService] Firebase Auth session re-established');
         } catch (authError: any) {
-          console.error('[AuthService] Firebase Auth sign-in failed during refresh:', authError);
+          // Fix Issue #251: Enhanced error handling during session refresh
+          this.handleFirebaseAuthError('session refresh', authError);
+          console.warn('[AuthService] ⚠️ Session refresh continuing without Firebase Auth');
           // Continue anyway - user data is still valid locally
         }
       }
@@ -507,7 +560,14 @@ export class AuthService {
     try {
       // Step 1: Sign in anonymously to get Firebase UID
       console.log('[AuthService] Getting Firebase Auth UID for migration');
-      const authResult = await signInAnonymously(this.firebaseAuth);
+      let authResult;
+      try {
+        authResult = await signInAnonymously(this.firebaseAuth);
+      } catch (authError: any) {
+        // Fix Issue #251: Handle auth failure during migration
+        this.handleFirebaseAuthError('user migration', authError);
+        throw new Error('Firebase Authentication unavailable - cannot migrate user');
+      }
       const firebaseUid = authResult.user.uid;
       console.log('[AuthService] Firebase UID obtained:', firebaseUid);
 
@@ -589,6 +649,15 @@ export class AuthService {
       initialized: this.initializedSubject.value,
       error: this.errorSubject.value,
     };
+  }
+
+  /**
+   * Check if Firebase Auth is available (synchronous).
+   * Fix Issue #251: Allows components to check auth status before operations
+   * @returns True if Firebase Auth is available and working
+   */
+  isFirebaseAuthAvailable(): boolean {
+    return this.firebaseAuthAvailableSubject.value;
   }
 
   /**

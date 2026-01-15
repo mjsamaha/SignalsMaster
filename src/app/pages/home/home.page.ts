@@ -30,8 +30,23 @@ export class HomePage implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isAuthenticated = false;
 
+  /**
+   * Fix Issue #251: Track Firebase Auth availability
+   */
+  firebaseAuthAvailable = true;
+
   ngOnInit() {
     console.log('[HomePage] Initializing home page');
+
+    // Fix Issue #251: Subscribe to Firebase Auth availability
+    this.authService.isFirebaseAuthAvailable$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(available => {
+        this.firebaseAuthAvailable = available;
+        if (!available) {
+          console.warn('[HomePage] Firebase Auth unavailable - some features may be limited');
+        }
+      });
 
     // Subscribe to authentication state
     this.authService.currentUser$

@@ -11,6 +11,19 @@
 
 <!-- FIX: Removed [fullscreen]="true" to prevent iOS scrolling conflicts. -->
 <ion-content class="ion-padding safe-area-padding">
+  <!-- Fix Issue #251: Warning banner when Firebase Auth unavailable -->
+  <ion-card *ngIf="!firebaseAuthAvailable" color="warning" class="auth-warning">
+    <ion-card-content>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <ion-icon name="warning-outline" style="font-size: 24px;"></ion-icon>
+        <div>
+          <strong>Connection Issue</strong><br>
+          <small>Results may not save. Check your connection or contact support.</small>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
   <div *ngIf="!quizCompleted; else resultsView">
     <!-- Compact metadata bar -->
     <div class="metadata-bar">
