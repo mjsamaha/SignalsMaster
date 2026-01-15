@@ -23,6 +23,8 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
+// Fix Issue #251: Import AuthService to check Firebase Auth availability
+import { AuthService } from './auth.service';
 import {
   PracticeResult,
   PracticeResultSubmission,
@@ -64,6 +66,7 @@ export interface PracticeHistoryOptions {
 export class PracticeResultsService {
   private readonly firestore = inject(Firestore);
   private readonly ngZone = inject(NgZone);
+  private readonly authService = inject(AuthService); // Fix Issue #251: Check Firebase Auth availability
   private readonly collectionName = 'practice_results';
 
   constructor() {
@@ -97,6 +100,15 @@ export class PracticeResultsService {
     });
 
     try {
+      // Fix Issue #251: Check Firebase Auth availability before attempting Firestore write
+      if (!this.authService.isFirebaseAuthAvailable()) {
+        console.warn('[PracticeResultsService] Firebase Auth unavailable - cannot save practice results');
+        return {
+          success: false,
+          message: 'Unable to save results: Firebase Authentication is currently unavailable. Your progress is saved locally, but cannot sync to the server. Please check your internet connection or contact support.'
+        };
+      }
+
       // Validate user parameter (auth handled by AuthService at page level)
       // Note: Firestore security rules will enforce auth validation server-side
       // by checking request.auth.uid matches user_id in document
@@ -178,9 +190,12 @@ export class PracticeResultsService {
       // Handle specific Firebase errors
       if (error.code === 'permission-denied') {
         console.error('[PracticeResultsService] Permission denied - check Firestore security rules');
+        // Fix Issue #251: Provide more context about Firebase Auth requirement
+        const authStatus = this.authService.isFirebaseAuthAvailable() ? 'active' : 'unavailable';
+        console.error(`[PracticeResultsService] Firebase Auth status: ${authStatus}`);
         return {
           success: false,
-          message: 'Permission denied. Please ensure you are logged in.'
+          message: 'Permission denied: Unable to save results. Firebase Authentication may be disabled. Please contact support.'
         };
       }
 

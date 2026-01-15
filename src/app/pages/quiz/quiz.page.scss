@@ -30,6 +30,15 @@ ion-header {
   }
 }
 
+// Fix Issue #251: Warning banner for Firebase Auth unavailability
+.auth-warning {
+  margin-bottom: 16px;
+
+  ion-card-content {
+    padding: 12px;
+  }
+}
+
 // ============================================================================
 // COMPACT METADATA BAR
 // ============================================================================

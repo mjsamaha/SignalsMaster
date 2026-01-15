@@ -18,6 +18,15 @@ ion-content {
   --background: var(--color-white);
 }
 
+// Fix Issue #251: Warning banner for Firebase Auth unavailability
+.auth-warning {
+  margin-bottom: 16px;
+
+  ion-card-content {
+    padding: 12px;
+  }
+}
+
 // ============================================================================
 // CONTAINER & LAYOUT
 // ============================================================================

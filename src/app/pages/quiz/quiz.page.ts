@@ -46,6 +46,11 @@ export class QuizPage implements OnInit, OnDestroy {
   currentUser: User | null = null;
 
   /**
+   * Fix Issue #251: Track Firebase Auth availability
+   */
+  firebaseAuthAvailable = true;
+
+  /**
    * Current question being displayed.
    */
   currentQuestion: Question | null = null;
@@ -129,6 +134,15 @@ export class QuizPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    // Fix Issue #251: Subscribe to Firebase Auth availability
+    const authAvailableSub = this.authService.isFirebaseAuthAvailable$.subscribe(available => {
+      this.firebaseAuthAvailable = available;
+      if (!available) {
+        console.warn('[QuizPage] Firebase Auth unavailable - results may not save');
+      }
+    });
+    this.subscriptions.push(authAvailableSub);
+
     // Get route parameters - handle format: /quiz/:mode
     const urlSegments = this.route.snapshot.url;
     const firstSegment = urlSegments[0]?.path;
